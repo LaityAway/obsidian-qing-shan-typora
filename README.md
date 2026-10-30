@@ -15,6 +15,10 @@ The community directory lists this plugin as **Qing Shan Typography**; the Chine
 - **Typora code blocks**: 14.4px / 23.04px code line boxes, `#f8f8f8` surface, 1px border, 8/6 padding, automatic wrapping, and the Typora `cm-s-inner` palette.
 - **Dark mode**: follows `theme-dark` automatically with a Typora `night`-inspired surface, text, table, code, and callout palette.
 - **Semantic callouts**: note / warning / danger keep Obsidian's `--callout-color` on the left border and icon.
+- **Optional paragraph indent**: opt-in 2em first-line indent for prose paragraphs without affecting headings, quotes, lists, callouts, tables, code, or images.
+- **Native PDF export**: exports cleanly styled documents through Obsidian's native PDF export (`.print > .markdown-preview-view`).
+- **[TOC] & TOC Reader compatible**: clean list styling without bullet collisions, tabular numbers, and hover highlights.
+- **Subtle hover scrollbars & tabular numbers**: tables and code blocks use quiet 6px scrollbars that only appear on hover, with tabular numbers for aligned data.
 - **Optional accessibility**: an opt-in high-contrast toggle for links, quotes, and metadata.
 - **Code-font switch**: use Typora's Courier stack or follow your Obsidian monospace font.
 - **No note changes**: links, embeds, block IDs, properties, and source text stay untouched.
@@ -47,6 +51,7 @@ Once the plugin appears in the Obsidian community directory:
 | Enable typography | On | Toggle the whole plugin. |
 | Reading width | Typora auto | 860 / 1024 / 1200 by window; fixed and full modes available. |
 | Unified shell | On | Light: `#fafafa` sidebar / `#ffffff` paper. Dark: `#2f3439` / `#363b40`. |
+| Paragraph indent | Off | 2em first-line indent for prose paragraphs only. |
 | Hide inline title | On | Hides Obsidian's inline filename; write an H1 in the note instead. |
 | Code font | Typora | `Lucida Console`, `Consolas`, `Courier`; or follow Obsidian. |
 | High contrast | Off | AA contrast for links, quotes, and metadata; deviates from Typora colors. |
@@ -82,7 +87,7 @@ No note content, file names, or vault metadata are collected.
 
 ## 中文说明
 
-把 `main.js`、`manifest.json`、`styles.css` 放到 `<库>/.obsidian/plugins/qing-shan-typora/`，重载 Obsidian 后在第三方插件中启用。默认使用 Typora 的 860 / 1024 / 1200 三档宽度、1.6 行距、隐藏顶部文件名和 Typora 代码配色；深色模式自动跟随，callout 恢复类型色，代码字体与对比度可在设置中切换。插件不读取笔记内容，也不请求网络。
+把 `main.js`、`manifest.json`、`styles.css` 放到 `<库>/.obsidian/plugins/qing-shan-typora/`，重载 Obsidian 后在第三方插件中启用。默认使用 Typora 的 860 / 1024 / 1200 三档宽度、1.6 行距、隐藏顶部文件名和 Typora 代码配色；深色模式自动跟随，callout 恢复类型色，段落首行缩进、代码字体与对比度可在设置中切换。全面适配原生 PDF 导出、TOC Reader 目录与宽表格悬浮细滚动条。插件不读取笔记内容，也不请求网络。
 
 ## License
 

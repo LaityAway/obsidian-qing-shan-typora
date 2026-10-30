@@ -14,6 +14,7 @@ const DEFAULTS = Object.freeze({
   widthMode: 'typora',
   contentWidth: 800,
   lineHeight: 1.6,
+  paragraphIndent: false,
   whiteShell: true,
   hideInlineTitle: true,
   highContrast: false,
@@ -21,6 +22,7 @@ const DEFAULTS = Object.freeze({
 });
 const CLASSES = [
   'qs-typora-enabled',
+  'qs-typora-indent',
   'qs-typora-white-shell',
   'qs-typora-hide-title',
   'qs-typora-contrast',
@@ -47,6 +49,7 @@ function normalizeSettings(value) {
     widthMode,
     contentWidth: number('contentWidth', 480, 1200, 20),
     lineHeight: number('lineHeight', 1.4, 2.2, 0.1),
+    paragraphIndent: boolean('paragraphIndent'),
     whiteShell: boolean('whiteShell'),
     hideInlineTitle: boolean('hideInlineTitle'),
     highContrast: boolean('highContrast'),
@@ -85,6 +88,7 @@ class TyporaSettingsTab extends PluginSettingTab {
           this.display();
         }));
     toggle('whiteShell', '整个界面统一底色', '默认开启。浅色下侧栏 #fafafa、正文 #ffffff；深色下侧栏 #2f3439、正文 #363b40。关闭后仅笔记正文使用 Typora 排版，其他区域跟随当前主题。');
+    toggle('paragraphIndent', '段落首行缩进 2 字符', '默认关闭。开启后正文段落首行自动缩进 2em（自动排除标题、列表、引用、Callout、代码块、表格与单图段落）。');
     toggle('hideInlineTitle', '隐藏顶部文件名', '默认开启。开启后隐藏阅读视图与实时预览顶部的文件名；不检查正文或嵌入笔记中的标题。');
     new Setting(containerEl).setName('代码字体')
       .setDesc('Typora 使用 Lucida Console / Consolas / Courier；跟随 Obsidian 使用你设置的等宽字体。')
@@ -137,6 +141,7 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
       this.settings = { ...DEFAULTS };
       new Notice('Typora 正文排版：设置读取失败，本次使用默认值。');
     }
+    this.refreshSettingsCache();
     if (!this.active) return;
     this.addSettingTab(new TyporaSettingsTab(this.app, this));
     this.addCommand({
@@ -144,18 +149,35 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
       name: '切换正文排版',
       callback: async () => {
         await this.updateSettings({ enabled: !this.settings.enabled });
-        new Notice(this.settings.enabled ? 'Typora 正文排版已开启（仅浅色模式生效）' : 'Typora 正文排版已关闭');
+        new Notice(this.settings.enabled ? 'Typora 正文排版已开启' : 'Typora 正文排版已关闭');
       },
     });
     this.registerEvent(this.app.workspace.on('layout-change', () => this.applySettings()));
     this.registerEvent(this.app.workspace.on('window-open', workspaceWindow => {
-      this.applyDocument(workspaceWindow.doc);
+      this.applyDocument(workspaceWindow?.doc);
     }));
     this.registerEvent(this.app.workspace.on('window-close', workspaceWindow => {
-      this.clearDocument(workspaceWindow.doc);
-      this.documents.delete(workspaceWindow.doc);
+      this.clearDocument(workspaceWindow?.doc);
+      this.documents.delete(workspaceWindow?.doc);
     }));
     this.applySettings();
+  }
+
+  refreshSettingsCache() {
+    this.signature = JSON.stringify(this.settings);
+    const s = this.settings;
+    const expected = new Set(['qs-typora-enabled', `qs-typora-width-${s.widthMode}`]);
+    if (s.paragraphIndent) expected.add('qs-typora-indent');
+    if (s.whiteShell) expected.add('qs-typora-white-shell');
+    if (s.hideInlineTitle) expected.add('qs-typora-hide-title');
+    if (s.highContrast) expected.add('qs-typora-contrast');
+    if (s.codeFont === 'system') expected.add('qs-typora-code-system');
+    this.expectedSet = expected;
+    this.expectedVars = [
+      [VARIABLES[0], `${s.fontSize}px`],
+      [VARIABLES[1], `${s.contentWidth}px`],
+      [VARIABLES[2], String(s.lineHeight)],
+    ];
   }
 
   applyDocument(doc) {
@@ -170,17 +192,12 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
       const mono = view.getComputedStyle(doc.body).getPropertyValue('--font-monospace').trim();
       if (mono && doc.body.style.getPropertyValue(MONO_VARIABLE) !== mono) doc.body.style.setProperty(MONO_VARIABLE, mono);
     }
-    const signature = JSON.stringify(this.settings);
-    const applied = this.appliedSettings.get(doc) === signature;
-    // A theme, snippet or another plugin can replace body classes; re-assert them.
-    const expected = new Set(['qs-typora-enabled', `qs-typora-width-${this.settings.widthMode}`]);
-    if (this.settings.whiteShell) expected.add('qs-typora-white-shell');
-    if (this.settings.hideInlineTitle) expected.add('qs-typora-hide-title');
-    if (this.settings.highContrast) expected.add('qs-typora-contrast');
-    if (this.settings.codeFont === 'system') expected.add('qs-typora-code-system');
-    const classesIntact = CLASSES.every(name => doc.body.classList.contains(name) === expected.has(name));
-    if (applied && classesIntact && doc.body.style.getPropertyValue(VARIABLES[0])) return;
+    const applied = this.appliedSettings.get(doc) === this.signature;
+    const classesIntact = CLASSES.every(name => doc.body.classList.contains(name) === this.expectedSet.has(name));
+    const varsIntact = this.expectedVars.every(([name, val]) => doc.body.style.getPropertyValue(name) === val);
+    if (applied && classesIntact && varsIntact) return;
     doc.body.classList.toggle('qs-typora-enabled', true);
+    doc.body.classList.toggle('qs-typora-indent', this.settings.paragraphIndent);
     doc.body.classList.toggle('qs-typora-white-shell', this.settings.whiteShell);
     doc.body.classList.toggle('qs-typora-hide-title', this.settings.hideInlineTitle);
     doc.body.classList.toggle('qs-typora-contrast', this.settings.highContrast);
@@ -188,10 +205,10 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
     for (const mode of WIDTH_MODES) {
       doc.body.classList.toggle(`qs-typora-width-${mode}`, this.settings.widthMode === mode);
     }
-    doc.body.style.setProperty(VARIABLES[0], `${this.settings.fontSize}px`);
-    doc.body.style.setProperty(VARIABLES[1], `${this.settings.contentWidth}px`);
-    doc.body.style.setProperty(VARIABLES[2], String(this.settings.lineHeight));
-    this.appliedSettings.set(doc, signature);
+    for (const [name, val] of this.expectedVars) {
+      doc.body.style.setProperty(name, val);
+    }
+    this.appliedSettings.set(doc, this.signature);
   }
 
   applySettings() {
@@ -216,6 +233,7 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
     const next = normalizeSettings({ ...this.settings, ...patch });
     if (!this.saveFailed && JSON.stringify(next) === JSON.stringify(this.settings)) return this.writeQueue;
     this.settings = next;
+    this.refreshSettingsCache();
     this.applySettings();
     const snapshot = { ...this.settings };
     this.writeQueue = this.writeState.tail.then(async () => {
