@@ -1,6 +1,8 @@
-# 青山 · Typora 正文排版
+# Qing Shan Typography
 
-Typora-inspired reading typography for Obsidian. Keep Obsidian's wikilinks, embeds, and block references, while getting Typora's calm reading rhythm.
+**青山 · Typora 正文排版** — Typora-inspired reading typography for Obsidian.
+
+The community directory lists this plugin as **Qing Shan Typography**; the Chinese name is 青山 · Typora 正文排版. Keep Obsidian's wikilinks, embeds, and block references, while getting Typora's calm reading rhythm.
 
 ![Light reading view](assets/screenshot-light.png)
 
