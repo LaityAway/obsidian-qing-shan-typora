@@ -182,15 +182,22 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
 
   applyDocument(doc) {
     if (!doc || !doc.body) return;
+    if (doc.defaultView === null) {
+      this.documents.delete(doc);
+      return;
+    }
     this.documents.add(doc);
     if (!this.settings.enabled) {
       this.clearDocument(doc);
       return;
     }
     const view = doc.defaultView;
-    if (view) {
-      const mono = view.getComputedStyle(doc.body).getPropertyValue('--font-monospace').trim();
-      if (mono && doc.body.style.getPropertyValue(MONO_VARIABLE) !== mono) doc.body.style.setProperty(MONO_VARIABLE, mono);
+    if (view && typeof view.getComputedStyle === 'function') {
+      const cs = view.getComputedStyle(doc.body);
+      const mono = cs ? cs.getPropertyValue('--font-monospace')?.trim() : '';
+      if (mono && doc.body.style?.getPropertyValue?.(MONO_VARIABLE) !== mono) {
+        doc.body.style.setProperty(MONO_VARIABLE, mono);
+      }
     }
     const applied = this.appliedSettings.get(doc) === this.signature;
     const classesIntact = CLASSES.every(name => doc.body.classList.contains(name) === this.expectedSet.has(name));
@@ -212,7 +219,7 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
   }
 
   applySettings() {
-    const docs = new Set([document]);
+    const docs = new Set([document, ...this.documents]);
     this.app.workspace.iterateAllLeaves(leaf => {
       const doc = leaf?.view?.containerEl?.ownerDocument;
       if (doc) docs.add(doc);

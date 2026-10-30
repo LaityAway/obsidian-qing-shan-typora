@@ -51,6 +51,13 @@ test('new windows inherit settings; unload removes every owned property and clas
   assert.ok(doc.body.classes.has('qs-typora-enabled'));
   p.onunload(); for(const d of [...docs,doc]) { assert.equal(d.body.classes.size,0); assert.equal(d.body.values.size,0); }
 });
+test('detached window with null defaultView is automatically pruned from documents',async()=>{
+  const {instance:p}=setup(); await p.onload();
+  const doc={body:element(),defaultView:null};
+  p.documents.add(doc);
+  p.applyDocument(doc);
+  assert.equal(p.documents.has(doc),false);
+});
 test('reset defaults restores all parameters and enables styling',async()=>{
   const {instance:p}=setup({enabled:false,fontSize:22,contentWidth:480,lineHeight:2.2}); await p.onload(); await p.resetSettings();
   assert.deepEqual(p.saved,{enabled:true,fontSize:16,widthMode:'typora',contentWidth:800,lineHeight:1.6,paragraphIndent:false,whiteShell:true,hideInlineTitle:true,highContrast:false,codeFont:'typora'});
