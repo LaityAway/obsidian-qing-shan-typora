@@ -1,9 +1,9 @@
 {
   "id": "qing-shan-typora",
   "name": "Qing Shan Typography",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "minAppVersion": "1.5.0",
-  "description": "Typora-inspired reading typography for Obsidian: responsive 860/1024/1200 width, 1.6 line height, Typora code palette, dark mode, callout colors, and code-font/contrast toggles.",
+  "description": "Apply Typora-inspired reading typography with responsive 860/1024/1200 width, 1.6 line height, Typora code palette, dark mode, callout colors, and code-font/contrast toggles.",
   "author": "青山",
   "authorUrl": "https://github.com/LaityAway",
   "isDesktopOnly": true
