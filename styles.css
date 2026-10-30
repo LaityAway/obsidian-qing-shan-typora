@@ -678,7 +678,7 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
 }
 
 /* Obsidian transclusions are not Typora pages: keep the host page margins out of the embed. */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .markdown-embed .markdown-preview-view {
+body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print) :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .markdown-embed .markdown-preview-view {
   padding: 0;
   /* Obsidian's own transclusion scale; the page's 2.25em H1 must not leak in. */
   --h1-size: 1.125em;
@@ -687,7 +687,7 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
   --h4-size: 0.9em;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-embed .markdown-preview-view > .markdown-preview-sizer { width: 100%; max-width: 100%; }
+body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print) .markdown-embed .markdown-preview-view > .markdown-preview-sizer { width: 100%; max-width: 100%; }
 
 /* 12. Code font: Typora's stack or the user's Obsidian monospace. */
 body.qs-typora-enabled.qs-typora-code-system .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) { --font-monospace: var(--qs-typora-system-mono, monospace); }
@@ -926,12 +926,17 @@ body.theme-dark.qs-typora-enabled.qs-typora-contrast.qs-typora-white-shell .stat
    ========================================================================== */
 
 body.qs-typora-enabled .print > .markdown-preview-view {
-  font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, 'Segoe UI Emoji', sans-serif;
+  font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SF Pro", sans-serif;
   font-size: 16px;
   line-height: 1.6;
   color: #333333;
   background-color: #ffffff;
   -webkit-font-smoothing: antialiased;
+}
+
+body.qs-typora-enabled .print > .markdown-preview-view > .markdown-preview-sizer {
+  width: 100%;
+  max-width: none;
 }
 
 body.qs-typora-enabled .print > .markdown-preview-view :is(h1, h2, h3, h4, h5, h6) {
