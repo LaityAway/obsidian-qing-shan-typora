@@ -1,115 +1,32 @@
-/* ==========================================================================
-   Qing Shan Typography (青山 · Typora 正文排版) Lean Architecture
-   Core contract: Pure CSS typography & responsive shell.
-   No notes read, searched, or modified.
-   ========================================================================== */
+/* All styling is gated by our own enable class (body.qs-typora-enabled).
+   Reverse-engineered from Typora.app/Contents/Resources/TypeMark/style/{base.css,themes/github.css,themes/night.css}.
+   Plugin-disabled state automatically reverts to the active theme. */
 
-/* --------------------------------------------------------------------------
-   1. Design Tokens & Color Palettes
-   -------------------------------------------------------------------------- */
-
-body.qs-typora-enabled {
-  /* Metrics & Scales */
-  --qs-typora-font-body: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, 'Segoe UI Emoji', sans-serif;
-  --qs-typora-font-mono: "Lucida Console", Consolas, Courier, monospace;
-
-  /* Typora Light Palette (GitHub Theme) */
+/* 1. Full-Window Pure White Shell & Clean Typora Sidebar */
+body.qs-typora-enabled.qs-typora-white-shell {
   --qs-paper: #ffffff;
   --qs-sidebar: #fafafa;
-  --qs-line: #e7eaed;
+  --qs-line: #eaecef;
   --qs-selected: #eaeaea;
   --qs-text: #333333;
   --qs-muted: #777777;
   --qs-accent: #4183c4;
-  --qs-h-color: #333333;
-  --qs-h-border: #eaecef;
-  --qs-h6-color: #777777;
-  --qs-quote-border: #dfe2e5;
-  --qs-quote-text: #777777;
-  --qs-table-bg: #ffffff;
-  --qs-table-border: #dfe2e5;
-  --qs-table-th-bg: #f8f8f8;
-  --qs-table-alt: #f8f8f8;
-  --qs-code-bg: #f8f8f8;
-  --qs-code-border: #e7eaed;
-  --qs-code-text: #333333;
-  --qs-meta-border: #e7eaed;
-  --qs-meta-label: #777777;
-  --qs-link: #4183c4;
-  --qs-link-hover: #2b65a0;
-  --qs-task-done: #999999;
+  --background-primary: #ffffff;
+  --background-primary-alt: #ffffff;
+  --background-secondary: #ffffff;
+  --background-secondary-alt: #ffffff;
+  --background-modifier-border: #eeeeee;
+  --background-modifier-hover: #f5f5f5;
+  --divider-color: #eeeeee;
+  --titlebar-background: #ffffff;
+  --titlebar-background-focused: #ffffff;
+  --ribbon-background: #ffffff;
+  --ribbon-background-collapsed: #ffffff;
+  --tab-container-background: #ffffff;
+  --statusbar-background: #ffffff;
 }
 
-body.theme-dark.qs-typora-enabled {
-  /* Typora Dark Palette (Night Theme) */
-  --qs-paper: #363b40;
-  --qs-sidebar: #2f3439;
-  --qs-line: #474d54;
-  --qs-selected: #454b52;
-  --qs-text: #b8bfc6;
-  --qs-muted: #9da2a6;
-  --qs-accent: #9ecbff;
-  --qs-h-color: #dedede;
-  --qs-h-border: #474d54;
-  --qs-h6-color: #9da2a6;
-  --qs-quote-border: #474d54;
-  --qs-quote-text: #9da2a6;
-  --qs-table-bg: #363b40;
-  --qs-table-border: #474d54;
-  --qs-table-th-bg: #3d4349;
-  --qs-table-alt: #3d4349;
-  --qs-code-bg: #2b3035;
-  --qs-code-border: #474d54;
-  --qs-code-text: #b8bfc6;
-  --qs-meta-border: #474d54;
-  --qs-meta-label: #9da2a6;
-  --qs-link: #9ecbff;
-  --qs-link-hover: #c6e0ff;
-  --qs-task-done: #7d858c;
-}
-
-/* Optional Accessibility: High Contrast overrides */
-body.qs-typora-enabled.qs-typora-contrast {
-  --qs-meta-label: #5f6b76;
-  --qs-quote-text: #5f6b76;
-  --qs-task-done: #5f6b76;
-  --qs-link: #005cc5;
-  --qs-link-hover: #003875;
-}
-
-body.theme-dark.qs-typora-enabled.qs-typora-contrast {
-  --qs-meta-label: #c9d1d9;
-  --qs-quote-text: #c9d1d9;
-  --qs-task-done: #c9d1d9;
-  --qs-link: #b8d7ff;
-  --qs-link-hover: #d6e8ff;
-  --qs-muted: #c9d1d9;
-}
-
-/* System Monospace Override */
-body.qs-typora-enabled.qs-typora-code-system {
-  --qs-typora-font-mono: var(--qs-typora-system-mono, var(--font-monospace, monospace));
-}
-
-/* --------------------------------------------------------------------------
-   2. Full-Window Unified White Shell (qs-typora-white-shell)
-   -------------------------------------------------------------------------- */
-
-body.qs-typora-enabled.qs-typora-white-shell {
-  --background-primary: var(--qs-paper);
-  --background-primary-alt: var(--qs-table-alt);
-  --background-secondary: var(--qs-sidebar);
-  --background-secondary-alt: var(--qs-table-alt);
-  --background-modifier-border: var(--qs-line);
-  --background-modifier-hover: var(--qs-selected);
-  --divider-color: var(--qs-line);
-  --titlebar-background: var(--qs-sidebar);
-  --titlebar-background-focused: var(--qs-sidebar);
-  --ribbon-background: var(--qs-sidebar);
-  --tab-container-background: var(--qs-sidebar);
-  --statusbar-background: var(--qs-sidebar);
-}
-
+/* Typora's github theme keeps the sidebar at #fafafa and the paper at #ffffff. */
 body.qs-typora-enabled.qs-typora-white-shell :is(
   .workspace-split.mod-left-split,
   .workspace-split.mod-right-split,
@@ -121,317 +38,377 @@ body.qs-typora-enabled.qs-typora-white-shell :is(
   .nav-files-container,
   .vault-profile,
   .titlebar
-) {
-  background-color: var(--qs-sidebar);
-}
+) { background-color: #fafafa; }
 
 body.qs-typora-enabled.qs-typora-white-shell :is(
   .workspace,
   .workspace-tabs .workspace-leaf,
   .workspace-leaf-content,
   .view-content
-) {
-  background-color: var(--qs-paper);
-}
+) { background-color: #ffffff; }
 
-body.qs-typora-enabled.qs-typora-white-shell .workspace-leaf-content[data-type="canvas"] {
-  background-color: var(--qs-paper);
-}
-
-body.qs-typora-enabled.qs-typora-white-shell :is(.workspace-ribbon, .mod-sidedock, .workspace-tab-header-container, .view-header) {
-  border-color: var(--qs-line);
-}
+body.qs-typora-enabled.qs-typora-white-shell :is(.workspace-ribbon, .mod-sidedock, .workspace-tab-header-container, .view-header) { border-color: #eeeeee; }
 
 body.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title.is-active, .nav-folder-title.is-active) {
-  background-color: var(--qs-selected);
-  color: var(--qs-text);
-}
-
-body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title.is-active, .nav-folder-title.is-active) {
-  color: #dedede;
+  background-color: #eaeaea;
+  color: #333333;
+  font-weight: 500;
+  border-radius: 4px;
+  outline: none;
+  border: none;
+  box-shadow: none;
 }
 
 body.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title:focus-visible, .nav-folder-title:focus-visible) {
-  outline: 2px solid var(--qs-accent);
+  outline: 2px solid #4183c4;
   outline-offset: -2px;
+  box-shadow: none;
 }
 
-body.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title:hover, .nav-folder-title:hover) {
-  background-color: var(--background-modifier-hover);
-}
+body.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title:hover, .nav-folder-title:hover) { background-color: #f5f5f5; }
 
 body.qs-typora-enabled.qs-typora-white-shell .status-bar {
-  background-color: var(--qs-sidebar);
-  border-color: var(--qs-line);
-  color: var(--qs-muted);
+  background-color: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 6px;
+  color: #888888;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
-/* --------------------------------------------------------------------------
-   3. Workspace Layout, Width Scaling & Gutters
-   -------------------------------------------------------------------------- */
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] {
-  container-type: inline-size;
-  container-name: qs-typora-pane;
-}
-
-/* Reading View & Live Preview side padding (30px standard, 18px on narrow split) */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller {
-  box-sizing: border-box;
-  padding: 30px;
-}
-
-@container qs-typora-pane (max-width: 640px) {
-  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home),
-  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller {
-    padding: 18px;
-  }
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-contentContainer {
-  padding: 0;
-  width: 100%;
-}
-
-/* Width scaling across reading & editing sizers */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer,
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer {
-  box-sizing: border-box;
-  width: 860px;
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0;
-}
-
-/* Viewport adaptive Typora scale: 860 / 1024 / 1200 */
-@media (min-width: 1400px) {
-  body.qs-typora-enabled:not(.qs-typora-width-fixed):not(.qs-typora-width-full) .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer,
-  body.qs-typora-enabled:not(.qs-typora-width-fixed):not(.qs-typora-width-full) .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer {
-    width: 1024px;
-  }
-}
-
-@media (min-width: 1800px) {
-  body.qs-typora-enabled:not(.qs-typora-width-fixed):not(.qs-typora-width-full) .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer,
-  body.qs-typora-enabled:not(.qs-typora-width-fixed):not(.qs-typora-width-full) .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer {
-    width: 1200px;
-  }
-}
-
-/* Fixed & Full width modes */
-body.qs-typora-enabled.qs-typora-width-fixed .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer,
-body.qs-typora-enabled.qs-typora-width-fixed .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer {
-  width: var(--qs-typora-width, 800px);
-}
-
-body.qs-typora-enabled.qs-typora-width-full .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer,
-body.qs-typora-enabled.qs-typora-width-full .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer {
-  width: 100%;
-  max-width: none;
-}
-
-/* Hide floating line numbers in Live Preview */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-gutters {
-  display: none;
-}
-
-/* Hide top inline title */
-body.qs-typora-enabled.qs-typora-hide-title .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .inline-title {
-  display: none;
-}
-
-/* --------------------------------------------------------------------------
-   4. Markdown Core Typography (Reading View & Live Preview)
-   -------------------------------------------------------------------------- */
-
+/* 2. Markdown Content Typography (Typora GitHub Theme Specs) */
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
-  font-family: var(--qs-typora-font-body);
+  --font-text: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SF Pro", sans-serif;
+  --font-text-size: var(--qs-typora-font-size, 16px);
+  --font-monospace: "Lucida Console", Consolas, "Courier", monospace;
+  --line-height-normal: var(--qs-typora-line-height, 1.6);
+  --file-line-width: 100%;
+  --line-width: 100%;
+  --line-width-wide: 100%;
+  --max-width: 100%;
+  --content-line-width: 100%;
+  --content-margin: 0;
+  --content-margin-start: 0;
+  --background-primary: #ffffff;
+  --background-primary-alt: #f8f8f8;
+  --background-secondary: #ffffff;
+  --background-secondary-alt: #f8f8f8;
+  --background-modifier-border: #dfe2e5;
+  --text-normal: #333333;
+  --text-muted: #777777;
+  --text-faint: #999999;
+  --text-accent: #4183c4;
+  --text-accent-hover: #2b65a0;
+  --link-color: #4183c4;
+  --link-color-hover: #2b65a0;
+  --link-external-color: #4183c4;
+  --link-external-color-hover: #2b65a0;
+  --interactive-accent: #4183c4;
+  --text-selection: #b5d6fc;
+  --h1-size: 2.25em;
+  --h2-size: 1.75em;
+  --h3-size: 1.5em;
+  --h4-size: 1.25em;
+  --h5-size: 1em;
+  --h6-size: 1em;
+  --h1-weight: 700;
+  --h2-weight: 700;
+  --h3-weight: 700;
+  --h4-weight: 700;
+  --h5-weight: 700;
+  --h6-weight: 700;
+  --h1-color: #333333;
+  --h2-color: #333333;
+  --h3-color: #333333;
+  --h4-color: #333333;
+  --h5-color: #333333;
+  --h6-color: #777777;
+  --heading-spacing: 1rem;
+  --p-spacing: 0.8em;
+  --code-background: #f3f4f4;
+  --code-normal: #333333;
+  --code-size: 0.9em;
+  --code-radius: 3px;
+  --blockquote-border-color: #dfe2e5;
+  --blockquote-border-thickness: 4px;
+  --blockquote-color: #777777;
+  --table-header-background: #f8f8f8;
+  --table-header-color: #333333;
+  --table-border-color: #dfe2e5;
+  --table-row-alt-background: #f8f8f8;
+  --table-text-size: 1em;
+  --table-cell-padding: 6px 13px;
+  --table-width: 100%;
+  --table-max-width: 100%;
+  --table-wrapper-width: 100%;
+  --container-table-width: 100%;
+  --container-table-max-width: 100%;
+  --container-table-margin: 0;
+  --table-drag-padding: 0;
+  --table-margin: 0;
+  --checkbox-color: #777777;
+  --checkbox-color-hover: #555555;
+  --checklist-done-color: #999999;
+  --list-marker-color: #333333;
+  --list-indent: 30px;
+  --metadata-background: #ffffff;
+  --metadata-border-color: #eaecef;
+  --metadata-border-radius: 8px;
+  --metadata-padding: 10px 14px;
+  --metadata-label-font-size: 12px;
+  --metadata-input-font-size: 12.5px;
+  --tag-background: #ffffff;
+  --tag-color: #4183c4;
+  --tag-border-color: #d0d7de;
+  --tag-border-width: 1px;
+  color: #333333;
+  background: #ffffff;
+  font-family: var(--font-text);
   font-size: var(--qs-typora-font-size, 16px);
   line-height: var(--qs-typora-line-height, 1.6);
-  color: var(--qs-text);
-  background-color: var(--qs-paper);
   -webkit-font-smoothing: antialiased;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) {
-  background-color: var(--qs-paper);
+/* 3. Fluid Full Width Layout (36px Left/Right Margin Like Typora #write) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) { padding: 30px 30px 100px; background-color: #ffffff; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(
+  .markdown-preview-sizer > div,
+  .markdown-preview-sizer .cm-table-widget
+) {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+  padding-inline-start: 0;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller {
-  color: var(--qs-text);
-  background-color: var(--qs-paper);
+  font-family: var(--font-text);
+  line-height: var(--qs-typora-line-height, 1.6);
+  color: #333333;
+  background-color: #ffffff;
+  padding: 30px 30px 100px;
+  overflow-x: hidden;
 }
 
-/* Title & Metadata */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-contentContainer {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(
+  .cm-content,
+  .cm-contentContainer.cm-contentContainer > .cm-content > div:not(.HyperMD-codeblock),
+  .cm-contentContainer.cm-contentContainer > .cm-content > *:not(div),
+  .cm-sizer > .inline-title,
+  .cm-sizer > .embedded-backlinks,
+  .cm-sizer > .metadata-container,
+  .cm-contentContainer.cm-contentContainer > .cm-content .cm-table-widget,
+  .cm-contentContainer.cm-contentContainer > .cm-content .el-table
+) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-inline: 0;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(
+  .cm-content,
+  .cm-contentContainer.cm-contentContainer > .cm-content > div:not(.HyperMD-codeblock):not(.HyperMD-quote):not(.HyperMD-list-line),
+  .cm-contentContainer.cm-contentContainer > .cm-content > *:not(div),
+  .cm-sizer > .inline-title,
+  .cm-sizer > .embedded-backlinks,
+  .cm-sizer > .metadata-container,
+  .cm-contentContainer.cm-contentContainer > .cm-content .cm-table-widget,
+  .cm-contentContainer.cm-contentContainer > .cm-content .el-table
+) { padding-inline-start: 0; }
+
+/* Width is applied once to the outer content sizer; children fill that sizer.
+   Typora's github theme: 860px, then 1024px at >=1400px viewport, 1200px at >=1800px. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] { container-type: inline-size; container-name: qs-typora-pane; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer, .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer) {
+  width: 100%;
+  max-width: 860px;
+  min-width: 0;
+  margin-inline: auto;
+}
+body.qs-typora-enabled.qs-typora-width-fixed .workspace-leaf-content[data-type="markdown"] :is(.markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer, .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer) { max-width: var(--qs-typora-width, 800px); }
+body.qs-typora-enabled.qs-typora-width-full .workspace-leaf-content[data-type="markdown"] :is(.markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer, .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer) { max-width: 100%; }
+@media (min-width: 1400px) {
+  body.qs-typora-enabled.qs-typora-width-typora .workspace-leaf-content[data-type="markdown"] :is(.markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer, .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer) {
+    max-width: 1024px;
+  }
+}
+@media (min-width: 1800px) {
+  body.qs-typora-enabled.qs-typora-width-typora .workspace-leaf-content[data-type="markdown"] :is(.markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer, .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer) {
+    max-width: 1200px;
+  }
+}
+
+/* 4. Hide Floating Line Numbers in Live Preview (Source Mode keeps gutters) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-gutters { display: none; }
+
+/* 5. Explicit title preference: never inspect note text or rendered headings. */
+body.qs-typora-enabled.qs-typora-hide-title .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .inline-title { display: none; }
+
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .inline-title {
-  font-weight: 700;
   font-size: 2.25em;
-  line-height: 1.25;
-  color: var(--qs-h-color);
-  border-bottom: 1px solid var(--qs-h-border);
-  margin-top: 1rem;
+  font-weight: 700;
+  color: #333333;
+  line-height: 1.2;
   margin-bottom: 1rem;
-  padding-bottom: 0.3em;
+  border-bottom: 1px solid #eeeeee;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-container {
-  background-color: var(--qs-paper);
-  border-color: var(--qs-meta-border);
-  color: var(--qs-text);
+  background-color: #ffffff;
+  border: 1px solid #eaecef;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 12.5px;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-properties-heading {
-  color: var(--qs-meta-label);
+  font-size: 12px;
+  font-weight: 600;
+  color: #888888;
+  margin-bottom: 4px;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-property-key {
-  color: var(--qs-meta-label);
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-property {
+  min-height: 26px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background-color: #ffffff;
 }
 
-/* Headings (Exact Typora: bold 700, H1 2.25em, H2 1.75em, H3 1.5em, H4 1.25em, rule line) */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h1, h2, h3, h4, h5, h6, .cm-header) {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-property-key { font-size: 12px; color: #888888; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-property-value { font-size: 12.5px; color: #333333; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-add-button {
+  font-size: 12px;
+  color: #999999;
+  margin-top: 2px;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .multi-select-pill {
+  background-color: #ffffff;
+  border: 1px solid #d0d7de;
+  color: #4183c4;
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 11.5px;
+}
+
+/* 6. Headings (Exact Typora github.css: bold 700, H1 2.25em, H2 1.75em, H3 1.5em, H4 1.25em, #eee border) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h1,h2,h3,h4,h5,h6,.cm-header) {
+  color: #333333;
   font-weight: 700;
-  line-height: 1.25;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  color: var(--qs-h-color);
+  letter-spacing: 0;
+  line-height: 1.4;
+  text-decoration: none;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h6, .cm-header-6) {
-  color: var(--qs-h6-color);
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h6, .cm-header-6) { color: #777777; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h1,h2,h3,h4,h5,h6,.cm-header) :is(code, tt, .cm-inline-code) { font-size: inherit; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(h1, h2, h3, h4, h5, h6):not(.markdown-embed :is(h1, h2, h3, h4, h5, h6)) { margin: 1rem 0; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(h1, h2):not(.markdown-embed :is(h1, h2)) { border-bottom: 1px solid #eeeeee; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h1:not(.markdown-embed h1) { font-size: 2.25em; line-height: 1.2; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h2:not(.markdown-embed h2) { font-size: 1.75em; line-height: 1.225; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h3:not(.markdown-embed h3) { font-size: 1.5em; line-height: 1.43; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h4:not(.markdown-embed h4) { font-size: 1.25em; line-height: 1.4; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(h5, h6):not(.markdown-embed :is(h5, h6)) { font-size: 1em; line-height: 1.4; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h6:not(.markdown-embed h6) { color: #777777; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line.HyperMD-header-1, .cm-line.HyperMD-header-2) { border-bottom: 1px solid #eeeeee; margin-bottom: 0.5em; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-1 { font-size: 2.25em; line-height: 1.2; padding-top: 0.4em; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-2 { font-size: 1.75em; line-height: 1.225; padding-top: 0.6em; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-3 { font-size: 1.5em; line-height: 1.43; padding-top: 0.5em; padding-bottom: 0.2em; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-4 { font-size: 1.25em; line-height: 1.4; padding-top: 0.4em; padding-bottom: 0.15em; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line.HyperMD-header-5, .cm-line.HyperMD-header-6) { font-size: 1em; line-height: 1.4; padding-top: 0.3em; padding-bottom: 0.1em; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-6 { color: #777777; }
+
+/* 7. Mermaid Diagrams: Scale Wide Diagrams to Fit Without Stretching Small Diagrams
+   Mermaid sets width="100%" and inline style="max-width: <bbox>px" on <svg>.
+   Do NOT put on svg max-width, otherwise a 320px stateDiagram stretches to 100% screen width! */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(
+  .block-language-mermaid,
+  .mermaid
+) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: visible;
+  text-align: center;
+  margin-block: 10px;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h1, h2, h3, h4, h5, h6, .cm-header) :is(code, tt, .cm-inline-code) {
-  font-size: inherit;
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .mermaid svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h1:not(.markdown-embed h1) {
-  font-size: 2.25em;
-  padding-bottom: 0;
-  border-bottom: 1px solid var(--qs-h-border);
-}
+/* 8. Blockquotes, Lists & Callouts: Typora Subtle Left Borders, Nested Rhythms & Semantic Alerts */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(p, ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *), ol:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *), blockquote, table) { margin-block: 0.8em; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h2 {
-  font-size: 1.75em;
-  padding-bottom: 0.3em;
-  border-bottom: 1px solid var(--qs-h-border);
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(ul, ol):not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) { padding-inline-start: 30px; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h3 { font-size: 1.5em; }
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h4 { font-size: 1.25em; }
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h5 { font-size: 1em; }
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h6 {
-  font-size: 1em;
-  color: var(--qs-h6-color);
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) { list-style-type: disc; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-1 {
-  font-size: 2.25em;
-  border-bottom: 1px solid var(--qs-h-border);
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) { list-style-type: circle; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-2 {
-  font-size: 1.75em;
-  border-bottom: 1px solid var(--qs-h-border);
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) { list-style-type: square; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-3 { font-size: 1.5em; }
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-4 { font-size: 1.25em; }
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-5 { font-size: 1em; }
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-6 {
-  font-size: 1em;
-  color: var(--qs-h6-color);
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) li { margin-block: 0; position: relative; }
 
-/* Strong element */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(strong, b, .cm-strong) {
-  font-weight: 700;
-  color: var(--qs-h-color);
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) li > :is(ul, ol):not(.toc-reader-list, .toc-list) { margin: 0; }
 
-/* --------------------------------------------------------------------------
-   5. Blockquotes, Lists & Callouts
-   -------------------------------------------------------------------------- */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) li p { margin: 0.5rem 0; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(p, ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *), ol:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *), blockquote, table) {
-  margin-block: 0.8em;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(blockquote, li) > :first-child { margin-top: 0; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(ul, ol):not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) {
-  padding-inline-start: 30px;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) blockquote > :last-child { margin-bottom: 0; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) {
-  list-style-type: disc;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .task-list-item { list-style-type: none; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) {
-  list-style-type: circle;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) {
-  list-style-type: square;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) li {
-  margin-block: 0;
-  position: relative;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) li > :is(ul, ol):not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) {
-  margin: 0;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) li p {
-  margin: 0.5rem 0;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(blockquote, li) > :first-child {
-  margin-top: 0;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) blockquote > :last-child {
-  margin-bottom: 0;
-}
-
-/* Tasks */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .task-list-item {
-  list-style-type: none;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) input[type="checkbox"] { cursor: pointer; border-radius: 3px; }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(li.is-checked, li.task-list-item.is-checked),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line.HyperMD-task-line[data-task="x"], .cm-line.HyperMD-task-line[data-task="X"], .cm-line.HyperMD-task-line.is-checked) {
-  color: var(--qs-task-done);
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line.HyperMD-task-line[data-task="x"], .cm-line.HyperMD-task-line[data-task="X"], .cm-line.HyperMD-task-line.is-checked) { color: var(--checklist-done-color, #999999); }
 
-/* Blockquotes */
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) blockquote {
-  border-left: 4px solid var(--qs-quote-border);
+  border-left: 4px solid #dfe2e5;
   padding: 0 15px;
-  color: var(--qs-quote-text);
+  color: #777777;
   background-color: transparent;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-quote {
-  border-left: 4px solid var(--qs-quote-border);
+  border-left: 4px solid #dfe2e5;
   padding-inline: 15px;
-  color: var(--qs-quote-text);
+  color: #777777;
   background-color: transparent;
 }
 
-/* Callouts */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .cm-embed-block.cm-callout { padding: 0; margin-block: 0.8em; }
+
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout {
   background-color: transparent;
   border: 0;
-  border-left: 4px solid var(--qs-quote-border);
+  border-left: 4px solid #dfe2e5;
   border-left-color: rgb(var(--callout-color, 223, 226, 229));
   border-radius: 0;
   box-shadow: none;
   padding: 2px 15px;
   margin: 0.8em 0;
-  color: var(--qs-text);
+  color: #333333;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-title {
@@ -452,49 +429,41 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-content {
-  color: var(--qs-text);
+  color: #333333;
   padding: 0;
   background: transparent;
 }
 
-/* Links */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(a:not(.tag), .internal-link, .external-link, .cm-link, .cm-hmd-internal-link) {
-  color: var(--qs-link);
-  text-decoration: none;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-content > p { margin-block: 0.3em; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(a:not(.tag), .internal-link, .external-link, .cm-link, .cm-hmd-internal-link):hover {
-  color: var(--qs-link-hover);
-  text-decoration: underline;
-}
+/* Links: Typora quiet links (no underline by default, underline on hover) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(a:not(.tag), .internal-link, .external-link, .cm-link, .cm-hmd-internal-link) { color: var(--link-color, #4183c4); text-decoration: none; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(a.is-unresolved, .cm-hmd-internal-link.is-unresolved) {
-  opacity: 0.65;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(a:not(.tag), .internal-link, .external-link, .cm-link, .cm-hmd-internal-link):hover { color: var(--link-color-hover, #2b65a0); text-decoration: underline; }
 
-/* --------------------------------------------------------------------------
-   6. Tables & Subtle Hover Scrollbars
-   -------------------------------------------------------------------------- */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(a.is-unresolved, .cm-hmd-internal-link.is-unresolved) { opacity: 0.65; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(table, th, td, .bases-td, .metadata-container) {
-  font-variant-numeric: tabular-nums;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(a.url, .external-link) { word-break: break-all; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.cm-embed-block.cm-table-widget, .el-table, .table-wrapper) {
+/* 9. Tables (Typora github.css: 1em font-size, 6px 13px padding, 1px solid #dfe2e5, #f8f8f8 even rows & thead, local horizontal scrolling) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(
+  .cm-embed-block.cm-table-widget,
+  .el-table,
+  .table-wrapper
+) {
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-embed-block.cm-table-widget {
-  overflow: visible;
-}
+/* Live editor controls extend beyond the table. Keep one scroll container,
+   with an inner gutter for the native row/column handles and add buttons. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-embed-block.cm-table-widget { overflow: visible; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-table-widget > .table-wrapper {
-  box-sizing: border-box;
-  padding: 20px;
-}
+/* Keep a 20px inner gutter so the native row/column handles stay clickable.
+   Reading view tables have no handles and align with the text. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-table-widget > .table-wrapper { box-sizing: border-box; padding: 20px; }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) table {
   width: 100%;
@@ -502,281 +471,135 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
   box-sizing: border-box;
   border-collapse: collapse;
   font-size: 1em;
-  background-color: var(--qs-table-bg);
+  background-color: #ffffff;
   overflow: visible;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(th, td) {
-  border: 1px solid var(--qs-table-border);
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(th,td) {
+  border: 1px solid #dfe2e5;
   text-align: start;
   min-width: 32px;
   overflow-wrap: break-word;
   word-break: normal;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(th, td) {
-  padding: 6px 13px;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(th,td) { padding: 6px 13px; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-table-widget :is(th, td) {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-table-widget :is(th,td) { padding: 0; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .cm-table-widget .table-cell-wrapper { padding: 6px 13px; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-table-widget .table-cell-wrapper :is(
+  .cm-editor,
+  .cm-scroller,
+  .cm-sizer,
+  .cm-contentContainer,
+  .cm-content,
+  .cm-line
+) {
   padding: 0;
+  margin: 0;
+  min-height: 0;
+  background-color: transparent;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) thead th {
-  background-color: var(--qs-table-th-bg);
+/* Preserve Markdown alignment */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(th,td)[align="left"] { text-align: left; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(th,td)[align="center"] { text-align: center; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(th,td)[align="right"] { text-align: right; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(thead, th) {
+  background-color: #f8f8f8;
   font-weight: 700;
-  color: var(--qs-h-color);
+  color: #333333;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) tbody tr:nth-child(2n) td {
-  background-color: var(--qs-table-alt);
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) tbody tr:nth-child(odd) td { background-color: #ffffff; }
 
-/* Subtle 6px hover scrollbars for tables & code blocks */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.el-table, .table-wrapper, pre, pre code)::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) tbody tr:nth-child(even) td { background-color: #f8f8f8; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.el-table, .table-wrapper, pre, pre code)::-webkit-scrollbar-track {
-  background: transparent;
-}
+/* 10. Inline Code & Code Blocks (Typora github.css: #f3f4f4 bg, 1px solid #e7eaed, 3px radius, inherit text color) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) code, .markdown-source-view.mod-cm6.is-live-preview .cm-inline-code) { font-family: var(--font-monospace); font-size: 0.9em; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.el-table, .table-wrapper, pre, pre code)::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 999px;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.el-table:hover, .table-wrapper:hover, pre:hover, pre:hover code)::-webkit-scrollbar-thumb {
-  background: rgba(136, 142, 150, 0.38);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.el-table, .table-wrapper, pre, pre code)::-webkit-scrollbar-thumb:hover {
-  background: rgba(136, 142, 150, 0.65);
-}
-
-/* --------------------------------------------------------------------------
-   7. Code Blocks, Inline Code & Syntax Highlighting
-   -------------------------------------------------------------------------- */
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(pre, code, kbd, samp, tt, .cm-inline-code, .cm-line.HyperMD-codeblock) {
-  font-family: var(--qs-typora-font-mono);
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) :not(pre) > code, .markdown-source-view.mod-cm6.is-live-preview .cm-inline-code) {
+  background-color: #f3f4f4;
+  border: 1px solid #e7eaed;
+  border-radius: 3px;
+  padding: 0 2px;
+  color: inherit;
+  overflow-wrap: anywhere;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre {
-  background-color: var(--qs-code-bg);
-  border: 1px solid var(--qs-code-border);
+  background-color: #f8f8f8;
+  border: 1px solid #e7eaed;
   border-radius: 3px;
   padding: 8px 8px 6px;
   margin: 15px 0;
-  font-size: 14.4px;
-  line-height: 23.04px;
-  white-space: pre-wrap;
-  word-break: normal;
-  overflow-wrap: break-word;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre code {
-  background: transparent;
-  border: 0;
-  padding: 0;
-  font-size: 14.4px;
-  color: var(--qs-code-text);
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) p code,
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-inline-code {
-  background-color: var(--qs-code-bg);
-  border: 1px solid var(--qs-code-border);
-  border-radius: 3px;
-  padding: 0px 2px;
+  overflow-x: auto;
   font-size: 0.9em;
-  color: var(--qs-code-text);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
-/* Live Preview fenced code lines */
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock {
-  background-color: var(--qs-code-bg);
-  font-size: 14.4px;
-  line-height: 23.04px;
-  color: var(--qs-code-text);
+  background-color: #f8f8f8;
+  font-family: var(--font-monospace);
+  font-size: 0.9em;
+  line-height: 1.6;
+  color: #333333;
   padding-left: 8px;
   padding-right: 8px;
-  box-shadow: inset 1px 0 var(--qs-code-border), inset -1px 0 var(--qs-code-border);
+  box-shadow: inset 1px 0 #e7eaed, inset -1px 0 #e7eaed;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-begin {
   padding-top: 8px;
   border-radius: 3px 3px 0 0;
-  box-shadow: inset 1px 0 var(--qs-code-border), inset -1px 0 var(--qs-code-border), inset 0 1px var(--qs-code-border);
+  box-shadow: inset 1px 0 #e7eaed, inset -1px 0 #e7eaed, inset 0 1px #e7eaed;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-end {
   padding-bottom: 6px;
   border-radius: 0 0 3px 3px;
-  box-shadow: inset 1px 0 var(--qs-code-border), inset -1px 0 var(--qs-code-border), inset 0 -1px var(--qs-code-border);
+  box-shadow: inset 1px 0 #e7eaed, inset -1px 0 #e7eaed, inset 0 -1px #e7eaed;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-begin.HyperMD-codeblock-end {
-  border-radius: 3px;
-  box-shadow: inset 1px 0 var(--qs-code-border), inset -1px 0 var(--qs-code-border), inset 0 1px var(--qs-code-border), inset 0 -1px var(--qs-code-border);
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-begin.HyperMD-codeblock-end { border-radius: 3px; box-shadow: inset 1px 0 #e7eaed, inset -1px 0 #e7eaed, inset 0 1px #e7eaed, inset 0 -1px #e7eaed; }
 
-/* Syntax Palettes: Compact Grouping */
-/* Light Mode cm-s-inner Syntax */
-body.qs-typora-enabled:not(.theme-dark) .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock) {
-  --token-keyword: #708;
-  --token-def: #00f;
-  --token-variable: #000;
-  --token-tag: #170;
-  --token-attr: #00c;
-  --token-string: #a11;
-  --token-comment: #a50;
-  --token-builtin: #30a;
-  --token-meta: #555;
-  --token-punctuation: #333;
-}
-
-/* Dark Mode GitHub Dark Syntax */
-body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock) {
-  --token-keyword: #ff7b72;
-  --token-def: #d2a8ff;
-  --token-variable: #c9d1d9;
-  --token-tag: #7ee787;
-  --token-attr: #79c0ff;
-  --token-string: #a5d6ff;
-  --token-comment: #8b949e;
-  --token-builtin: #ffa657;
-  --token-meta: #79c0ff;
-  --token-punctuation: #c9d1d9;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.keyword, .token.control-flow, .token.atrule),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-keyword) {
-  color: var(--token-keyword);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.function, .token.class-name),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-def) {
-  color: var(--token-def);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.string, .token.char),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-string) {
-  color: var(--token-string);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.comment, .token.prolog),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-comment) {
-  color: var(--token-comment);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.tag, .token.selector),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-tag) {
-  color: var(--token-tag);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.attr-name),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-attribute) {
-  color: var(--token-attr);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.builtin),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-builtin) {
-  color: var(--token-builtin);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.meta, .token.entity),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-meta, .cm-qualifier) {
-  color: var(--token-meta);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.punctuation) {
-  color: var(--token-punctuation);
-}
-
-/* --------------------------------------------------------------------------
-   8. Inline Elements, Media Containment & Special Widgets
-   -------------------------------------------------------------------------- */
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) mark,
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-highlight {
-  background-color: #ffff00;
-  color: #000000;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) kbd {
-  margin: 0 0.1em;
-  padding: 0.1em 0.6em;
-  font-family: var(--font-monospace);
-  font-size: 0.8em;
-  color: #242729;
-  background-color: #f7f7f7;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
-  border-style: solid;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .footnotes {
-  font-size: 14.4px;
-  opacity: 0.8;
-  color: var(--qs-muted);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) sup.footnote-ref a {
-  color: rgb(85, 85, 85);
-  text-decoration: none;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] ::selection,
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .cm-selectionBackground {
-  background: var(--text-selection, #b5d6fc);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) hr, .markdown-source-view.mod-cm6.is-live-preview .hr) {
-  height: 2px;
-  background-color: var(--qs-line);
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) pre code:not(.cm-inline-code) {
+  background: transparent;
   border: 0;
-  margin-block: 16px;
+  padding: 0;
+  font-size: 1em;
+  color: #333333;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6 .cm-line.HyperMD-hr {
-  border: none;
-}
-
-/* Math block */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.math-block, .cm-math.cm-embed-block) {
-  display: block;
-  width: 100%;
-  margin: 1rem 0;
-  overflow-x: auto;
-  text-align: center;
-  padding: 4px 0;
-}
-
-/* Mermaid diagrams */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .mermaid {
-  max-width: 100%;
-  min-width: 0;
-  overflow: visible;
-  text-align: center;
-  margin-block: 10px;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .mermaid svg {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-/* Multimedia containment & centering */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.image-embed, .video-embed, .audio-embed) {
-  max-width: 100%;
-}
+/* 10b. Typora's fence syntax palette (codemirror.css .cm-s-inner). Only code
+   blocks are recoloured; inline code and the rest of the theme stay untouched. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.keyword, .token.control-flow, .token.atrule), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-keyword) { color: #708; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.function, .token.class-name, .token.parameter), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-def, .cm-header)) { color: #00f; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.variable-2, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-variable-2) { color: #05a; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.variable-3, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-variable-3) { color: #085; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.comment, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-comment) { color: #a50; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.operator, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-operator) { color: #981a1a; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.number, .token.inserted), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-number) { color: #164; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.string, .token.char, .token.attr-value, .token.url, .token.deleted), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-string) { color: #a11; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.regex, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-string-2) { color: #f50; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.boolean, .token.constant, .token.atom), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-atom) { color: #219; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.property, .token.variable), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-property) { color: #000; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.tag, .token.selector), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-tag) { color: #170; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.attr-name, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-attribute) { color: #00c; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.builtin, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-builtin) { color: #30a; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.meta, .token.entity), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-meta, .cm-qualifier)) { color: #555; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre .token.punctuation { color: #333; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-hr { color: #999; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-bracket { color: #997; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-quote { color: #090; }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(img, video) {
   max-width: 100%;
@@ -792,60 +615,318 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-s
   margin: 1.2em auto;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .image-embed img,
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .video-embed video {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 4px;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .audio-embed audio {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.math-block, .cm-math.cm-embed-block) {
+  display: block;
   width: 100%;
-  max-width: 520px;
+  margin: 1rem 0;
+  overflow-x: auto;
+  text-align: center;
+  padding: 4px 0;
 }
 
-/* Details & Summary */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) details {
-  margin: 0.8em 0;
-  padding: 8px 14px;
-  border: 1px solid var(--qs-table-border);
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.math-inline, .cm-inline-math) { font-size: 1rem; vertical-align: baseline; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] ::selection,
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .cm-selectionBackground { background: var(--text-selection, #b5d6fc); }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) hr, .markdown-source-view.mod-cm6.is-live-preview .hr) {
+  height: 2px;
+  background-color: #e7e7e7;
+  border: 0;
+  margin-block: 16px;
+}
+
+.qs-typora-settings-description {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  line-height: 1.7;
+}
+
+/* 11. Typora Inline Elements: mark, kbd, footnotes and print. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) mark,
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-highlight { background-color: #ffff00; color: #000000; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) kbd {
+  margin: 0 0.1em;
+  padding: 0.1em 0.6em;
+  font-family: var(--font-monospace);
+  font-size: 0.8em;
+  color: #242729;
+  background-color: #ffffff;
+  border: 1px solid #adb3b9;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(12, 13, 14, 0.2), 0 0 0 2px #ffffff inset;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) .footnotes {
+  opacity: 0.8;
+  font-size: 0.9rem;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) .footnotes li { margin-block: 0.2em; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(sup.footnote-ref a, sup.footnote-ref a:hover):not(.tag) {
+  padding: 2px 4px;
+  background-color: rgba(238, 238, 238, 0.7);
+  color: #555555;
   border-radius: 4px;
-  background-color: transparent;
+  text-decoration: none;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) details > summary {
-  cursor: pointer;
-  font-weight: 600;
-  color: var(--qs-h-color);
-  outline: none;
-  user-select: none;
+/* Obsidian transclusions are not Typora pages: keep the host page margins out of the embed. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .markdown-embed .markdown-preview-view {
+  padding: 0;
+  /* Obsidian's own transclusion scale; the page's 2.25em H1 must not leak in. */
+  --h1-size: 1.125em;
+  --h2-size: 1.05em;
+  --h3-size: 1em;
+  --h4-size: 0.9em;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) details[open] > summary {
-  margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--qs-line);
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-embed .markdown-preview-view > .markdown-preview-sizer { width: 100%; max-width: 100%; }
+
+/* 12. Code font: Typora's stack or the user's Obsidian monospace. */
+body.qs-typora-enabled.qs-typora-code-system .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) { --font-monospace: var(--qs-typora-system-mono, monospace); }
+
+/* 13. Dark mode: Typora night palette with the same metrics. */
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell {
+  --qs-paper: #363b40;
+  --qs-sidebar: #2f3439;
+  --qs-line: #474d54;
+  --qs-selected: #454b52;
+  --qs-text: #b8bfc6;
+  --qs-muted: #9da2a6;
+  --qs-accent: #9ecbff;
+  --background-primary: #363b40;
+  --background-primary-alt: #3d4349;
+  --background-secondary: #2f3439;
+  --background-secondary-alt: #3d4349;
+  --background-modifier-border: #474d54;
+  --background-modifier-hover: #3d4349;
+  --divider-color: #474d54;
+  --titlebar-background: #2f3439;
+  --titlebar-background-focused: #2f3439;
+  --ribbon-background: #2f3439;
+  --ribbon-background-collapsed: #2f3439;
+  --tab-container-background: #2f3439;
+  --statusbar-background: #2f3439;
 }
 
-/* Subscript & Superscript */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(sub, sup) {
-  font-size: 0.75em;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline;
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(
+  .workspace-split.mod-left-split,
+  .workspace-split.mod-right-split,
+  .mod-sidedock,
+  .workspace-ribbon,
+  .workspace-tab-header-container,
+  .view-header,
+  .nav-header,
+  .nav-files-container,
+  .vault-profile,
+  .titlebar
+) { background-color: #2f3439; }
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(
+  .workspace,
+  .workspace-tabs .workspace-leaf,
+  .workspace-leaf-content,
+  .view-content
+) { background-color: #363b40; }
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(.workspace-ribbon, .mod-sidedock, .workspace-tab-header-container, .view-header) { border-color: #474d54; }
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title.is-active, .nav-folder-title.is-active) { background-color: #454b52; color: #dedede; }
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title:focus-visible, .nav-folder-title:focus-visible) { outline-color: #9ecbff; }
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title:hover, .nav-folder-title:hover) { background-color: #3d4349; }
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell .status-bar {
+  background-color: #2f3439;
+  border-color: #474d54;
+  color: #9da2a6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] sup { top: -0.5em; }
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] sub { bottom: -0.25em; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
+  --background-primary: #363b40;
+  --background-primary-alt: #3d4349;
+  --background-secondary: #363b40;
+  --background-secondary-alt: #3d4349;
+  --background-modifier-border: #474d54;
+  --text-normal: #b8bfc6;
+  --text-muted: #9da2a6;
+  --text-faint: #7d858c;
+  --text-accent: #9ecbff;
+  --text-accent-hover: #c6e0ff;
+  --link-color: #9ecbff;
+  --link-color-hover: #c6e0ff;
+  --link-external-color: #9ecbff;
+  --link-external-color-hover: #c6e0ff;
+  --interactive-accent: #9ecbff;
+  --text-selection: #3f566e;
+  --h1-color: #dedede;
+  --h2-color: #dedede;
+  --h3-color: #dedede;
+  --h4-color: #dedede;
+  --h5-color: #dedede;
+  --h6-color: #9da2a6;
+  --code-background: #2b3035;
+  --code-normal: #c9d1d9;
+  --blockquote-border-color: #474d54;
+  --blockquote-color: #9da2a6;
+  --table-header-background: #3d4349;
+  --table-header-color: #dedede;
+  --table-border-color: #474d54;
+  --table-row-alt-background: #3d4349;
+  --checkbox-color: #9da2a6;
+  --checkbox-color-hover: #b8bfc6;
+  --checklist-done-color: #7d858c;
+  --list-marker-color: #b8bfc6;
+  --metadata-background: #363b40;
+  --metadata-border-color: #474d54;
+  --tag-background: #363b40;
+  --tag-color: #9ecbff;
+  --tag-border-color: #474d54;
+  color: #b8bfc6;
+  background: #363b40;
+}
 
-/* --------------------------------------------------------------------------
-   9. Typora Features (PDF Export, Paragraph Indent, TOC, Outline)
-   -------------------------------------------------------------------------- */
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-reading-view > .markdown-preview-view:not(.qs-home), :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.metadata-property, table)) { background-color: #363b40; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller { color: #b8bfc6; background-color: #363b40; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .inline-title { color: #dedede; border-bottom-color: #474d54; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-container { background-color: #363b40; border-color: #474d54; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.metadata-properties-heading, .metadata-property-key, h6, .cm-header-6, .cm-line.HyperMD-header-6) { color: #9da2a6; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-property-value { color: #b8bfc6; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-add-button { color: #7d858c; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .multi-select-pill { background-color: #363b40; border-color: #474d54; color: #9ecbff; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h1,h2,h3,h4,h5,.cm-header, :is(strong, b, dt, .cm-strong):not(a *, .cm-link *, .cm-hmd-internal-link *, .callout-title *)) { color: #dedede; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) :is(li.is-checked, li.task-list-item.is-checked), .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line.HyperMD-task-line[data-task="x"], .cm-line.HyperMD-task-line[data-task="X"], .cm-line.HyperMD-task-line.is-checked)) { color: var(--checklist-done-color, #7d858c); }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) :is(h1,h2):not(.markdown-embed h1):not(.markdown-embed h2), .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line.HyperMD-header-1, .cm-line.HyperMD-header-2)) { border-bottom-color: #474d54; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) blockquote, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-quote) { border-left-color: #474d54; color: #9da2a6; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout { border-left-color: rgb(var(--callout-color, 71, 77, 84)); color: #b8bfc6; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.callout-title, .callout-icon) { color: rgb(var(--callout-color, 157, 162, 166)); }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-content { color: #b8bfc6; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(th,td) { border-color: #474d54; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(thead, th) { background-color: #3d4349; color: #dedede; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) tbody tr:nth-child(odd) td { background-color: #363b40; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) tbody tr:nth-child(even) td { background-color: #3d4349; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) :not(pre) > code, .markdown-source-view.mod-cm6.is-live-preview .cm-inline-code, .markdown-preview-view:not(.qs-home) pre) { background-color: #2b3035; border-color: #474d54; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) pre code:not(.cm-inline-code) { color: #c9d1d9; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock { background-color: #2b3035; color: #c9d1d9; box-shadow: inset 1px 0 #474d54, inset -1px 0 #474d54; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-begin { box-shadow: inset 1px 0 #474d54, inset -1px 0 #474d54, inset 0 1px #474d54; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-end { box-shadow: inset 1px 0 #474d54, inset -1px 0 #474d54, inset 0 -1px #474d54; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-begin.HyperMD-codeblock-end { box-shadow: inset 1px 0 #474d54, inset -1px 0 #474d54, inset 0 1px #474d54, inset 0 -1px #474d54; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) hr, .markdown-source-view.mod-cm6.is-live-preview .hr) { background-color: #474d54; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) mark, .markdown-source-view.mod-cm6.is-live-preview :is(mark, .cm-highlight)) { background-color: #d3d40e; color: #000000; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) kbd { color: #d0d6dc; background-color: #2b3035; border-color: #5a626a; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4), 0 0 0 2px #2b3035 inset; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(sup.footnote-ref a, sup.footnote-ref a:hover):not(.tag) { background-color: rgba(255, 255, 255, 0.08); color: #b8bfc6; }
 
-/* Native PDF Export (.print > .markdown-preview-view) */
+/* 13b. Dark syntax palette (GitHub Dark). */
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.keyword, .token.control-flow, .token.atrule, .token.operator), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-keyword, .cm-operator)) { color: #ff7b72; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.function, .token.class-name), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-def) { color: #d2a8ff; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.parameter, .token.variable-2, .token.number, .token.boolean, .token.constant, .token.atom, .token.attr-name), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-variable-2, .cm-number, .cm-atom, .cm-attribute, .cm-header)) { color: #79c0ff; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.variable-3, .token.tag, .token.selector, .token.inserted), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-variable-3, .cm-tag, .cm-quote)) { color: #7ee787; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.comment, .token.meta, .token.entity), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-comment, .cm-meta, .cm-qualifier, .cm-hr)) { color: #8b949e; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.string, .token.char, .token.attr-value, .token.url, .token.regex), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-string, .cm-string-2)) { color: #a5d6ff; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.property, .token.variable, .token.punctuation), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-property, .cm-bracket)) { color: #c9d1d9; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.builtin, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-builtin) { color: #ffa657; }
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) pre .token.deleted { color: #ffa198; }
+
+/* 14. Optional AA contrast: off by default so the Typora palette stays intact. */
+body.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
+  --text-muted: #5f6b76;
+  --text-faint: #6a737d;
+  --text-accent: #2f6f9f;
+  --text-accent-hover: #245a82;
+  --link-color: #2f6f9f;
+  --link-color-hover: #245a82;
+  --link-external-color: #2f6f9f;
+  --link-external-color-hover: #245a82;
+  --blockquote-color: #5f6b76;
+  --checklist-done-color: #5f6b76;
+}
+
+body.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(
+  h6,
+  .cm-header-6,
+  .cm-line.HyperMD-header-6,
+  blockquote,
+  .cm-line.HyperMD-quote,
+  .metadata-properties-heading,
+  .metadata-property-key,
+  .metadata-add-button
+) { color: #5f6b76; }
+
+body.qs-typora-enabled.qs-typora-contrast.qs-typora-white-shell .status-bar { color: #5f6b76; }
+
+body.theme-dark.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
+  --text-muted: #c9d1d9;
+  --text-faint: #b8bfc6;
+  --text-accent: #b8d7ff;
+  --text-accent-hover: #d6e8ff;
+  --link-color: #b8d7ff;
+  --link-color-hover: #d6e8ff;
+  --link-external-color: #b8d7ff;
+  --link-external-color-hover: #d6e8ff;
+  --blockquote-color: #c9d1d9;
+  --checklist-done-color: #b8bfc6;
+}
+
+body.theme-dark.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(
+  h6,
+  .cm-header-6,
+  .cm-line.HyperMD-header-6,
+  blockquote,
+  .cm-line.HyperMD-quote,
+  .metadata-properties-heading,
+  .metadata-property-key,
+  .metadata-add-button
+) { color: #c9d1d9; }
+
+body.theme-dark.qs-typora-enabled.qs-typora-contrast.qs-typora-white-shell .status-bar { color: #c9d1d9; }
+
+@media print {
+  @page {
+    margin: 16mm 0;
+  }
+
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) {
+    padding: 0;
+    font-size: 13px;
+  }
+
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer {
+    max-width: none;
+  }
+
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre {
+    page-break-inside: avoid;
+    white-space: pre-wrap;
+  }
+
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(pre, blockquote, table, .callout) {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(h1, h2, h3, h4, h5, h6) {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+}
+
+/* ==========================================================================
+   Native PDF Export (.print > .markdown-preview-view)
+   (Absorbed from ParaFlow REA audit: Obsidian PDF export mounts directly
+    under body > .print > .markdown-preview-view without a workspace-leaf)
+   ========================================================================== */
+
 body.qs-typora-enabled .print > .markdown-preview-view {
-  font-family: var(--qs-typora-font-body);
+  font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, 'Segoe UI Emoji', sans-serif;
   font-size: 16px;
   line-height: 1.6;
   color: #333333;
@@ -855,7 +936,7 @@ body.qs-typora-enabled .print > .markdown-preview-view {
 
 body.qs-typora-enabled .print > .markdown-preview-view :is(h1, h2, h3, h4, h5, h6) {
   color: #333333;
-  font-weight: 700;
+  font-weight: bold;
   line-height: 1.25;
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -895,19 +976,11 @@ body.qs-typora-enabled .print > .markdown-preview-view table {
   font-variant-numeric: tabular-nums;
 }
 
-body.qs-typora-enabled .print > .markdown-preview-view :is(th, td) {
-  border: 1px solid #dfe2e5;
-  padding: 6px 13px;
-}
+body.qs-typora-enabled .print > .markdown-preview-view :is(th, td) { border: 1px solid #dfe2e5; padding: 6px 13px; }
 
-body.qs-typora-enabled .print > .markdown-preview-view thead th {
-  background-color: #f8f8f8;
-  font-weight: 700;
-}
+body.qs-typora-enabled .print > .markdown-preview-view thead th { background-color: #f8f8f8; font-weight: 700; }
 
-body.qs-typora-enabled .print > .markdown-preview-view tbody tr:nth-child(2n) td {
-  background-color: #f8f8f8;
-}
+body.qs-typora-enabled .print > .markdown-preview-view tbody tr:nth-child(2n) td { background-color: #f8f8f8; }
 
 body.qs-typora-enabled .print > .markdown-preview-view pre {
   background-color: #f8f8f8;
@@ -948,74 +1021,39 @@ body.qs-typora-enabled .print > .markdown-preview-view .callout-title {
   margin-bottom: 0.2em;
 }
 
-body.qs-typora-enabled .print > .markdown-preview-view .callout-content {
-  color: #333333;
-}
+body.qs-typora-enabled .print > .markdown-preview-view .callout-content { color: #333333; }
 
-body.qs-typora-enabled .print > .markdown-preview-view :is(pre, blockquote, table, .callout) {
-  break-inside: avoid;
-  page-break-inside: avoid;
-}
+body.qs-typora-enabled .print > .markdown-preview-view :is(pre, blockquote, table, .callout) { break-inside: avoid; page-break-inside: avoid; }
 
-body.qs-typora-enabled .print > .markdown-preview-view :is(ul, ol):not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) {
-  padding-inline-start: 30px;
-  margin-block: 0.8em;
-}
+body.qs-typora-enabled .print > .markdown-preview-view :is(ul, ol):not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) { padding-inline-start: 30px; margin-block: 0.8em; }
 
-body.qs-typora-enabled .print > .markdown-preview-view ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) {
-  list-style-type: disc;
-}
+body.qs-typora-enabled .print > .markdown-preview-view ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) { list-style-type: disc; }
 
-body.qs-typora-enabled .print > .markdown-preview-view ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) {
-  list-style-type: circle;
-}
+body.qs-typora-enabled .print > .markdown-preview-view ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) { list-style-type: circle; }
 
-body.qs-typora-enabled .print > .markdown-preview-view ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list):not(.toc-list):not(:is(.toc-reader, .toc, .block-language-toc) *) {
-  list-style-type: square;
-}
+body.qs-typora-enabled .print > .markdown-preview-view ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) ul:not(.toc-reader-list, .toc-list, :is(.toc-reader, .toc, .block-language-toc) *) { list-style-type: square; }
 
-body.qs-typora-enabled .print > .markdown-preview-view .task-list-item {
-  list-style-type: none;
-}
+body.qs-typora-enabled .print > .markdown-preview-view .task-list-item { list-style-type: none; }
 
-body.qs-typora-enabled .print > .markdown-preview-view :is(a:not(.tag), .internal-link, .external-link) {
-  color: #4183c4;
-  text-decoration: none;
-}
+body.qs-typora-enabled .print > .markdown-preview-view :is(a:not(.tag), .internal-link, .external-link) { color: #4183c4; text-decoration: none; }
 
-body.qs-typora-enabled .print > .markdown-preview-view mark {
-  background-color: #ffff00;
-  color: #000000;
-}
+body.qs-typora-enabled .print > .markdown-preview-view mark { background-color: #ffff00; color: #000000; }
 
-@media print {
-  @page { margin: 16mm 0; }
-  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) {
-    padding: 0;
-    font-size: 13px;
-  }
-  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer {
-    max-width: none;
-  }
-  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(pre, blockquote, table, .callout) {
-    break-inside: avoid;
-    page-break-inside: avoid;
-    white-space: pre-wrap;
-  }
-}
+/* ==========================================================================
+   Optional First-Line Paragraph Indent (2em, body.qs-typora-indent)
+   (Absorbed from ParaFlow: strictly targets prose paragraphs only)
+   ========================================================================== */
 
-/* Optional First-Line Paragraph Indent (2em, body.qs-typora-indent) */
-body.qs-typora-enabled.qs-typora-indent .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) .markdown-preview-sizer > div > p:not(:has(> img, > .image-embed, > .video-embed, > .audio-embed)),
-body.qs-typora-enabled.qs-typora-indent .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) .markdown-preview-sizer > p:not(:has(> img, > .image-embed, > .video-embed, > .audio-embed)),
-body.qs-typora-enabled.qs-typora-indent .print > .markdown-preview-view p:not(blockquote p):not(.callout p):not(li p):not(td p):not(th p):not(:has(> img, > .image-embed, > .video-embed, > .audio-embed)) {
-  text-indent: 2em;
-}
+body.qs-typora-enabled.qs-typora-indent .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(.markdown-preview-sizer > div, .markdown-preview-sizer) > p:not(:has(> img, > .image-embed, > .video-embed, > .audio-embed)),
+body.qs-typora-enabled.qs-typora-indent .print > .markdown-preview-view p:not(blockquote p, .callout p, li p, td p, th p):not(:has(> img, > .image-embed, > .video-embed, > .audio-embed)),
+body.qs-typora-enabled.qs-typora-indent .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-content > .cm-line:not(.HyperMD-header, .HyperMD-list-line, .HyperMD-quote, .HyperMD-codeblock, [class*="HyperMD-table"], .HyperMD-hr, .HyperMD-callout, [class*="HyperMD-frontmatter"], .HyperMD-footnote, .cm-math):not(:has(> img, > .image-embed, > .video-embed, > .audio-embed, > .cm-embed-block)) { text-indent: 2em; }
 
-body.qs-typora-enabled.qs-typora-indent .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-content > .cm-line:not(.HyperMD-header):not(.HyperMD-list-line):not(.HyperMD-quote):not(.HyperMD-codeblock):not([class*="HyperMD-table"]):not(.HyperMD-hr):not(.HyperMD-callout):not([class*="HyperMD-frontmatter"]):not(.HyperMD-footnote):not(.cm-math):not(:has(> img, > .image-embed, > .video-embed, > .audio-embed, > .cm-embed-block)) {
-  text-indent: 2em;
-}
+/* ==========================================================================
+   Typora [TOC] & TOC Reader Compatibility
+   (Absorbed from TOC Reader REA audit: prevents list bullet collision
+    and provides authentic Typora TOC hierarchy & tabular numbers)
+   ========================================================================== */
 
-/* Typora [TOC] & TOC Reader Compatibility */
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader, .toc, .block-language-toc) {
   margin: 0.8em 0;
   padding: 6px 0;
@@ -1023,19 +1061,11 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-re
   line-height: 1.65;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader, .toc, .block-language-toc) :is(ul, ol, li) {
-  list-style: none;
-  list-style-type: none;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader, .toc, .block-language-toc) :is(ul, ol, li) { list-style: none; list-style-type: none; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader, .toc, .block-language-toc) :is(ul, ol) {
-  margin: 0;
-  padding-inline-start: 18px;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader, .toc, .block-language-toc) :is(ul, ol) { margin: 0; padding-inline-start: 18px; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader > ul, .toc > ul, .block-language-toc > ul) {
-  padding-inline-start: 0;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader > ul, .toc > ul, .block-language-toc > ul) { padding-inline-start: 0; }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader, .toc, .block-language-toc) a {
   display: flex;
@@ -1043,31 +1073,99 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-re
   gap: 6px;
   padding: 2px 6px;
   border-radius: 4px;
-  color: var(--qs-link);
+  color: var(--link-color, #4183c4);
   text-decoration: none;
   transition: background-color 0.12s ease, color 0.12s ease;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader, .toc, .block-language-toc) a:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-  text-decoration: none;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader, .toc, .block-language-toc) a:hover { background-color: rgba(0, 0, 0, 0.04); text-decoration: none; }
 
-body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader, .toc, .block-language-toc) a:hover {
-  background-color: rgba(255, 255, 255, 0.06);
-}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.toc-reader, .toc, .block-language-toc) a:hover { background-color: rgba(255, 255, 255, 0.06); }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .toc-reader-num {
-  color: var(--qs-muted);
+  color: var(--text-muted, #777777);
   font-variant-numeric: tabular-nums;
   font-size: 0.9em;
   flex-shrink: 0;
 }
 
-/* Outline Panel Polish when Unified White Shell is active */
-body.qs-typora-enabled.qs-typora-white-shell .workspace-leaf-content[data-type="outline"] .view-content {
-  padding: 8px 6px;
+/* ==========================================================================
+   Tabular Numbers, Subtle Hover Scrollbars, Details/Sub/Sup & Media Polish
+   (Absorbed from Minimalism UI, ParaFlow & Custom Attachment Location)
+   ========================================================================== */
+
+/* Tabular numbers for tables, ordered lists, and metadata properties */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(table, th, td, .bases-td, .metadata-container) { font-variant-numeric: tabular-nums; }
+
+/* Subtle 6px hover scrollbars for wide tables & code blocks */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.el-table, .table-wrapper, pre, pre code)::-webkit-scrollbar { width: 6px; height: 6px; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.el-table, .table-wrapper, pre, pre code)::-webkit-scrollbar-track { background: transparent; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.el-table, .table-wrapper, pre, pre code)::-webkit-scrollbar-thumb { background: transparent; border-radius: 999px; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.el-table:hover, .table-wrapper:hover, pre:hover, pre:hover code)::-webkit-scrollbar-thumb { background: rgba(136, 142, 150, 0.38); }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.el-table, .table-wrapper, pre, pre code)::-webkit-scrollbar-thumb:hover { background: rgba(136, 142, 150, 0.65); }
+
+/* Live Preview HR single-line safeguard */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6 .cm-line.HyperMD-hr { border: none; }
+
+/* Callout list item color inheritance in dark & light themes */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .callout-content :is(li, p) { color: inherit; }
+
+/* Quiet 1px focus border on metadata properties */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .metadata-property:focus-within { box-shadow: 0 0 0 1px #dfe2e5; }
+
+/* Details & Summary collapsible blocks */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) details {
+  margin: 0.8em 0;
+  padding: 8px 14px;
+  border: 1px solid #dfe2e5;
+  border-radius: 4px;
+  background-color: transparent;
 }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  outline: none;
+  user-select: none;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) details[open] > summary {
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e7eaed;
+}
+
+/* Subscript & Superscript zero line-height baseline alignment */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(sub, sup) {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] sup { top: -0.5em; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] sub { bottom: -0.25em; }
+
+/* Multimedia Embeds containment & centering */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.image-embed, .video-embed, .audio-embed) { max-width: 100%; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .image-embed img,
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .video-embed video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .audio-embed audio { width: 100%; max-width: 520px; }
+
+/* Outline Panel Polish when Unified White Shell (qs-typora-white-shell) is active */
+body.qs-typora-enabled.qs-typora-white-shell .workspace-leaf-content[data-type="outline"] .view-content { padding: 8px 6px; }
 
 body.qs-typora-enabled.qs-typora-white-shell .workspace-leaf-content[data-type="outline"] .tree-item-self {
   border-radius: 4px;
@@ -1081,13 +1179,18 @@ body.qs-typora-enabled.qs-typora-white-shell .workspace-leaf-content[data-type="
   text-overflow: ellipsis;
 }
 
-/* --------------------------------------------------------------------------
-   10. Homepage Index Layout (frontmatter: cssclasses: qs-home)
-   -------------------------------------------------------------------------- */
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home {
-  padding: 40px 44px 24px;
+@container qs-typora-pane (max-width: 640px) {
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home),
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller {
+    padding: 24px 18px 60px;
+  }
 }
+
+/* 9. 首页索引页（frontmatter: cssclasses: qs-home）
+   笔记本身是纯 Markdown；版式与装饰全部由本插件提供，不依赖任何外部 CSS 片段。
+   约定：H1 为品牌标题，紧随的引用块为副标题，各 H2 下用无序列表排链接，
+   条目写法 `- [[路径|标题]] — 说明`，列表自动铺 2–3 栏。 */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home { padding: 40px 44px 24px; }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view.qs-home > .markdown-preview-sizer {
   width: 100%;
@@ -1095,10 +1198,10 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-r
   padding-bottom: 16px;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home :is(.inline-title, .metadata-container) {
-  display: none;
-}
+/* 首页自带 H1，隐藏顶部文件名与属性表 */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home :is(.inline-title, .metadata-container) { display: none; }
 
+/* Hero：标题即品牌；山形用遮罩绘制，笔记源码保持纯 Markdown */
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h1 {
   margin: 0 0 6px;
   padding: 0;
@@ -1123,6 +1226,7 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 64'%3E%3Cpath d='M3 51 19 39 29 44 51 19 62 30 76 8 103 44 117 52' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
 }
 
+/* 副标题兼 Hero 分隔线 */
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home blockquote {
   margin: 0 0 8px;
   padding: 0 0 26px;
@@ -1133,63 +1237,76 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
   font-size: 18px;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home blockquote > p {
-  margin: 0;
-}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home blockquote > p { margin: 0; }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h2 {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 28px 0 12px;
-  padding: 0 0 6px;
-  border: 0;
-  border-bottom: 1.5px solid var(--text-accent);
-  color: var(--text-normal);
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h2 + ul {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 10px 14px;
-  list-style: none;
+  margin: 32px 0 14px;
   padding: 0;
-  margin: 0 0 18px;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h2 + ul > li {
-  margin: 0;
-  padding: 8px 12px;
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 6px;
-  background-color: var(--background-primary);
-  font-size: 13.5px;
-  line-height: 1.5;
-  transition: border-color 0.15s ease, transform 0.15s ease;
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h2 + ul > li:hover {
-  border-color: var(--text-accent);
-  transform: translateY(-1px);
-}
-
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h2 + ul > li > a {
-  font-weight: 500;
+  border: 0;
+  font-family: var(--font-text);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.4;
   color: var(--text-normal);
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h2 + ul > li > a:hover {
-  color: var(--text-accent);
-  text-decoration: none;
+/* 链接栅格：按可用宽度自动铺 2–3 栏 */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home li {
+  margin: 0;
+  padding: 14px 18px;
+  border-left: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home li:first-child { border-left: 0; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home li:hover { background-color: var(--background-modifier-hover); }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home li > a {
+  display: block;
+  margin-bottom: 2px;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-accent);
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home li > a:hover { text-decoration: underline; }
+
+/* 页脚 */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home p > em {
+  display: block;
+  margin: 34px 0 10px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-style: normal;
+  letter-spacing: 0.15em;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .callout { margin-top: 18px; font-size: 12px; }
 
 @container qs-typora-pane (max-width: 720px) {
   body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home {
     padding: 24px 20px;
   }
+
   body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h1 {
     font-size: 42px;
   }

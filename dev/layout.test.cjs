@@ -174,5 +174,28 @@ await t.test('narrow split uses the same padding in both views',async()=>{await 
   assert.equal(extraMetrics.pdfCalloutTitle, 'rgb(8, 109, 221)');
   await p.evaluate(()=>{document.body.classList.remove('qs-typora-indent');});
  });
+ await t.test('overrides Obsidian is-readable-line-width 700px cap on inner containers',async()=>{
+  const a=await p.evaluate(()=>{
+   const style=document.createElement('style');
+   style.id='obs-readable-mock';
+   style.textContent='body{--file-line-width:700px}.markdown-preview-sizer,.markdown-preview-sizer>div,.cm-sizer,.cm-content{max-width:var(--file-line-width)}';
+   document.head.appendChild(style);
+   document.body.classList.remove('qs-typora-width-fixed');
+   document.body.classList.add('qs-typora-width-typora');
+   const previewDiv=document.querySelector('.markdown-preview-sizer > div');
+   const cmContent=document.querySelector('.cm-content');
+   const fileLineWidth=getComputedStyle(document.querySelector('.markdown-preview-view')).getPropertyValue('--file-line-width').trim();
+   const res={
+    fileLineWidth,
+    previewDivWidth:previewDiv.getBoundingClientRect().width,
+    cmContentWidth:cmContent.getBoundingClientRect().width,
+   };
+   style.remove();
+   return res;
+  });
+  assert.equal(a.fileLineWidth,'100%');
+  assert.equal(a.previewDivWidth,1024);
+  assert.equal(a.cmContentWidth,1024);
+ });
  }finally{await b.close();}
 });
