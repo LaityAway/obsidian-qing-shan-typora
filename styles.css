@@ -1,0 +1,1226 @@
+/* All styling is gated by light mode + our own enable class (body.qs-typora-enabled.qs-typora-white-shell).
+   Reverse-engineered from Typora.app/Contents/Resources/TypeMark/style/{base.css,themes/github.css}
+   and appsrc/main.js. Dark mode and plugin-disabled state automatically revert to the active theme. */
+
+/* 1. Full-Window Pure White Shell & Clean Typora Sidebar */
+body.qs-typora-enabled.qs-typora-white-shell {
+  --qs-paper: #ffffff;
+  --qs-sidebar: #fafafa;
+  --qs-line: #eaecef;
+  --qs-selected: #eaeaea;
+  --qs-text: #333333;
+  --qs-muted: #777777;
+  --qs-accent: #4183c4;
+  --background-primary: #ffffff;
+  --background-primary-alt: #ffffff;
+  --background-secondary: #ffffff;
+  --background-secondary-alt: #ffffff;
+  --background-modifier-border: #eeeeee;
+  --background-modifier-hover: #f5f5f5;
+  --divider-color: #eeeeee;
+  --titlebar-background: #ffffff;
+  --titlebar-background-focused: #ffffff;
+  --ribbon-background: #ffffff;
+  --ribbon-background-collapsed: #ffffff;
+  --tab-container-background: #ffffff;
+  --statusbar-background: #ffffff;
+}
+
+/* Typora's github theme keeps the sidebar at #fafafa and the paper at #ffffff. */
+body.qs-typora-enabled.qs-typora-white-shell :is(
+  .workspace-split.mod-left-split,
+  .workspace-split.mod-right-split,
+  .mod-sidedock,
+  .workspace-ribbon,
+  .workspace-tab-header-container,
+  .view-header,
+  .nav-header,
+  .nav-files-container,
+  .vault-profile,
+  .titlebar
+) {
+  background-color: #fafafa !important;
+}
+
+body.qs-typora-enabled.qs-typora-white-shell :is(
+  .workspace,
+  .workspace-tabs .workspace-leaf,
+  .workspace-leaf-content,
+  .view-content
+) {
+  background-color: #ffffff !important;
+}
+
+body.qs-typora-enabled.qs-typora-white-shell :is(.workspace-ribbon, .mod-sidedock, .workspace-tab-header-container, .view-header) {
+  border-color: #eeeeee !important;
+}
+
+body.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title.is-active, .nav-folder-title.is-active) {
+  background-color: #eaeaea !important;
+  color: #333333 !important;
+  font-weight: 500;
+  border-radius: 4px;
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title:focus-visible, .nav-folder-title:focus-visible) {
+  outline: 2px solid #4183c4 !important;
+  outline-offset: -2px;
+  box-shadow: none !important;
+}
+
+body.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title:hover, .nav-folder-title:hover) {
+  background-color: #f5f5f5;
+}
+
+body.qs-typora-enabled.qs-typora-white-shell .status-bar {
+  background-color: #ffffff !important;
+  border: 1px solid #eeeeee !important;
+  border-radius: 6px;
+  color: #888888;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* 2. Markdown Content Typography (Typora GitHub Theme Specs) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
+  --font-text: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SF Pro", sans-serif;
+  --font-text-size: var(--qs-typora-font-size, 16px);
+  --font-monospace: "Lucida Console", Consolas, "Courier", monospace;
+  --line-height-normal: var(--qs-typora-line-height, 1.6);
+  --file-line-width: 100%;
+  --line-width: 100%;
+  --line-width-wide: 100%;
+  --max-width: 100%;
+  --content-line-width: 100%;
+  --content-margin: 0;
+  --content-margin-start: 0;
+  --background-primary: #ffffff;
+  --background-primary-alt: #f8f8f8;
+  --background-secondary: #ffffff;
+  --background-secondary-alt: #f8f8f8;
+  --background-modifier-border: #dfe2e5;
+  --text-normal: #333333;
+  --text-muted: #777777;
+  --text-faint: #999999;
+  --text-accent: #4183c4;
+  --text-accent-hover: #2b65a0;
+  --link-color: #4183c4;
+  --link-color-hover: #2b65a0;
+  --link-external-color: #4183c4;
+  --link-external-color-hover: #2b65a0;
+  --interactive-accent: #4183c4;
+  --text-selection: #b5d6fc;
+  --h1-size: 2.25em;
+  --h2-size: 1.75em;
+  --h3-size: 1.5em;
+  --h4-size: 1.25em;
+  --h5-size: 1em;
+  --h6-size: 1em;
+  --h1-weight: 700;
+  --h2-weight: 700;
+  --h3-weight: 700;
+  --h4-weight: 700;
+  --h5-weight: 700;
+  --h6-weight: 700;
+  --h1-color: #333333;
+  --h2-color: #333333;
+  --h3-color: #333333;
+  --h4-color: #333333;
+  --h5-color: #333333;
+  --h6-color: #777777;
+  --heading-spacing: 1rem;
+  --p-spacing: 0.8em;
+  --code-background: #f3f4f4;
+  --code-normal: #333333;
+  --code-size: 0.9em;
+  --code-radius: 3px;
+  --blockquote-border-color: #dfe2e5;
+  --blockquote-border-thickness: 4px;
+  --blockquote-color: #777777;
+  --table-header-background: #f8f8f8;
+  --table-header-color: #333333;
+  --table-border-color: #dfe2e5;
+  --table-row-alt-background: #f8f8f8;
+  --table-text-size: 1em;
+  --table-cell-padding: 6px 13px;
+  --table-width: 100%;
+  --table-max-width: 100%;
+  --table-wrapper-width: 100%;
+  --container-table-width: 100%;
+  --container-table-max-width: 100%;
+  --container-table-margin: 0;
+  --table-drag-padding: 0;
+  --table-margin: 0;
+  --checkbox-color: #777777;
+  --checkbox-color-hover: #555555;
+  --checklist-done-color: #999999;
+  --list-marker-color: #333333;
+  --list-indent: 30px;
+  --metadata-background: #ffffff;
+  --metadata-border-color: #eaecef;
+  --metadata-border-radius: 8px;
+  --metadata-padding: 10px 14px;
+  --metadata-label-font-size: 12px;
+  --metadata-input-font-size: 12.5px;
+  --tag-background: #ffffff;
+  --tag-color: #4183c4;
+  --tag-border-color: #d0d7de;
+  --tag-border-width: 1px;
+  color: #333333;
+  background: #ffffff;
+  font-family: var(--font-text);
+  font-size: var(--qs-typora-font-size, 16px);
+  line-height: var(--qs-typora-line-height, 1.6);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 3. Fluid Full Width Layout (36px Left/Right Margin Like Typora #write) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) {
+  padding: 30px 30px 100px !important;
+  background-color: #ffffff;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(
+  .markdown-preview-sizer > div,
+  .markdown-preview-sizer .cm-table-widget,
+  .markdown-preview-sizer > div:has(table)
+) {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-inline: 0 !important;
+  padding-inline-start: 0 !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller {
+  font-family: var(--font-text);
+  line-height: var(--qs-typora-line-height, 1.6);
+  color: #333333;
+  background-color: #ffffff;
+  padding: 30px 30px 100px !important;
+  overflow-x: hidden !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-contentContainer {
+  min-width: 0;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(
+  .cm-content,
+  .cm-contentContainer.cm-contentContainer > .cm-content > div:not(.HyperMD-codeblock),
+  .cm-contentContainer.cm-contentContainer > .cm-content > *:not(div),
+  .cm-sizer > .inline-title,
+  .cm-sizer > .embedded-backlinks,
+  .cm-sizer > .metadata-container,
+  .cm-contentContainer.cm-contentContainer > .cm-content .cm-table-widget,
+  .cm-contentContainer.cm-contentContainer > .cm-content > div:has(table),
+  .cm-contentContainer.cm-contentContainer > .cm-content .el-table
+) {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin-inline: 0 !important;
+  padding-inline-start: 0 !important;
+}
+
+/* Width is applied once to the outer content sizer; children fill that sizer.
+   Typora's github theme: 860px, then 1024px at >=1400px viewport, 1200px at >=1800px. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] {
+  container-type: inline-size;
+  container-name: qs-typora-pane;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer,
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer {
+  width: 100% !important;
+  max-width: 860px !important;
+  min-width: 0 !important;
+  margin-inline: auto !important;
+}
+body.qs-typora-enabled.qs-typora-width-fixed .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer,
+body.qs-typora-enabled.qs-typora-width-fixed .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer {
+  max-width: var(--qs-typora-width, 800px) !important;
+}
+body.qs-typora-enabled.qs-typora-width-full .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer,
+body.qs-typora-enabled.qs-typora-width-full .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer {
+  max-width: 100% !important;
+}
+@media (min-width: 1400px) {
+  body.qs-typora-enabled.qs-typora-width-typora .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer,
+  body.qs-typora-enabled.qs-typora-width-typora .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer {
+    max-width: 1024px !important;
+  }
+}
+@media (min-width: 1800px) {
+  body.qs-typora-enabled.qs-typora-width-typora .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer,
+  body.qs-typora-enabled.qs-typora-width-typora .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller > .cm-sizer {
+    max-width: 1200px !important;
+  }
+}
+
+/* 4. Hide Floating Line Numbers in Live Preview (Source Mode keeps gutters) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-gutters {
+  display: none !important;
+}
+
+/* 5. Explicit title preference: never inspect note text or rendered headings. */
+body.qs-typora-enabled.qs-typora-hide-title .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .inline-title {
+  display: none !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .inline-title {
+  font-size: 2.25em;
+  font-weight: 700;
+  color: #333333;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eeeeee;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-container {
+  background-color: #ffffff !important;
+  border: 1px solid #eaecef !important;
+  border-radius: 6px;
+  padding: 10px 14px !important;
+  margin-top: 0;
+  margin-bottom: 24px !important;
+  font-size: 12.5px;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-properties-heading {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888888;
+  margin-bottom: 4px;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-property {
+  min-height: 26px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-property-key {
+  font-size: 12px;
+  color: #888888;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-property-value {
+  font-size: 12.5px;
+  color: #333333;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-add-button {
+  font-size: 12px;
+  color: #999999;
+  margin-top: 2px;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .multi-select-pill {
+  background-color: #ffffff !important;
+  border: 1px solid #d0d7de !important;
+  color: #4183c4 !important;
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 11.5px;
+}
+
+/* 6. Headings (Exact Typora github.css: bold 700, H1 2.25em, H2 1.75em, H3 1.5em, H4 1.25em, #eee border) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h1,h2,h3,h4,h5,h6,.cm-header) {
+  color: #333333;
+  font-weight: 700 !important;
+  letter-spacing: 0;
+  line-height: 1.4;
+  text-decoration: none !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h1:not(.markdown-embed h1) {
+  font-size: 2.25em;
+  line-height: 1.2;
+  margin: 1rem 0;
+  border-bottom: 1px solid #eeeeee;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h2:not(.markdown-embed h2) {
+  font-size: 1.75em;
+  line-height: 1.225;
+  margin: 1rem 0;
+  border-bottom: 1px solid #eeeeee;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h3:not(.markdown-embed h3) {
+  font-size: 1.5em;
+  line-height: 1.43;
+  margin: 1rem 0;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h4:not(.markdown-embed h4) {
+  font-size: 1.25em;
+  line-height: 1.4;
+  margin: 1rem 0;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-1 {
+  font-size: 2.25em;
+  line-height: 1.2;
+  padding-top: 0.4em;
+  border-bottom: 1px solid #eeeeee;
+  margin-bottom: 0.5em;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-2 {
+  font-size: 1.75em;
+  line-height: 1.225;
+  padding-top: 0.6em;
+  border-bottom: 1px solid #eeeeee;
+  margin-bottom: 0.5em;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+  padding-top: 0.5em;
+  padding-bottom: 0.2em;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-4 {
+  font-size: 1.25em;
+  line-height: 1.4;
+  padding-top: 0.4em;
+  padding-bottom: 0.15em;
+}
+
+/* 7. Mermaid Diagrams: Scale Wide Diagrams to Fit Without Stretching Small Diagrams
+   Mermaid sets width="100%" and inline style="max-width: <bbox>px" on <svg>.
+   Do NOT put !important on svg max-width, otherwise a 320px stateDiagram stretches to 100% screen width! */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(
+  .cm-embed-block:has(.mermaid),
+  .block-language-mermaid,
+  .mermaid
+) {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+  text-align: center;
+  margin-block: 10px;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .mermaid svg {
+  max-width: 100%;
+  height: auto !important;
+  display: block;
+  margin: 0 auto !important;
+}
+
+/* 8. Blockquotes & Callouts: Typora Subtle Gray Left Border (4px solid #dfe2e5, #777777 text, no colored box) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(p,ul,ol,blockquote,table) {
+  margin-block: 0.8em;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) li {
+  margin-block: 0;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) blockquote,
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-quote {
+  border-left: 4px solid #dfe2e5 !important;
+  padding: 0 15px !important;
+  color: #777777 !important;
+  background-color: transparent !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .cm-embed-block.cm-callout {
+  padding: 0 !important;
+  margin-block: 0.8em !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout {
+  background-color: transparent !important;
+  border: 0 !important;
+  border-left: 4px solid var(--callout-color, #dfe2e5) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 2px 15px !important;
+  margin: 0.8em 0 !important;
+  color: #777777 !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-title {
+  color: #777777 !important;
+  font-size: 1em !important;
+  font-weight: 400 !important;
+  padding: 0 !important;
+  margin-bottom: 0.2em !important;
+  background: transparent !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-icon {
+  display: flex !important;
+  flex: 0 0 auto;
+  margin-right: 0.35em;
+  color: var(--callout-color, #777777) !important;
+  opacity: 0.85;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-content {
+  color: #777777 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-content p {
+  margin-block: 0.3em !important;
+  color: #777777 !important;
+}
+
+/* 9. Tables (Typora github.css: 1em font-size, 6px 13px padding, 1px solid #dfe2e5, #f8f8f8 even rows & thead, local horizontal scrolling) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(
+  .cm-embed-block.cm-table-widget,
+  .el-table,
+  .table-wrapper
+) {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden;
+}
+
+/* Live editor controls extend beyond the table. Keep one scroll container,
+   with an inner gutter for the native row/column handles and add buttons. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-embed-block.cm-table-widget {
+  overflow: visible !important;
+}
+
+/* Keep a 20px inner gutter so the native row/column handles stay clickable.
+   Reading view tables have no handles and align with the text. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-table-widget > .table-wrapper {
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) table {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+  border-collapse: collapse;
+  font-size: 1em !important;
+  background-color: #ffffff;
+  overflow: visible !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(th,td) {
+  border: 1px solid #dfe2e5 !important;
+  text-align: start;
+  min-width: 32px;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(th,td) {
+  padding: 6px 13px !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-table-widget :is(th,td) {
+  padding: 0 !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .cm-table-widget .table-cell-wrapper {
+  padding: 6px 13px !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-table-widget .table-cell-wrapper :is(
+  .cm-editor,
+  .cm-scroller,
+  .cm-sizer,
+  .cm-contentContainer,
+  .cm-content,
+  .cm-line
+) {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  background-color: transparent !important;
+}
+
+/* Preserve Markdown alignment */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(th,td)[align="left"] { text-align: left; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(th,td)[align="center"] { text-align: center; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(th,td)[align="right"] { text-align: right; }
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(thead, th) {
+  background-color: #f8f8f8 !important;
+  font-weight: 700 !important;
+  color: #333333 !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) tbody tr:nth-child(odd) td {
+  background-color: #ffffff !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) tbody tr:nth-child(even) td {
+  background-color: #f8f8f8 !important;
+}
+
+/* 10. Inline Code & Code Blocks (Typora github.css: #f3f4f4 bg, 1px solid #e7eaed, 3px radius, inherit text color) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) code, .markdown-source-view.mod-cm6.is-live-preview .cm-inline-code) {
+  font-family: var(--font-monospace);
+  font-size: 0.9em;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) :not(pre) > code, .markdown-source-view.mod-cm6.is-live-preview .cm-inline-code) {
+  background-color: #f3f4f4 !important;
+  border: 1px solid #e7eaed !important;
+  border-radius: 3px !important;
+  padding: 0 2px !important;
+  color: inherit !important;
+  overflow-wrap: anywhere;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre {
+  background-color: #f8f8f8 !important;
+  border: 1px solid #e7eaed !important;
+  border-radius: 3px;
+  padding: 8px 8px 6px;
+  margin: 15px 0;
+  overflow-x: auto;
+  font-size: 0.9em;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock {
+  background-color: #f8f8f8 !important;
+  font-family: var(--font-monospace);
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  box-shadow: inset 1px 0 #e7eaed, inset -1px 0 #e7eaed;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-begin {
+  padding-top: 8px !important;
+  border-radius: 3px 3px 0 0;
+  box-shadow: inset 1px 0 #e7eaed, inset -1px 0 #e7eaed, inset 0 1px #e7eaed;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-end {
+  padding-bottom: 6px !important;
+  border-radius: 0 0 3px 3px;
+  box-shadow: inset 1px 0 #e7eaed, inset -1px 0 #e7eaed, inset 0 -1px #e7eaed;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre code {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  font-size: 1em !important;
+  color: #333333;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* 10b. Typora's fence syntax palette (codemirror.css .cm-s-inner). Only code
+   blocks are recoloured; inline code and the rest of the theme stay untouched. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.keyword, .token.control-flow, .token.atrule),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-keyword) {
+  color: #708;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.function, .token.class-name),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-def) {
+  color: #00f;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.parameter),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-def) {
+  color: #00f;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.variable-2),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-variable-2) {
+  color: #05a;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.variable-3),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-variable-3) {
+  color: #085;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.comment),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-comment) {
+  color: #a50;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.operator),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-operator) {
+  color: #981a1a;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.number),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-number) {
+  color: #164;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.string, .token.char, .token.attr-value, .token.url),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-string) {
+  color: #a11;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.regex),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-string-2) {
+  color: #f50;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.boolean, .token.constant, .token.atom),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-atom) {
+  color: #219;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.property, .token.variable),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-property) {
+  color: #000;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.tag, .token.selector),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-tag) {
+  color: #170;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.attr-name),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-attribute) {
+  color: #00c;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.builtin),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-builtin) {
+  color: #30a;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.meta, .token.entity),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-meta, .cm-qualifier) {
+  color: #555;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.punctuation) {
+  color: #333;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.deleted) {
+  color: #a11;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.inserted) {
+  color: #164;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-hr) {
+  color: #999;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-header) {
+  color: #00f;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-bracket) {
+  color: #997;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-quote) {
+  color: #090;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) hr, .markdown-source-view.mod-cm6.is-live-preview .hr) {
+  height: 2px;
+  background-color: #e7e7e7;
+  border: 0;
+  margin-block: 16px;
+}
+
+.qs-typora-settings-description {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  line-height: 1.7;
+}
+
+/* 11. Typora Inline Elements: mark, kbd, footnotes and print. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) mark,
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-highlight {
+  background-color: #ffff00 !important;
+  color: #000000 !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) kbd {
+  margin: 0 0.1em;
+  padding: 0.1em 0.6em;
+  font-family: var(--font-monospace);
+  font-size: 0.8em;
+  color: #242729;
+  background-color: #ffffff;
+  border: 1px solid #adb3b9;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(12, 13, 14, 0.2), 0 0 0 2px #ffffff inset;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) .footnotes {
+  opacity: 0.8;
+  font-size: 0.9rem;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) .footnotes li {
+  margin-block: 0.2em;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) sup.footnote-ref a {
+  padding: 2px 4px;
+  background-color: rgba(238, 238, 238, 0.7);
+  color: #555555;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+/* Obsidian transclusions are not Typora pages: keep the host page margins out of the embed. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-embed .markdown-preview-view {
+  padding: 0 !important;
+  /* Obsidian's own transclusion scale; the page's 2.25em H1 must not leak in. */
+  --h1-size: 1.125em !important;
+  --h2-size: 1.05em !important;
+  --h3-size: 1em !important;
+  --h4-size: 0.9em !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-embed .markdown-preview-view > .markdown-preview-sizer {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* 12. Code font: Typora's stack or the user's Obsidian monospace. */
+body.qs-typora-enabled.qs-typora-code-system .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
+  --font-monospace: var(--qs-typora-system-mono, monospace);
+}
+
+/* 13. Dark mode: Typora night palette with the same metrics. */
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell {
+  --qs-paper: #363b40;
+  --qs-sidebar: #2f3439;
+  --qs-line: #474d54;
+  --qs-selected: #454b52;
+  --qs-text: #b8bfc6;
+  --qs-muted: #9da2a6;
+  --qs-accent: #9ecbff;
+  --background-primary: #363b40;
+  --background-primary-alt: #3d4349;
+  --background-secondary: #2f3439;
+  --background-secondary-alt: #3d4349;
+  --background-modifier-border: #474d54;
+  --background-modifier-hover: #3d4349;
+  --divider-color: #474d54;
+  --titlebar-background: #2f3439;
+  --titlebar-background-focused: #2f3439;
+  --ribbon-background: #2f3439;
+  --ribbon-background-collapsed: #2f3439;
+  --tab-container-background: #2f3439;
+  --statusbar-background: #2f3439;
+}
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(
+  .workspace-split.mod-left-split,
+  .workspace-split.mod-right-split,
+  .mod-sidedock,
+  .workspace-ribbon,
+  .workspace-tab-header-container,
+  .view-header,
+  .nav-header,
+  .nav-files-container,
+  .vault-profile,
+  .titlebar
+) {
+  background-color: #2f3439 !important;
+}
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(
+  .workspace,
+  .workspace-tabs .workspace-leaf,
+  .workspace-leaf-content,
+  .view-content
+) {
+  background-color: #363b40 !important;
+}
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(.workspace-ribbon, .mod-sidedock, .workspace-tab-header-container, .view-header) {
+  border-color: #474d54 !important;
+}
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title.is-active, .nav-folder-title.is-active) {
+  background-color: #454b52 !important;
+  color: #dedede !important;
+}
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title:focus-visible, .nav-folder-title:focus-visible) {
+  outline-color: #9ecbff !important;
+}
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(.nav-file-title:hover, .nav-folder-title:hover) {
+  background-color: #3d4349;
+}
+
+body.theme-dark.qs-typora-enabled.qs-typora-white-shell .status-bar {
+  background-color: #2f3439 !important;
+  border-color: #474d54 !important;
+  color: #9da2a6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
+  --background-primary: #363b40;
+  --background-primary-alt: #3d4349;
+  --background-secondary: #363b40;
+  --background-secondary-alt: #3d4349;
+  --background-modifier-border: #474d54;
+  --text-normal: #b8bfc6;
+  --text-muted: #9da2a6;
+  --text-faint: #7d858c;
+  --text-accent: #9ecbff;
+  --text-accent-hover: #c6e0ff;
+  --link-color: #9ecbff;
+  --link-color-hover: #c6e0ff;
+  --link-external-color: #9ecbff;
+  --link-external-color-hover: #c6e0ff;
+  --interactive-accent: #9ecbff;
+  --text-selection: #3f566e;
+  --h1-color: #dedede;
+  --h2-color: #dedede;
+  --h3-color: #dedede;
+  --h4-color: #dedede;
+  --h5-color: #dedede;
+  --h6-color: #9da2a6;
+  --code-background: #2b3035;
+  --code-normal: #c9d1d9;
+  --blockquote-border-color: #474d54;
+  --blockquote-color: #9da2a6;
+  --table-header-background: #3d4349;
+  --table-header-color: #dedede;
+  --table-border-color: #474d54;
+  --table-row-alt-background: #3d4349;
+  --checkbox-color: #9da2a6;
+  --checkbox-color-hover: #b8bfc6;
+  --checklist-done-color: #7d858c;
+  --list-marker-color: #b8bfc6;
+  --metadata-background: #363b40;
+  --metadata-border-color: #474d54;
+  --tag-background: #363b40;
+  --tag-color: #9ecbff;
+  --tag-border-color: #474d54;
+  color: #b8bfc6;
+  background: #363b40;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) {
+  background-color: #363b40;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller {
+  color: #b8bfc6;
+  background-color: #363b40;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .inline-title {
+  color: #dedede;
+  border-bottom-color: #474d54;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-container {
+  background-color: #363b40 !important;
+  border-color: #474d54 !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-properties-heading {
+  color: #9da2a6;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-property {
+  background-color: #363b40;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-property-key {
+  color: #9da2a6;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-property-value {
+  color: #b8bfc6;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .metadata-add-button {
+  color: #7d858c;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .multi-select-pill {
+  background-color: #363b40 !important;
+  border-color: #474d54 !important;
+  color: #9ecbff !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h1,h2,h3,h4,h5,h6,.cm-header) {
+  color: #dedede;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h6,.cm-header-6) {
+  color: #9da2a6;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(h1,h2):not(.markdown-embed h1):not(.markdown-embed h2) {
+  border-bottom-color: #474d54;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line.HyperMD-header-1, .cm-line.HyperMD-header-2) {
+  border-bottom-color: #474d54;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) blockquote,
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-quote {
+  border-left-color: #474d54 !important;
+  color: #9da2a6 !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout {
+  color: #9da2a6 !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.callout-title, .callout-content, .callout-content p) {
+  color: #9da2a6 !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) table {
+  background-color: #363b40;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(th,td) {
+  border-color: #474d54 !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(thead, th) {
+  background-color: #3d4349 !important;
+  color: #dedede !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) tbody tr:nth-child(odd) td {
+  background-color: #363b40 !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) tbody tr:nth-child(even) td {
+  background-color: #3d4349 !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) :not(pre) > code, .markdown-source-view.mod-cm6.is-live-preview .cm-inline-code) {
+  background-color: #2b3035 !important;
+  border-color: #474d54 !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre {
+  background-color: #2b3035 !important;
+  border-color: #474d54 !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre code {
+  color: #c9d1d9;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock {
+  background-color: #2b3035 !important;
+  box-shadow: inset 1px 0 #474d54, inset -1px 0 #474d54;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-begin {
+  box-shadow: inset 1px 0 #474d54, inset -1px 0 #474d54, inset 0 1px #474d54;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-end {
+  box-shadow: inset 1px 0 #474d54, inset -1px 0 #474d54, inset 0 -1px #474d54;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) hr, .markdown-source-view.mod-cm6.is-live-preview .hr) {
+  background-color: #474d54;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) mark,
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-highlight {
+  background-color: #d3d40e !important;
+  color: #000000 !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) kbd {
+  color: #d0d6dc;
+  background-color: #2b3035;
+  border-color: #5a626a;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4), 0 0 0 2px #2b3035 inset;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) sup.footnote-ref a {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #b8bfc6;
+}
+
+/* 13b. Dark syntax palette (GitHub Dark). */
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.keyword, .token.control-flow, .token.atrule),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-keyword) {
+  color: #ff7b72;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.function, .token.class-name),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-def) {
+  color: #d2a8ff;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.parameter),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-def) {
+  color: #79c0ff;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.variable-2),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-variable-2) {
+  color: #79c0ff;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.variable-3),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-variable-3) {
+  color: #7ee787;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.comment),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-comment) {
+  color: #8b949e;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.operator),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-operator) {
+  color: #ff7b72;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.number),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-number) {
+  color: #79c0ff;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.string, .token.char, .token.attr-value, .token.url),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-string) {
+  color: #a5d6ff;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.regex),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-string-2) {
+  color: #a5d6ff;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.boolean, .token.constant, .token.atom),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-atom) {
+  color: #79c0ff;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.property, .token.variable),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-property) {
+  color: #c9d1d9;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.tag, .token.selector),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-tag) {
+  color: #7ee787;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.attr-name),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-attribute) {
+  color: #79c0ff;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.builtin),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-builtin) {
+  color: #ffa657;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.meta, .token.entity),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-meta, .cm-qualifier) {
+  color: #8b949e;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.punctuation) {
+  color: #c9d1d9;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.deleted) {
+  color: #ffa198;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.inserted) {
+  color: #7ee787;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-bracket) {
+  color: #c9d1d9;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-hr) {
+  color: #8b949e;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-header) {
+  color: #79c0ff;
+}
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-quote) {
+  color: #7ee787;
+}
+
+/* 14. Optional AA contrast: off by default so the Typora palette stays intact. */
+body.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
+  --text-muted: #5f6b76;
+  --text-faint: #6a737d;
+  --text-accent: #2f6f9f;
+  --text-accent-hover: #245a82;
+  --link-color: #2f6f9f;
+  --link-color-hover: #245a82;
+  --link-external-color: #2f6f9f;
+  --link-external-color-hover: #245a82;
+  --blockquote-color: #5f6b76;
+}
+
+body.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(
+  blockquote,
+  .callout-title,
+  .callout-content,
+  .callout-content p,
+  .metadata-properties-heading,
+  .metadata-property-key,
+  .metadata-add-button
+) {
+  color: #5f6b76 !important;
+}
+
+body.qs-typora-enabled.qs-typora-contrast.qs-typora-white-shell .status-bar {
+  color: #5f6b76;
+}
+
+body.theme-dark.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
+  --text-muted: #c9d1d9;
+  --text-faint: #b8bfc6;
+  --text-accent: #b8d7ff;
+  --text-accent-hover: #d6e8ff;
+  --link-color: #b8d7ff;
+  --link-color-hover: #d6e8ff;
+  --link-external-color: #b8d7ff;
+  --link-external-color-hover: #d6e8ff;
+  --blockquote-color: #c9d1d9;
+}
+
+body.theme-dark.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(
+  blockquote,
+  .callout-title,
+  .callout-content,
+  .callout-content p,
+  .metadata-properties-heading,
+  .metadata-property-key,
+  .metadata-add-button
+) {
+  color: #c9d1d9 !important;
+}
+
+body.theme-dark.qs-typora-enabled.qs-typora-contrast.qs-typora-white-shell .status-bar {
+  color: #c9d1d9;
+}
+
+@media print {
+  @page {
+    margin: 16mm 0;
+  }
+
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) {
+    padding: 0 !important;
+    font-size: 13px !important;
+  }
+
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) > .markdown-preview-sizer {
+    max-width: none !important;
+  }
+
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre {
+    page-break-inside: avoid;
+    white-space: pre-wrap;
+  }
+}
+
+@container qs-typora-pane (max-width: 640px) {
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home),
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview > .cm-editor > .cm-scroller {
+    padding: 24px 18px 60px !important;
+  }
+}
