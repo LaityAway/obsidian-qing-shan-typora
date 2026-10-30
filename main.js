@@ -153,6 +153,7 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
       },
     });
     this.registerEvent(this.app.workspace.on('layout-change', () => this.applySettings()));
+    this.registerEvent(this.app.workspace.on('css-change', () => this.applySettings()));
     this.registerEvent(this.app.workspace.on('window-open', workspaceWindow => {
       this.applyDocument(workspaceWindow?.doc);
     }));

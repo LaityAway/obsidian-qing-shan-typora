@@ -58,6 +58,18 @@ test('detached window with null defaultView is automatically pruned from documen
   p.applyDocument(doc);
   assert.equal(p.documents.has(doc),false);
 });
+test('css-change event re-applies settings and synchronizes monospace font',async()=>{
+  const {instance:p,docs,events}=setup();
+  let mono = 'Source Code Pro';
+  docs[0].defaultView = {
+    getComputedStyle: () => ({ getPropertyValue: k => (k === '--font-monospace' ? mono : '') }),
+  };
+  await p.onload();
+  assert.equal(docs[0].body.values.get('--qs-typora-system-mono'), 'Source Code Pro');
+  mono = 'Fira Code';
+  events.get('css-change')();
+  assert.equal(docs[0].body.values.get('--qs-typora-system-mono'), 'Fira Code');
+});
 test('reset defaults restores all parameters and enables styling',async()=>{
   const {instance:p}=setup({enabled:false,fontSize:22,contentWidth:480,lineHeight:2.2}); await p.onload(); await p.resetSettings();
   assert.deepEqual(p.saved,{enabled:true,fontSize:16,widthMode:'typora',contentWidth:800,lineHeight:1.6,paragraphIndent:false,whiteShell:true,hideInlineTitle:true,highContrast:false,codeFont:'typora'});
