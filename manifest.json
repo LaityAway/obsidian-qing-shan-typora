@@ -1,7 +1,7 @@
 {
   "id": "qing-shan-typora",
   "name": "Qing Shan Typography",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "minAppVersion": "1.5.0",
   "description": "Apply Typora-inspired reading typography with responsive 860/1024/1200 width, 1.6 line height, Typora code palette, dark mode, callout colors, and code-font/contrast toggles.",
   "author": "青山",

@@ -1,6 +1,6 @@
-/* All styling is gated by light mode + our own enable class (body.qs-typora-enabled.qs-typora-white-shell).
-   Reverse-engineered from Typora.app/Contents/Resources/TypeMark/style/{base.css,themes/github.css}
-   and appsrc/main.js. Dark mode and plugin-disabled state automatically revert to the active theme. */
+/* All styling is gated by our own enable class (body.qs-typora-enabled).
+   Reverse-engineered from Typora.app/Contents/Resources/TypeMark/style/{base.css,themes/github.css,themes/night.css}.
+   Plugin-disabled state automatically reverts to the active theme. */
 
 /* 1. Full-Window Pure White Shell & Clean Typora Sidebar */
 body.qs-typora-enabled.qs-typora-white-shell {
@@ -184,8 +184,7 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-r
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(
   .markdown-preview-sizer > div,
-  .markdown-preview-sizer .cm-table-widget,
-  .markdown-preview-sizer > div:has(table)
+  .markdown-preview-sizer .cm-table-widget
 ) {
   width: 100% !important;
   max-width: 100% !important;
@@ -216,13 +215,24 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-s
   .cm-sizer > .embedded-backlinks,
   .cm-sizer > .metadata-container,
   .cm-contentContainer.cm-contentContainer > .cm-content .cm-table-widget,
-  .cm-contentContainer.cm-contentContainer > .cm-content > div:has(table),
   .cm-contentContainer.cm-contentContainer > .cm-content .el-table
 ) {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
   margin-inline: 0 !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(
+  .cm-content,
+  .cm-contentContainer.cm-contentContainer > .cm-content > div:not(.HyperMD-codeblock):not(.HyperMD-quote):not(.HyperMD-list-line),
+  .cm-contentContainer.cm-contentContainer > .cm-content > *:not(div),
+  .cm-sizer > .inline-title,
+  .cm-sizer > .embedded-backlinks,
+  .cm-sizer > .metadata-container,
+  .cm-contentContainer.cm-contentContainer > .cm-content .cm-table-widget,
+  .cm-contentContainer.cm-contentContainer > .cm-content .el-table
+) {
   padding-inline-start: 0 !important;
 }
 
@@ -337,6 +347,14 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
   text-decoration: none !important;
 }
 
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h6, .cm-header-6) {
+  color: #777777;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h1,h2,h3,h4,h5,h6,.cm-header) :is(code, tt, .cm-inline-code) {
+  font-size: inherit !important;
+}
+
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h1:not(.markdown-embed h1) {
   font-size: 2.25em;
   line-height: 1.2;
@@ -361,6 +379,19 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
   font-size: 1.25em;
   line-height: 1.4;
   margin: 1rem 0;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h5:not(.markdown-embed h5) {
+  font-size: 1em;
+  line-height: 1.4;
+  margin: 1rem 0;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) h6:not(.markdown-embed h6) {
+  font-size: 1em;
+  line-height: 1.4;
+  margin: 1rem 0;
+  color: #777777;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-1 {
@@ -393,11 +424,25 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-s
   padding-bottom: 0.15em;
 }
 
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-5 {
+  font-size: 1em;
+  line-height: 1.4;
+  padding-top: 0.3em;
+  padding-bottom: 0.1em;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-6 {
+  font-size: 1em;
+  line-height: 1.4;
+  padding-top: 0.3em;
+  padding-bottom: 0.1em;
+  color: #777777;
+}
+
 /* 7. Mermaid Diagrams: Scale Wide Diagrams to Fit Without Stretching Small Diagrams
    Mermaid sets width="100%" and inline style="max-width: <bbox>px" on <svg>.
    Do NOT put !important on svg max-width, otherwise a 320px stateDiagram stretches to 100% screen width! */
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(
-  .cm-embed-block:has(.mermaid),
   .block-language-mermaid,
   .mermaid
 ) {
@@ -416,21 +461,78 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
   margin: 0 auto !important;
 }
 
-/* 8. Blockquotes & Callouts: Typora Subtle Gray Left Border (4px solid #dfe2e5, #777777 text, no colored box) */
+/* 8. Blockquotes, Lists & Callouts: Typora Subtle Left Borders, Nested Rhythms & Semantic Alerts */
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(p,ul,ol,blockquote,table) {
   margin-block: 0.8em;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) li {
-  margin-block: 0;
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(ul, ol) {
+  padding-inline-start: 30px;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) blockquote,
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-quote {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) ul {
+  list-style-type: disc;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) ul ul {
+  list-style-type: circle;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) ul ul ul {
+  list-style-type: square;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) li {
+  margin-block: 0;
+  position: relative;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) li > :is(ul, ol) {
+  margin: 0 !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) li p {
+  margin: 0.5rem 0;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(blockquote, li) > :first-child {
+  margin-top: 0 !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) blockquote > :last-child {
+  margin-bottom: 0 !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .task-list-item {
+  list-style-type: none;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) input[type="checkbox"] {
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(li.is-checked, li.task-list-item.is-checked),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line.HyperMD-task-line[data-task="x"], .cm-line.HyperMD-task-line[data-task="X"], .cm-line.HyperMD-task-line.is-checked) {
+  color: var(--checklist-done-color, #999999) !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) blockquote {
   border-left: 4px solid #dfe2e5 !important;
   padding: 0 15px !important;
   color: #777777 !important;
   background-color: transparent !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-quote {
+  border-left: 4px solid #dfe2e5 !important;
+  padding-inline: 15px !important;
+  color: #777777 !important;
+  background-color: transparent !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) blockquote blockquote {
+  padding-right: 0;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .cm-embed-block.cm-callout {
@@ -441,18 +543,19 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout {
   background-color: transparent !important;
   border: 0 !important;
-  border-left: 4px solid var(--callout-color, #dfe2e5) !important;
+  border-left: 4px solid #dfe2e5 !important;
+  border-left-color: rgb(var(--callout-color, 223, 226, 229)) !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   padding: 2px 15px !important;
   margin: 0.8em 0 !important;
-  color: #777777 !important;
+  color: #333333 !important;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-title {
-  color: #777777 !important;
-  font-size: 1em !important;
-  font-weight: 400 !important;
+  color: rgb(var(--callout-color, 119, 119, 119)) !important;
+  font-size: 0.95em !important;
+  font-weight: 700 !important;
   padding: 0 !important;
   margin-bottom: 0.2em !important;
   background: transparent !important;
@@ -462,19 +565,37 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
   display: flex !important;
   flex: 0 0 auto;
   margin-right: 0.35em;
-  color: var(--callout-color, #777777) !important;
-  opacity: 0.85;
+  color: rgb(var(--callout-color, 119, 119, 119)) !important;
+  opacity: 0.95;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-content {
-  color: #777777 !important;
+  color: #333333 !important;
   padding: 0 !important;
   background: transparent !important;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-content p {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-content > p {
   margin-block: 0.3em !important;
-  color: #777777 !important;
+}
+
+/* Links: Typora quiet links (no underline by default, underline on hover) */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(a:not(.tag), .internal-link, .external-link, .cm-link, .cm-hmd-internal-link) {
+  color: var(--link-color, #4183c4);
+  text-decoration: none !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(a:not(.tag), .internal-link, .external-link, .cm-link, .cm-hmd-internal-link):hover {
+  color: var(--link-color-hover, #2b65a0);
+  text-decoration: underline !important;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(a.is-unresolved, .cm-hmd-internal-link.is-unresolved) {
+  opacity: 0.65;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(a.url, .external-link) {
+  word-break: break-all;
 }
 
 /* 9. Tables (Typora github.css: 1em font-size, 6px 13px padding, 1px solid #dfe2e5, #f8f8f8 even rows & thead, local horizontal scrolling) */
@@ -596,6 +717,9 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock {
   background-color: #f8f8f8 !important;
   font-family: var(--font-monospace);
+  font-size: 0.9em;
+  line-height: 1.6;
+  color: #333333;
   padding-left: 8px !important;
   padding-right: 8px !important;
   box-shadow: inset 1px 0 #e7eaed, inset -1px 0 #e7eaed;
@@ -611,6 +735,11 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-s
   padding-bottom: 6px !important;
   border-radius: 0 0 3px 3px;
   box-shadow: inset 1px 0 #e7eaed, inset -1px 0 #e7eaed, inset 0 -1px #e7eaed;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-begin.HyperMD-codeblock-end {
+  border-radius: 3px;
+  box-shadow: inset 1px 0 #e7eaed, inset -1px 0 #e7eaed, inset 0 1px #e7eaed, inset 0 -1px #e7eaed;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre code {
@@ -630,11 +759,7 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-keyword) {
   color: #708;
 }
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.function, .token.class-name),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-def) {
-  color: #00f;
-}
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.parameter),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.function, .token.class-name, .token.parameter),
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-def) {
   color: #00f;
 }
@@ -714,10 +839,37 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-s
   color: #090;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) img {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(img, video) {
   max-width: 100%;
   height: auto;
   border-radius: 4px;
+  vertical-align: middle;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(p > img:only-child, p > .image-embed:only-child, video),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line > .image-embed:only-child, .cm-embed-block video) {
+  display: block;
+  text-align: center;
+  margin: 1.2em auto;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.math-block, .cm-math.cm-embed-block) {
+  display: block;
+  width: 100% !important;
+  margin: 1rem 0 !important;
+  overflow-x: auto !important;
+  text-align: center;
+  padding: 4px 0;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.math-inline, .cm-inline-math) {
+  font-size: 1rem;
+  vertical-align: baseline;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] ::selection,
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .cm-selectionBackground {
+  background: var(--text-selection, #b5d6fc) !important;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) hr, .markdown-source-view.mod-cm6.is-live-preview .hr) {
@@ -765,12 +917,12 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
   margin-block: 0.2em;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) sup.footnote-ref a {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(sup.footnote-ref a, sup.footnote-ref a:hover) {
   padding: 2px 4px;
   background-color: rgba(238, 238, 238, 0.7);
-  color: #555555;
+  color: #555555 !important;
   border-radius: 4px;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 /* Obsidian transclusions are not Typora pages: keep the host page margins out of the embed. */
@@ -958,8 +1110,17 @@ body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] 
   color: #dedede;
 }
 
-body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h6,.cm-header-6) {
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(h6, .cm-header-6, .cm-line.HyperMD-header-6) {
   color: #9da2a6;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(strong, b, dt, .cm-strong):not(a *, .cm-link *, .cm-hmd-internal-link *, .callout-title *) {
+  color: #dedede;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(li.is-checked, li.task-list-item.is-checked),
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line.HyperMD-task-line[data-task="x"], .cm-line.HyperMD-task-line[data-task="X"], .cm-line.HyperMD-task-line.is-checked) {
+  color: var(--checklist-done-color, #7d858c) !important;
 }
 
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(h1,h2):not(.markdown-embed h1):not(.markdown-embed h2) {
@@ -977,11 +1138,16 @@ body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] 
 }
 
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout {
-  color: #9da2a6 !important;
+  border-left-color: rgb(var(--callout-color, 71, 77, 84)) !important;
+  color: #b8bfc6 !important;
 }
 
-body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.callout-title, .callout-content, .callout-content p) {
-  color: #9da2a6 !important;
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.callout-title, .callout-icon) {
+  color: rgb(var(--callout-color, 157, 162, 166)) !important;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .callout-content {
+  color: #b8bfc6 !important;
 }
 
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) table {
@@ -1021,6 +1187,7 @@ body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] 
 
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock {
   background-color: #2b3035 !important;
+  color: #c9d1d9;
   box-shadow: inset 1px 0 #474d54, inset -1px 0 #474d54;
 }
 
@@ -1030,6 +1197,10 @@ body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] 
 
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-end {
   box-shadow: inset 1px 0 #474d54, inset -1px 0 #474d54, inset 0 -1px #474d54;
+}
+
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock-begin.HyperMD-codeblock-end {
+  box-shadow: inset 1px 0 #474d54, inset -1px 0 #474d54, inset 0 1px #474d54, inset 0 -1px #474d54;
 }
 
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) hr, .markdown-source-view.mod-cm6.is-live-preview .hr) {
@@ -1049,9 +1220,9 @@ body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] 
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4), 0 0 0 2px #2b3035 inset;
 }
 
-body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) sup.footnote-ref a {
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(sup.footnote-ref a, sup.footnote-ref a:hover) {
   background-color: rgba(255, 255, 255, 0.08);
-  color: #b8bfc6;
+  color: #b8bfc6 !important;
 }
 
 /* 13b. Dark syntax palette (GitHub Dark). */
@@ -1063,8 +1234,7 @@ body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] 
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-def) {
   color: #d2a8ff;
 }
-body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.parameter),
-body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-def) {
+body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.parameter) {
   color: #79c0ff;
 }
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre :is(.token.variable-2),
@@ -1152,13 +1322,15 @@ body.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="mar
   --link-external-color: #2f6f9f;
   --link-external-color-hover: #245a82;
   --blockquote-color: #5f6b76;
+  --checklist-done-color: #5f6b76;
 }
 
 body.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(
+  h6,
+  .cm-header-6,
+  .cm-line.HyperMD-header-6,
   blockquote,
-  .callout-title,
-  .callout-content,
-  .callout-content p,
+  .cm-line.HyperMD-quote,
   .metadata-properties-heading,
   .metadata-property-key,
   .metadata-add-button
@@ -1180,13 +1352,15 @@ body.theme-dark.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[dat
   --link-external-color: #b8d7ff;
   --link-external-color-hover: #d6e8ff;
   --blockquote-color: #c9d1d9;
+  --checklist-done-color: #b8bfc6;
 }
 
 body.theme-dark.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(
+  h6,
+  .cm-header-6,
+  .cm-line.HyperMD-header-6,
   blockquote,
-  .callout-title,
-  .callout-content,
-  .callout-content p,
+  .cm-line.HyperMD-quote,
   .metadata-properties-heading,
   .metadata-property-key,
   .metadata-add-button
