@@ -624,7 +624,7 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
   padding: 4px 0;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.math-inline, .cm-inline-math) { font-size: 1rem; vertical-align: baseline; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.math-inline, .cm-inline-math) { font-size: 1em; vertical-align: baseline; }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] ::selection,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .cm-selectionBackground { background: var(--text-selection, #b5d6fc); }
@@ -662,7 +662,7 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) .footnotes {
   opacity: 0.8;
-  font-size: 0.9rem;
+  font-size: 0.9em;
   margin-top: 1em;
   margin-bottom: 1em;
 }
@@ -687,10 +687,15 @@ body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print
   --h4-size: 0.9em;
 }
 
+body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print) .markdown-embed .markdown-preview-view h1 { font-size: var(--h1-size, 1.125em); }
+body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print) .markdown-embed .markdown-preview-view h2 { font-size: var(--h2-size, 1.05em); }
+body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print) .markdown-embed .markdown-preview-view h3 { font-size: var(--h3-size, 1em); }
+body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print) .markdown-embed .markdown-preview-view :is(h4, h5, h6) { font-size: var(--h4-size, 0.9em); }
+
 body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print) .markdown-embed .markdown-preview-view > .markdown-preview-sizer { width: 100%; max-width: 100%; }
 
 /* 12. Code font: Typora's stack or the user's Obsidian monospace. */
-body.qs-typora-enabled.qs-typora-code-system .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) { --font-monospace: var(--qs-typora-system-mono, monospace); }
+body.qs-typora-enabled.qs-typora-code-system :is(.workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview), .print > .markdown-preview-view) { --font-monospace: var(--qs-typora-system-mono, monospace); }
 
 /* 13. Dark mode: Typora night palette with the same metrics. */
 body.theme-dark.qs-typora-enabled.qs-typora-white-shell {
@@ -926,9 +931,10 @@ body.theme-dark.qs-typora-enabled.qs-typora-contrast.qs-typora-white-shell .stat
    ========================================================================== */
 
 body.qs-typora-enabled .print > .markdown-preview-view {
+  --font-monospace: "Lucida Console", Consolas, "Courier", monospace;
   font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SF Pro", sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: var(--qs-typora-font-size, 16px);
+  line-height: var(--qs-typora-line-height, 1.6);
   color: #333333;
   background-color: #ffffff;
   -webkit-font-smoothing: antialiased;
@@ -939,7 +945,7 @@ body.qs-typora-enabled .print > .markdown-preview-view > .markdown-preview-sizer
   max-width: none;
 }
 
-body.qs-typora-enabled .print > .markdown-preview-view :is(h1, h2, h3, h4, h5, h6) {
+body.qs-typora-enabled .print > .markdown-preview-view :is(h1, h2, h3, h4, h5, h6):not(.markdown-embed *) {
   color: #333333;
   font-weight: bold;
   line-height: 1.25;
@@ -949,22 +955,22 @@ body.qs-typora-enabled .print > .markdown-preview-view :is(h1, h2, h3, h4, h5, h
   page-break-after: avoid;
 }
 
-body.qs-typora-enabled .print > .markdown-preview-view h1 {
-  font-size: 2rem;
+body.qs-typora-enabled .print > .markdown-preview-view h1:not(.markdown-embed *) {
+  font-size: 2em;
   padding-bottom: 0.3em;
   border-bottom: 1px solid #eaecef;
 }
 
-body.qs-typora-enabled .print > .markdown-preview-view h2 {
-  font-size: 1.5rem;
+body.qs-typora-enabled .print > .markdown-preview-view h2:not(.markdown-embed *) {
+  font-size: 1.5em;
   padding-bottom: 0.3em;
   border-bottom: 1px solid #eaecef;
 }
 
-body.qs-typora-enabled .print > .markdown-preview-view h3 { font-size: 1.25rem; }
-body.qs-typora-enabled .print > .markdown-preview-view h4 { font-size: 1rem; }
-body.qs-typora-enabled .print > .markdown-preview-view h5 { font-size: 0.875rem; }
-body.qs-typora-enabled .print > .markdown-preview-view h6 { font-size: 0.85rem; color: #777777; }
+body.qs-typora-enabled .print > .markdown-preview-view h3:not(.markdown-embed *) { font-size: 1.25em; }
+body.qs-typora-enabled .print > .markdown-preview-view h4:not(.markdown-embed *) { font-size: 1em; }
+body.qs-typora-enabled .print > .markdown-preview-view h5:not(.markdown-embed *) { font-size: 0.875em; }
+body.qs-typora-enabled .print > .markdown-preview-view h6:not(.markdown-embed *) { font-size: 0.85em; color: #777777; }
 
 body.qs-typora-enabled .print > .markdown-preview-view blockquote {
   margin: 0.8em 0;
@@ -998,6 +1004,8 @@ body.qs-typora-enabled .print > .markdown-preview-view pre {
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+body.qs-typora-enabled .print > .markdown-preview-view pre code { font-family: inherit; font-size: 1em; background: transparent; border: 0; padding: 0; }
 
 body.qs-typora-enabled .print > .markdown-preview-view :not(pre) > code {
   font-family: var(--font-monospace, monospace);

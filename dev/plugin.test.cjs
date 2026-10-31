@@ -69,6 +69,9 @@ test('css-change event re-applies settings and synchronizes monospace font',asyn
   mono = 'Fira Code';
   events.get('css-change')();
   assert.equal(docs[0].body.values.get('--qs-typora-system-mono'), 'Fira Code');
+  mono = '';
+  events.get('css-change')();
+  assert.equal(docs[0].body.values.has('--qs-typora-system-mono'), false);
 });
 test('reset defaults restores all parameters and enables styling',async()=>{
   const {instance:p}=setup({enabled:false,fontSize:22,contentWidth:480,lineHeight:2.2}); await p.onload(); await p.resetSettings();

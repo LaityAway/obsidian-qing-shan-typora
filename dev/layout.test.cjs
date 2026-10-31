@@ -47,7 +47,7 @@ test('synthetic browser layout: Typora widths, tables, code, inline elements and
  <div class="cm-line HyperMD-codeblock HyperMD-codeblock-end">}</div>
  <div class="cm-embed-block cm-table-widget"><div class="table-wrapper"><table><tr>${'<td><div class="table-cell-wrapper">示例</div></td>'.repeat(24)}</tr></table></div></div>
  </div></div></div></div></div></div>
- </div><div class="workspace-leaf-content" data-type="canvas">虚构画布</div><button class="nav-file-title">示例</button><div class="print"><div class="markdown-preview-view" id="pdf-export-view"><h1>PDF 一级标题</h1><p id="pdf-prose-p">PDF普通段落</p><p id="pdf-media-p"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></p><div class="callout" id="pdf-callout" style="--callout-color: 8, 109, 221;"><div class="callout-title">PDF Callout</div></div><table><thead><tr><th>PDF Th</th></tr></thead><tbody><tr><td>PDF Td</td></tr></tbody></table></div></div></body>`);
+ </div><div class="workspace-leaf-content" data-type="canvas">虚构画布</div><button class="nav-file-title">示例</button><div class="print"><div class="markdown-preview-view" id="pdf-export-view"><h1 id="pdf-h1">PDF 一级标题</h1><p id="pdf-prose-p">PDF普通段落</p><p id="pdf-media-p"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></p><pre><code id="pdf-code">const x = 1;</code></pre><div class="markdown-embed"><div class="markdown-preview-view"><h1 id="pdf-embed-h1">PDF 嵌入标题</h1></div></div><div class="callout" id="pdf-callout" style="--callout-color: 8, 109, 221;"><div class="callout-title">PDF Callout</div></div><table><thead><tr><th>PDF Th</th></tr></thead><tbody><tr><td>PDF Td</td></tr></tbody></table></div></div></body>`);
  await p.addStyleTag({content:fs.readFileSync(path.join(__dirname,'../styles.css'),'utf8')});
  await t.test('fixed widths affect both reading and editing',async()=>{for(const w of [480,800,1000,1200]){const a=await p.evaluate(w=>{document.body.style.setProperty('--qs-typora-width',w+'px');return ['.markdown-preview-sizer','.cm-scroller > .cm-sizer'].map(s=>document.querySelector(s).getBoundingClientRect().width)},w);assert.deepEqual(a,[w,w]);}});
  await t.test('full width restores available width',async()=>{await p.evaluate(()=>{document.body.classList.remove('qs-typora-width-fixed');document.body.classList.add('qs-typora-width-full')});assert.equal(await p.locator('.markdown-preview-sizer').evaluate(x=>x.getBoundingClientRect().width),1340);await p.evaluate(()=>{document.body.classList.remove('qs-typora-width-full');document.body.classList.add('qs-typora-width-typora')});});
@@ -148,7 +148,11 @@ await t.test('narrow split uses the same padding in both views',async()=>{await 
       lpFrontmatterIndent: cs('#lp-frontmatter').textIndent,
       lpFootnoteIndent: cs('#lp-footnote').textIndent,
       lpImgIndent: cs('#lp-img').textIndent,
-      pdfH1BorderBottom: cs('#pdf-export-view h1').borderBottomWidth,
+      pdfH1BorderBottom: cs('#pdf-h1').borderBottomWidth,
+      pdfH1Size: cs('#pdf-h1').fontSize,
+      pdfEmbedH1Size: cs('#pdf-embed-h1').fontSize,
+      pdfEmbedH1Border: cs('#pdf-embed-h1').borderBottomStyle,
+      pdfCodeFont: cs('#pdf-code').fontFamily,
       pdfThBg: cs('#pdf-export-view thead th').backgroundColor,
       pdfProseIndent: cs('#pdf-prose-p').textIndent,
       pdfMediaIndent: cs('#pdf-media-p').textIndent,
@@ -167,6 +171,10 @@ await t.test('narrow split uses the same padding in both views',async()=>{await 
   assert.equal(extraMetrics.lpFootnoteIndent, '0px');
   assert.equal(extraMetrics.lpImgIndent, '0px');
   assert.equal(extraMetrics.pdfH1BorderBottom, '1px');
+  assert.equal(extraMetrics.pdfH1Size, '32px');
+  assert.equal(extraMetrics.pdfEmbedH1Size, '18px');
+  assert.equal(extraMetrics.pdfEmbedH1Border, 'none');
+  assert.ok(extraMetrics.pdfCodeFont.includes('Lucida Console'));
   assert.equal(extraMetrics.pdfThBg, 'rgb(248, 248, 248)');
   assert.equal(extraMetrics.pdfProseIndent, '32px');
   assert.equal(extraMetrics.pdfMediaIndent, '0px');

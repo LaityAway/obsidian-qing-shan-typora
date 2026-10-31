@@ -6,6 +6,17 @@ GitHub Releases 在线查看：[https://github.com/LaityAway/obsidian-qing-shan-
 
 ---
 
+## [0.4.9] - 2026-10-31
+
+### 修复与优化
+- **PDF 导出字号、行距与标题比例同步**：`.print > .markdown-preview-view` 现继承用户设定的 `--qs-typora-font-size` 与 `--qs-typora-line-height`，且导出标题（`h1~h6`）改用相对单位 `em` 并排除 `.markdown-embed *`，随正文字号成比例缩放。
+- **嵌入笔记（Transclusion）标题字号与下边框隔离**：为 `.markdown-embed .markdown-preview-view` 内的 `h1~h6` 显式绑定 `--h1-size ~ --h4-size`，并排除导出视图中外层 `h1/h2` 的底部分隔线泄漏到嵌入块内。
+- **PDF 导出代码字体一致性**：在 `.print > .markdown-preview-view` 中注入 Typora 默认等宽字体栈，并支持 `qs-typora-code-system` 跟随系统/Obsidian 等宽字体，同时重置 `pre code` 内联样式。
+- **行内公式与脚注字号相对化**：`.math-inline` / `.cm-inline-math` 与 `.footnotes` 由 `rem` 改为 `em`，随用户自定义字号及所在标题层级同步缩放。
+- **系统等宽字体置空清理**：当用户在 Obsidian 外观设置中清空自定义等宽字体时，自动移除残留的 `--qs-typora-system-mono` 属性。
+
+---
+
 ## [0.4.8] - 2026-10-30
 
 ### 新增与优化

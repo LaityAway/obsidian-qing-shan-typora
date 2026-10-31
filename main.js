@@ -196,8 +196,11 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
     if (view && typeof view.getComputedStyle === 'function') {
       const cs = view.getComputedStyle(doc.body);
       const mono = cs ? cs.getPropertyValue('--font-monospace')?.trim() : '';
-      if (mono && doc.body.style?.getPropertyValue?.(MONO_VARIABLE) !== mono) {
-        doc.body.style.setProperty(MONO_VARIABLE, mono);
+      const currentMono = doc.body.style?.getPropertyValue?.(MONO_VARIABLE) ?? '';
+      if (mono) {
+        if (currentMono !== mono) doc.body.style.setProperty(MONO_VARIABLE, mono);
+      } else if (currentMono) {
+        doc.body.style.removeProperty(MONO_VARIABLE);
       }
     }
     const applied = this.appliedSettings.get(doc) === this.signature;
