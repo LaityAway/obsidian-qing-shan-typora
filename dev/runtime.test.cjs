@@ -230,12 +230,13 @@ test('isolated Obsidian runtime acceptance', { timeout: 180000 }, async t => {
    }
   });
 
-  await t.test('paragraphs after standalone HTML comments are indented',async()=>{
+  await t.test('HTML comment boundaries preserve paragraph indentation',async()=>{
    await settings({paragraphIndent:true});await open('验收布局.md');
    try {
     for(const [text,line] of [
      ['<!-- 注释 -->\n正文',1],
      ['<!-- 第一行\n第二行 -->\n正文',2],
+     ['<!-- 第一行\n中间\n结束 -->\n正文',3],
      ['前文\n<!-- 注释 -->\n正文',2],
      ['前文\n  <!-- 注释 -->\n正文',2],
     ]){
@@ -251,6 +252,10 @@ test('isolated Obsidian runtime acceptance', { timeout: 180000 }, async t => {
     assert.equal(await page.locator('.is-live-preview .cm-content > .cm-line').nth(1).evaluate(e=>getComputedStyle(e).textIndent),'0px');
     await page.evaluate(()=>app.workspace.activeLeaf.view.editor.setValue('前文 <!-- 行内注释 -->\n续行'));
     assert.equal(await page.locator('.is-live-preview .cm-content > .cm-line').nth(1).evaluate(e=>getComputedStyle(e).textIndent),'0px');
+    for(const [text,line] of [['前文 <!-- 注释\n结束 -->\n续行',2],['前文 <!-- 注释\n中间\n结束 --> 之后\n续行',3]]){
+     await page.evaluate(text=>app.workspace.activeLeaf.view.editor.setValue(text),text);
+     assert.equal(await page.locator('.is-live-preview .cm-content > .cm-line').nth(line).evaluate(e=>getComputedStyle(e).textIndent),'0px',text);
+    }
    } finally {
     await page.evaluate(async text=>{app.workspace.activeLeaf.view.editor.setValue(text);await app.workspace.activeLeaf.view.save()},fixtures['验收布局.md']);
     await settings({paragraphIndent:false});

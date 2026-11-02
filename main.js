@@ -191,12 +191,18 @@ function isMarkdownBlockLine(tree, line) {
   return node.name.startsWith('HyperMD-');
 }
 
-function isHtmlCommentEnd(tree, line) {
+function isHtmlCommentEnd(tree, doc, line) {
   const offset = line.text.search(/\S/);
   if (offset < 0) return false;
   let node = tree.resolveInner(line.from + offset, 1);
   while (node.parent && node.parent.name !== 'Document') node = node.parent;
-  if (node.name.includes('comment_hmd-html-end')) return true;
+  if (node.name.includes('comment_hmd-html-end')) {
+    let start = node.prevSibling;
+    while (start && start.name.startsWith('comment') && !start.name.includes('comment_hmd-html-begin')) start = start.prevSibling;
+    if (!start || !start.name.includes('comment_hmd-html-begin')) return false;
+    const startLine = doc.lineAt(start.from);
+    return !startLine.text.slice(0, start.from - startLine.from).trim();
+  }
   return node.name === 'comment' && line.text.trimStart().startsWith('<!--') && line.text.includes('-->');
 }
 
@@ -225,7 +231,7 @@ function paragraphStartDecorations(view) {
           const previous = doc.line(line.number - 1);
           startsParagraph = !previous.text.trim();
           if (!startsParagraph) {
-            startsParagraph = isMarkdownBlockLine(tree, previous) || isHtmlCommentEnd(tree, previous);
+            startsParagraph = isMarkdownBlockLine(tree, previous) || isHtmlCommentEnd(tree, doc, previous);
           }
         }
         if (startsParagraph) {
