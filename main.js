@@ -191,6 +191,14 @@ function isMarkdownBlockLine(tree, line) {
   return node.name.startsWith('HyperMD-');
 }
 
+function isHtmlCommentStart(tree, line) {
+  const offset = line.text.search(/\S/);
+  if (offset < 0 || !line.text.slice(offset).startsWith('<!--')) return false;
+  let node = tree.resolveInner(line.from + offset, 1);
+  while (node.parent && node.parent.name !== 'Document') node = node.parent;
+  return node.name.startsWith('comment');
+}
+
 function isHtmlCommentEnd(tree, doc, line) {
   const offset = line.text.search(/\S/);
   if (offset < 0) return false;
@@ -210,7 +218,7 @@ function mediaOnlyParagraph(doc, tree, line) {
   if (!standaloneMediaLine(line.text)) return false;
   for (let number = line.number + 1; number <= doc.lines; number++) {
     const next = doc.line(number);
-    if (!next.text.trim() || isMarkdownBlockLine(tree, next)) break;
+    if (!next.text.trim() || isMarkdownBlockLine(tree, next) || isHtmlCommentStart(tree, next)) break;
     if (!standaloneMediaLine(next.text, true)) return false;
   }
   return true;

@@ -6,6 +6,16 @@ GitHub Releases 在线查看：[https://github.com/LaityAway/obsidian-qing-shan-
 
 ---
 
+## [Unreleased: 0.4.17] - 2026-11-02
+
+### 修复
+- **图片与独立注释的段落边界**：纯图片后的独立 HTML 注释会终止当前段落，避免后续正文使图片在实时预览中被误缩进；行内注释仍按同一段处理。
+
+### 测试
+- 隔离 Obsidian 完整回归 102 项通过，0 失败、0 跳过。
+
+---
+
 ## [Unreleased: 0.4.16] - 2026-11-02
 
 ### 修复

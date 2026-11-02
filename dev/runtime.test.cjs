@@ -320,6 +320,9 @@ test('isolated Obsidian runtime acceptance', { timeout: 180000 }, async t => {
       ['![图](虚构缩进图.png)<!--备注-->文字','32px'],
       ['![[虚构缩进图.png]]\n![[虚构缩进图.png]]','0px'],
       ['![[虚构缩进图.png]]  \n后续文字','32px'],
+      ['![图](虚构缩进图.png)\n<!-- 注释 -->\n正文','0px'],
+      ['![图](虚构缩进图.png)\n<!-- 开始\n结束 -->\n正文','0px'],
+      ['![图](虚构缩进图.png) <!-- 行内注释 -->\n正文','32px'],
       ['![甲](虚构缩进图.png) 中间文字 ![乙](虚构缩进图.png)','32px'],
       ['[![甲](虚构缩进图.png)](https://example.invalid) 中间文字 [![乙](虚构缩进图.png)](https://example.invalid)','32px'],
     ]){
