@@ -97,22 +97,47 @@ function skipBracket(value, position, closing) {
 
 function skipDestination(value, position) {
   if (value[position] !== '(') return -1;
-  let depth = 1;
-  let quote = '';
-  let inAngle = false;
-  let started = false;
-  for (let i = position + 1; i < value.length; i++) {
-    const char = value[i];
-    if (char === '\\') { started = true; i++; continue; }
-    if (inAngle) { if (char === '>') inAngle = false; continue; }
-    if (quote) { if (char === quote) quote = ''; continue; }
-    if (!started && char === '<') { started = true; inAngle = true; continue; }
-    if (!/\s/.test(char)) started = true;
-    if ((char === '"' || char === "'") && /\s/.test(value[i - 1])) { quote = char; continue; }
-    if (char === '(') depth++;
-    else if (char === ')' && --depth === 0) return i + 1;
+  let i = position + 1;
+  while (i < value.length && /\s/.test(value[i])) i++;
+  if (value[i] === '<') {
+    i++;
+    while (i < value.length && value[i] !== '>') {
+      if (value[i] === '\\') i++;
+      i++;
+    }
+    if (i >= value.length) return -1;
+    i++;
+    if (value[i] !== ')' && !/\s/.test(value[i] || '')) return -1;
+  } else {
+    let depth = 0;
+    while (i < value.length) {
+      const char = value[i];
+      if (char === '\\') { i += 2; continue; }
+      if (/\s/.test(char)) break;
+      if (char === '(') depth++;
+      else if (char === ')') {
+        if (depth === 0) return i + 1;
+        depth--;
+      }
+      i++;
+    }
+    if (depth !== 0) return -1;
   }
-  return -1;
+  if (value[i] === ')') return i + 1;
+  while (i < value.length && /\s/.test(value[i])) i++;
+  if (value[i] === ')') return i + 1;
+  const opener = value[i];
+  if (opener !== '"' && opener !== "'" && opener !== '(') return -1;
+  const closer = opener === '(' ? ')' : opener;
+  i++;
+  while (i < value.length && value[i] !== closer) {
+    if (value[i] === '\\') i++;
+    i++;
+  }
+  if (i >= value.length) return -1;
+  i++;
+  while (i < value.length && /\s/.test(value[i])) i++;
+  return value[i] === ')' ? i + 1 : -1;
 }
 
 function skipImage(value, position) {

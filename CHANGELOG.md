@@ -6,6 +6,16 @@ GitHub Releases 在线查看：[https://github.com/LaityAway/obsidian-qing-shan-
 
 ---
 
+## [Unreleased: 0.4.14] - 2026-11-02
+
+### 修复
+- **图片地址校验**：未完成或无效的 Markdown 图片地址不再被误判为纯图片段落；保留带空格的尖括号地址和合法标题的识别。
+
+### 测试
+- 隔离 Obsidian 完整回归 101 项通过，0 失败、0 跳过。
+
+---
+
 ## [Unreleased: 0.4.13] - 2026-11-02
 
 ### 修复
