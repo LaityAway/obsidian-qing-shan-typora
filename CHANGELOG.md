@@ -6,6 +6,29 @@ GitHub Releases 在线查看：[https://github.com/LaityAway/obsidian-qing-shan-
 
 ---
 
+## [Unreleased] - 2026-11-02
+
+### 修复
+- **实时预览图文混排**：限制图片 Markdown 匹配范围，避免两张图片之间有文字时被误判为纯图片；保留文件名含括号的单图识别。
+- **媒体段落边界**：识别带链接的图片及多行纯媒体段落；图片后同段有文字时，实时预览与阅读视图使用一致的缩进，并在编辑时更新。
+- **读取失败提示清理**：插件卸载时关闭持久提示；读取尚未结束就卸载时不再创建孤立提示。
+- **图文混排首行缩进**：阅读、悬浮预览、打印和实时预览区分含文字的媒体段落与纯媒体段落，前者照常缩进，行内图片不再被误设为块级居中。
+- **设置读取失败保护**：读取配置失败时本次会话暂停写入，显示持续提示；检查配置并重新加载插件后恢复，避免用默认值覆盖原配置。
+- **实时预览首行缩进**：按编辑器文档标记段落首行，续行和空行不再重复缩进；编辑时同步更新，不改变笔记内容。
+- **首页样式作用域**：首页 H1/H2、副标题引用块、链接栅格、页脚斜体与 Callout 现在只命中首页自己的 `.el-h1` / `.el-h2` / `.el-blockquote` / `.el-ul` / `.el-p` / `.el-div` section，并排除 `.markdown-embed` 与 `.callout` 内的后代。修复了嵌套列表/Callout 列表被改成网格、正文行内斜体被当成页脚、所有引用块都变成副标题、首页样式泄漏进嵌入笔记等问题。
+- **首页列表分隔线**：去掉换行后落在页面左边缘的 `border-left`，改为 `margin-left:-1px` + `ul { overflow:hidden }`，只保留列与列之间的分隔线；单列和末行空单元格不再出现多余竖线或灰块，顶层列表的 `.list-bullet` 圆点也一并隐藏。
+- **首页嵌入隔离**：嵌入规则不再因外层 `.qs-home` 而失效，首页内嵌笔记恢复 `--h1-size: 1.125em`、`padding: 0` 与正常列表排版。
+- **PDF 页边距与图片**：`@page` 改为四边 16mm，`.print > .markdown-preview-view` 内边距归零；补充打印态独立图片居中/圆角、`--p-spacing: .8em` 与键帽阴影。左右边距不再依赖主题的 `--file-margins`。
+- **统一底色与焦点**：纸色背景只作用于 `.workspace-split.mod-root`，侧栏大纲/反链恢复 `#fafafa`（深色 `#2f3439`）；`details > summary` 恢复可见的 `:focus-visible` 轮廓，并允许选中摘要文字。
+- **文档更正**：0.4.5 条目中“保持全量 0 `!important`”的表述不准确；实际保留 1 处针对 Minimal gutter 的 `!important`。
+
+### 测试
+- 新增 `dev/home.test.cjs` 7 项合成测试：首页网格与嵌套/Callout 列表、行内 `em` 与副标题引用块、嵌入笔记隔离、页脚与 Callout、侧栏底色、PDF 16mm 页边距与图片、`details` 焦点。
+- 更新 `dev/layout.test.cjs` 的画布夹具以匹配真实 `.workspace-split.mod-root` 结构，并更新 `dev/release-lint.test.cjs` 以允许首页页脚的 `:has(+ .el-div)` / `:has(+ .mod-footer)`。
+- 首页修复时全量测试 90 项通过；本次推送前执行 `QS_REQUIRE_RUNTIME=1 node --test dev/*.test.cjs`，99 项通过、0 失败、0 跳过，包含隔离 Obsidian 1.14.5 运行时场景。
+
+---
+
 ## [0.4.9] - 2026-10-31
 
 ### 修复与优化

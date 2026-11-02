@@ -1,6 +1,8 @@
 'use strict';
 
 const { Plugin, PluginSettingTab, Setting, Notice } = require('obsidian');
+const { ViewPlugin, Decoration } = require('@codemirror/view');
+const { syntaxTree } = require('@codemirror/language');
 
 // App-scoped queue survives plugin module reloads without touching note data.
 const WRITE_STATE = Symbol.for('qing-shan-typora.settings-writes');
@@ -56,6 +58,94 @@ function normalizeSettings(value) {
     codeFont: CODE_FONTS.includes(data.codeFont) ? data.codeFont : DEFAULTS.codeFont,
   };
 }
+
+// Text nodes matter here: :only-child alone also matches an image surrounded by text.
+function markMediaOnlyParagraphs(element) {
+  const paragraphs = element.matches('p') ? [element] : [...element.querySelectorAll('p')];
+  for (const paragraph of paragraphs) {
+    let mediaCount = 0;
+    const isMediaOrWhitespace = node => {
+      if (node.nodeType === 3) return !node.textContent.trim();
+      if (node.nodeType !== 1) return true;
+      if (node.matches('br')) return true;
+      const isPendingMedia = node.matches('.internal-embed[src]') && /\.(?:png|jpe?g|gif|webp|avif|svg|bmp|mp4|webm|ogv|mov|m4v|mp3|wav|ogg|m4a|flac|aac)(?:[?#].*)?$/i.test(node.getAttribute('src'));
+      if (node.matches('img, .image-embed, .video-embed, .audio-embed') || isPendingMedia) {
+        mediaCount++;
+        return true;
+      }
+      if (node.matches('a')) {
+        const before = mediaCount;
+        return [...node.childNodes].every(isMediaOrWhitespace) && mediaCount > before;
+      }
+      return false;
+    };
+    const mediaOnly = [...paragraph.childNodes].every(isMediaOrWhitespace);
+    paragraph.classList.toggle('qs-typora-media-only', mediaOnly && mediaCount > 0);
+  }
+}
+
+function standaloneMediaLine(text) {
+  const value = text.trim();
+  const image = '!\\[[^\\]\\n]*\\]\\((?:[^()\\n]|\\([^()\\n]*\\))*\\)';
+  return /^!\[\[[^\]\n]+\]\]$/.test(value) ||
+    new RegExp(`^(?:${image}|\\[${image}\\]\\((?:[^()\\n]|\\([^()\\n]*\\))*\\))$`).test(value) ||
+    /^<(?:img\b[^>]*\/?|(?:audio|video)\b[^>]*>.*<\/(?:audio|video))>$/i.test(value);
+}
+
+function isMarkdownBlockLine(tree, line) {
+  let node = tree.resolveInner(line.from, 1);
+  while (node.parent && node.parent.name !== 'Document') node = node.parent;
+  return node.name.startsWith('HyperMD-');
+}
+
+function mediaOnlyParagraph(doc, tree, line) {
+  if (!standaloneMediaLine(line.text)) return false;
+  for (let number = line.number + 1; number <= doc.lines; number++) {
+    const next = doc.line(number);
+    if (!next.text.trim() || isMarkdownBlockLine(tree, next)) break;
+    if (!standaloneMediaLine(next.text)) return false;
+  }
+  return true;
+}
+
+// Mark paragraph starts in the editor document, not just the rendered DOM: a
+// viewport may begin in the middle of a paragraph.
+function paragraphStartDecorations(view) {
+  const { doc } = view.state;
+  const tree = syntaxTree(view.state);
+  const marks = [];
+  let previousLine = 0;
+  for (const range of view.visibleRanges) {
+    for (let line = doc.lineAt(range.from); line.from <= range.to; line = doc.line(line.number + 1)) {
+      if (line.number !== previousLine && line.text.trim()) {
+        let startsParagraph = line.number === 1;
+        if (!startsParagraph) {
+          const previous = doc.line(line.number - 1);
+          startsParagraph = !previous.text.trim();
+          if (!startsParagraph) {
+            startsParagraph = isMarkdownBlockLine(tree, previous);
+          }
+        }
+        if (startsParagraph) {
+          const name = mediaOnlyParagraph(doc, tree, line) ? 'qs-typora-paragraph-start qs-typora-media-only' : 'qs-typora-paragraph-start';
+          marks.push(Decoration.line({ class: name }).range(line.from));
+        }
+      }
+      previousLine = line.number;
+      if (line.number === doc.lines) break;
+    }
+  }
+  return Decoration.set(marks, true);
+}
+
+const paragraphIndentExtension = ViewPlugin.fromClass(class {
+  constructor(view) { this.decorations = paragraphStartDecorations(view); }
+  update(update) {
+    if (update.docChanged || update.viewportChanged || syntaxTree(update.startState) !== syntaxTree(update.state)) {
+      this.decorations = paragraphStartDecorations(update.view);
+    }
+  }
+}, { decorations: plugin => plugin.decorations });
 
 class TyporaSettingsTab extends PluginSettingTab {
   constructor(app, plugin) {
@@ -130,6 +220,7 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
     this.documents = new Set();
     this.appliedSettings = new WeakMap();
     this.saveFailed = false;
+    this.loadFailed = false;
     this.active = true;
     this.writeState = this.app[WRITE_STATE] ??= { tail: Promise.resolve() };
     this.writeQueue = this.writeState.tail;
@@ -137,12 +228,14 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
     try {
       this.settings = normalizeSettings(await this.loadData());
     } catch {
-      this.saveFailed = true;
+      this.loadFailed = true;
       this.settings = { ...DEFAULTS };
-      new Notice('Typora 正文排版：设置读取失败，本次使用默认值。');
+      if (this.active) this.loadNotice = new Notice('Typora 正文排版：设置读取失败，本次使用默认值且不会保存。请检查配置后重新加载插件。', 0);
     }
     this.refreshSettingsCache();
     if (!this.active) return;
+    this.registerEditorExtension(paragraphIndentExtension);
+    this.registerMarkdownPostProcessor(markMediaOnlyParagraphs);
     this.addSettingTab(new TyporaSettingsTab(this.app, this));
     this.addCommand({
       id: 'toggle-typora-typography',
@@ -254,6 +347,7 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
     this.settings = next;
     this.refreshSettingsCache();
     this.applySettings();
+    if (this.loadFailed) return this.writeQueue;
     if (!options.deferSave) this.flushPendingSave();
     if (options.deferSave && this.pendingSave) {
       this.pendingSave.snapshot = { ...this.settings };
@@ -286,6 +380,8 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
 
   onunload() {
     this.active = false;
+    this.loadNotice?.hide();
+    this.loadNotice = null;
     this.flushPendingSave();
     for (const doc of this.documents) this.clearDocument(doc);
     this.documents.clear();

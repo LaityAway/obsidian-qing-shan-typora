@@ -42,9 +42,10 @@ body.qs-typora-enabled.qs-typora-white-shell :is(
 
 body.qs-typora-enabled.qs-typora-white-shell :is(
   .workspace,
-  .workspace-tabs .workspace-leaf,
-  .workspace-leaf-content,
-  .view-content
+  .workspace-split.mod-root,
+  .workspace-split.mod-root .workspace-leaf,
+  .workspace-split.mod-root .workspace-leaf-content,
+  .workspace-split.mod-root .view-content
 ) { background-color: #ffffff; }
 
 body.qs-typora-enabled.qs-typora-white-shell :is(.workspace-ribbon, .mod-sidedock, .workspace-tab-header-container, .view-header) { border-color: #eeeeee; }
@@ -248,6 +249,14 @@ body.qs-typora-enabled.qs-typora-width-full .workspace-leaf-content[data-type="m
 
 /* Gutter visibility and placement belong to Obsidian's line-number setting.
    Keep the host's gutter layout inside the centered content sizer. */
+/* Minimal forces this gutter to be absolutely positioned, so it cannot reserve
+   space for line numbers. Restore normal flow in live preview only. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-contentContainer > .cm-gutters {
+  position: static !important;
+}
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-lineNumbers {
+  margin-inline-end: 20px;
+}
 
 /* 5. Explicit title preference: never inspect note text or rendered headings. */
 body.qs-typora-enabled.qs-typora-hide-title .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .inline-title { display: none; }
@@ -393,7 +402,9 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-quote {
-  border-left: 4px solid #dfe2e5;
+  /* The editor draws its quote rail with ::before and calculates hanging
+     indentation inline. Preserve both instead of adding a second border. */
+  border-left: 0;
   padding-inline: 15px;
   color: #777777;
   background-color: transparent;
@@ -628,8 +639,8 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
   vertical-align: middle;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(p > img:only-child, p > .image-embed:only-child, video),
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line > .image-embed:only-child, .cm-embed-block video) {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(p.qs-typora-media-only > img, p.qs-typora-media-only > .image-embed, p.qs-typora-media-only > a, video),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line.qs-typora-media-only > .image-embed, .cm-embed-block video) {
   display: block;
   text-align: center;
   margin: 1.2em auto;
@@ -704,7 +715,7 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
 }
 
 /* Obsidian transclusions are not Typora pages: keep the host page margins out of the embed. */
-body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print) :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .markdown-embed .markdown-preview-view {
+body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print) :is(.markdown-preview-view, .markdown-source-view.mod-cm6.is-live-preview) .markdown-embed .markdown-preview-view {
   padding: 0;
   /* Obsidian's own transclusion scale; the page's 2.25em H1 must not leak in. */
   --h1-size: 1.125em;
@@ -778,9 +789,10 @@ body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(
 
 body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(
   .workspace,
-  .workspace-tabs .workspace-leaf,
-  .workspace-leaf-content,
-  .view-content
+  .workspace-split.mod-root,
+  .workspace-split.mod-root .workspace-leaf,
+  .workspace-split.mod-root .workspace-leaf-content,
+  .workspace-split.mod-root .view-content
 ) { background-color: #363b40; }
 
 body.theme-dark.qs-typora-enabled.qs-typora-white-shell :is(.workspace-ribbon, .mod-sidedock, .workspace-tab-header-container, .view-header) { border-color: #474d54; }
@@ -951,7 +963,7 @@ body.theme-dark.qs-typora-enabled.qs-typora-contrast.qs-typora-white-shell .stat
 @media print {
   /* Named pages keep disabled typography from changing host PDF margins. */
   @page qs-typora {
-    margin: 16mm 0;
+    margin: 16mm;
   }
 
   body.qs-typora-enabled { page: qs-typora; }
@@ -989,9 +1001,12 @@ body.theme-dark.qs-typora-enabled.qs-typora-contrast.qs-typora-white-shell .stat
 
 body.qs-typora-enabled .print > .markdown-preview-view {
   --font-monospace: "Lucida Console", Consolas, "Courier", monospace;
+  --line-height-normal: var(--qs-typora-line-height, 1.6);
+  --p-spacing: 0.8em;
   font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SF Pro", sans-serif;
   font-size: var(--qs-typora-font-size, 16px);
   line-height: var(--qs-typora-line-height, 1.6);
+  padding: 0;
   color: #333333;
   background-color: #ffffff;
   -webkit-font-smoothing: antialiased;
@@ -1000,6 +1015,16 @@ body.qs-typora-enabled .print > .markdown-preview-view {
 body.qs-typora-enabled .print > .markdown-preview-view > .markdown-preview-sizer {
   width: 100%;
   max-width: none;
+}
+
+body.qs-typora-enabled .print > .markdown-preview-view :is(p.qs-typora-media-only > img, p.qs-typora-media-only > .image-embed, p.qs-typora-media-only > a) {
+  display: block;
+  margin: 1.2em auto;
+  text-align: center;
+}
+
+body.qs-typora-enabled .print > .markdown-preview-view img {
+  border-radius: 4px;
 }
 
 body.qs-typora-enabled .print > .markdown-preview-view :is(h1, h2, h3, h4, h5, h6):not(.markdown-embed *) {
@@ -1136,6 +1161,7 @@ body.qs-typora-enabled .print > .markdown-preview-view kbd {
   background-color: #ffffff;
   border: 1px solid #adb3b9;
   border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(12, 13, 14, 0.2), 0 0 0 2px #ffffff inset;
   white-space: nowrap;
 }
 body.qs-typora-enabled .print > .markdown-preview-view details {
@@ -1167,10 +1193,10 @@ body.qs-typora-enabled .print > .markdown-preview-view .mermaid svg {
    (Absorbed from ParaFlow: strictly targets prose paragraphs only)
    ========================================================================== */
 
-body.qs-typora-enabled.qs-typora-indent .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(.markdown-preview-sizer > div, .markdown-preview-sizer) > p:not(:has(> img, > .image-embed, > .video-embed, > .audio-embed)),
-body.qs-typora-enabled.qs-typora-indent .popover.hover-popover .markdown-preview-view p:not(blockquote p, .callout p, li p, td p, th p):not(:has(> img, > .image-embed, > .video-embed, > .audio-embed)),
-body.qs-typora-enabled.qs-typora-indent .print > .markdown-preview-view p:not(blockquote p, .callout p, li p, td p, th p):not(:has(> img, > .image-embed, > .video-embed, > .audio-embed)),
-body.qs-typora-enabled.qs-typora-indent .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-content > .cm-line:not(.HyperMD-header, .HyperMD-list-line, .HyperMD-quote, .HyperMD-codeblock, [class*="HyperMD-table"], .HyperMD-hr, .HyperMD-callout, [class*="HyperMD-frontmatter"], .HyperMD-footnote, .cm-math):not(:has(> img, > .image-embed, > .video-embed, > .audio-embed, > .cm-embed-block)) { text-indent: 2em; }
+body.qs-typora-enabled.qs-typora-indent .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(.markdown-preview-sizer > div, .markdown-preview-sizer) > p:not(.qs-typora-media-only),
+body.qs-typora-enabled.qs-typora-indent .popover.hover-popover .markdown-preview-view p:not(blockquote p, .callout p, li p, td p, th p, .qs-typora-media-only),
+body.qs-typora-enabled.qs-typora-indent .print > .markdown-preview-view p:not(blockquote p, .callout p, li p, td p, th p, .qs-typora-media-only),
+body.qs-typora-enabled.qs-typora-indent .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-content > .cm-line.qs-typora-paragraph-start:not(.qs-typora-media-only, .HyperMD-header, .HyperMD-list-line, .HyperMD-quote, .HyperMD-codeblock, [class*="HyperMD-table"], .HyperMD-hr, .HyperMD-callout, [class*="HyperMD-frontmatter"], .HyperMD-footnote, .cm-math):not(:has(> .cm-embed-block)) { text-indent: 2em; }
 
 /* ==========================================================================
    Typora [TOC] & TOC Reader Compatibility
@@ -1253,8 +1279,11 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) details > summary {
   cursor: pointer;
   font-weight: 600;
-  outline: none;
-  user-select: none;
+}
+
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) details > summary:focus-visible {
+  outline: 2px solid var(--text-accent);
+  outline-offset: 2px;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) details[open] > summary {
@@ -1313,20 +1342,23 @@ body.qs-typora-enabled.qs-typora-white-shell .workspace-leaf-content[data-type="
 /* 9. 首页索引页（frontmatter: cssclasses: qs-home）
    笔记本身是纯 Markdown；版式与装饰全部由本插件提供，不依赖任何外部 CSS 片段。
    约定：H1 为品牌标题，紧随的引用块为副标题，各 H2 下用无序列表排链接，
-   条目写法 `- [[路径|标题]] — 说明`，列表自动铺 2–3 栏。 */
+   条目写法 `- [[路径|标题]] — 说明`，列表自动铺 2–3 栏。
+   阅读视图会把每个顶层块包进 .el-h1/.el-blockquote/.el-ul/.el-p/.el-div，
+   因此只命中这些 section，并排除 .markdown-embed 与 .callout 内的后代。 */
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home { padding: 40px 44px 24px; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view.qs-home > .markdown-preview-sizer {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home > .markdown-preview-sizer {
   width: 100%;
   max-width: 1120px;
   padding-bottom: 16px;
 }
 
-/* 首页自带 H1，隐藏顶部文件名与属性表 */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home :is(.inline-title, .metadata-container) { display: none; }
+/* 首页自带 H1，隐藏顶部文件名与属性表。 */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home > .markdown-preview-sizer > .mod-header :is(.inline-title, .metadata-container),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home > .markdown-preview-sizer > :is(.inline-title, .metadata-container) { display: none; }
 
-/* Hero：标题即品牌；山形用遮罩绘制，笔记源码保持纯 Markdown */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h1 {
+/* Hero：标题即品牌；山形用遮罩绘制，笔记源码保持纯 Markdown。 */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-h1 > h1:not(.markdown-embed *):not(.callout *) {
   margin: 0 0 6px;
   padding: 0;
   border: 0;
@@ -1339,7 +1371,7 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
   color: var(--text-normal);
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h1::before {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-h1 > h1:not(.markdown-embed *):not(.callout *)::before {
   content: "";
   display: block;
   width: 90px;
@@ -1350,8 +1382,8 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 64'%3E%3Cpath d='M3 51 19 39 29 44 51 19 62 30 76 8 103 44 117 52' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
 }
 
-/* 副标题兼 Hero 分隔线 */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home blockquote {
+/* 副标题：只命中 H1 紧随的第一个引用块。 */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-h1 + .el-blockquote > blockquote:not(.markdown-embed *):not(.callout *) {
   margin: 0 0 8px;
   padding: 0 0 26px;
   border: 0;
@@ -1361,9 +1393,9 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
   font-size: 18px;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home blockquote > p { margin: 0; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-h1 + .el-blockquote > blockquote > p { margin: 0; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h2 {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-h2 > h2:not(.markdown-embed *):not(.callout *) {
   margin: 32px 0 14px;
   padding: 0;
   border: 0;
@@ -1374,31 +1406,35 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
   color: var(--text-normal);
 }
 
-/* 链接栅格：按可用宽度自动铺 2–3 栏 */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home ul {
+/* 链接栅格：只处理顶层列表；嵌套列表、Callout 列表和嵌入列表保持原样。
+   列间分隔线用 li 的左边框 + 负外边距，第一列由 ul 的 overflow:hidden 裁掉，
+   避免换行后左侧出现多余竖线，也避免末行空单元格出现底色。 */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-ul > ul:not(.markdown-embed *):not(.callout *) {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  overflow: hidden;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home li {
-  margin: 0;
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-ul > ul > li:not(.markdown-embed *):not(.callout *) {
+  margin: 0 0 0 -1px;
   padding: 14px 18px;
   border-left: 1px solid var(--background-modifier-border);
   border-radius: 4px;
+  background-color: var(--background-primary);
   text-align: center;
   color: var(--text-muted);
   font-size: 13px;
   line-height: 1.6;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home li:first-child { border-left: 0; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-ul > ul > li > .list-bullet { display: none; }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home li:hover { background-color: var(--background-modifier-hover); }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-ul > ul > li:hover:not(.markdown-embed *):not(.callout *) { background-color: var(--background-modifier-hover); }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home li > a {
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-ul > ul > li > a:not(.markdown-embed *):not(.callout *) {
   display: block;
   margin-bottom: 2px;
   padding: 0;
@@ -1411,10 +1447,12 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
   line-height: 1.4;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home li > a:hover { text-decoration: underline; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-ul > ul > li > a:hover { text-decoration: underline; }
 
-/* 页脚 */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home p > em {
+/* 页脚：最后一个段落，或紧邻 Callout / 页尾的段落。 */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-p:last-child > p > em:not(.markdown-embed *):not(.callout *),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-p:has(+ .el-div) > p > em:not(.markdown-embed *):not(.callout *),
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-p:has(+ .mod-footer) > p > em:not(.markdown-embed *):not(.callout *) {
   display: block;
   margin: 34px 0 10px;
   text-align: center;
@@ -1424,14 +1462,14 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-p
   letter-spacing: 0.15em;
 }
 
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .callout { margin-top: 18px; font-size: 12px; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-div > .callout:not(.markdown-embed *):not(.callout .callout) { margin-top: 18px; font-size: 12px; }
 
 @container qs-typora-pane (max-width: 720px) {
   body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home {
     padding: 24px 20px;
   }
 
-  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home h1 {
+  body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view.qs-home .el-h1 > h1:not(.markdown-embed *):not(.callout *) {
     font-size: 42px;
   }
 }

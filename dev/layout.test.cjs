@@ -13,7 +13,7 @@ test('synthetic browser layout: Typora widths, tables, code, inline elements and
  <h2>二级 <code>code-in-h2</code></h2>
  <h6>六级标题</h6>
  <p id="prose-p">正文 <code>行内</code> <mark>高亮</mark> <kbd>Cmd</kbd> <a class="internal-link" href="#">双链示例</a> <sup class="footnote-ref"><a href="#fn1">[1]</a></sup> <strong>粗体测试</strong></p>
- <p id="media-p"><span class="image-embed is-loaded"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></span></p>
+ <p class="qs-typora-media-only" id="media-p"><span class="image-embed is-loaded"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></span></p>
  <div class="toc-reader">
    <ul class="toc-reader-list">
      <li class="toc-reader-item"><a href="#一级标题"><span class="toc-reader-num">1.</span>一级标题</a></li>
@@ -37,8 +37,8 @@ test('synthetic browser layout: Typora widths, tables, code, inline elements and
  <div class="cm-line HyperMD-header-6">LP六级标题</div>
  <div class="cm-line HyperMD-frontmatter" id="lp-frontmatter">tags: [test]</div>
  <div class="cm-line HyperMD-footnote" id="lp-footnote">[^1]: Footnote def</div>
- <div class="cm-line" id="lp-img"><span class="image-embed"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></span></div>
- <div class="cm-line" id="lp-prose">LP普通正文段落</div>
+ <div class="cm-line qs-typora-media-only" id="lp-img"><span class="image-embed"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></span></div>
+ <div class="cm-line qs-typora-paragraph-start" id="lp-prose">LP普通正文段落</div>
  <div class="cm-line HyperMD-quote">LP引用正文</div>
  <div class="cm-line HyperMD-list-line HyperMD-list-line-2" style="text-indent: -24px; padding-inline-start: 48px;">LP列表项</div>
  <div class="cm-line HyperMD-task-line is-checked"><input type="checkbox" checked> 任务已完成</div>
@@ -47,7 +47,7 @@ test('synthetic browser layout: Typora widths, tables, code, inline elements and
  <div class="cm-line HyperMD-codeblock HyperMD-codeblock-end">}</div>
  <div class="cm-embed-block cm-table-widget"><div class="table-wrapper"><table><tr>${'<td><div class="table-cell-wrapper">示例</div></td>'.repeat(24)}</tr></table></div></div>
  </div></div></div></div></div></div>
- </div><div class="workspace-leaf-content" data-type="canvas">虚构画布</div><button class="nav-file-title">示例</button><div class="print"><div class="markdown-preview-view" id="pdf-export-view"><h1 id="pdf-h1">PDF 一级标题</h1><p id="pdf-prose-p">PDF普通段落</p><p id="pdf-media-p"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></p><pre><code id="pdf-code">const x = 1;</code></pre><div class="markdown-embed"><div class="markdown-preview-view"><h1 id="pdf-embed-h1">PDF 嵌入标题</h1></div></div><div class="callout" id="pdf-callout" style="--callout-color: 8, 109, 221;"><div class="callout-title">PDF Callout</div></div><table><thead><tr><th>PDF Th</th></tr></thead><tbody><tr><td>PDF Td</td></tr></tbody></table></div></div></body>`);
+ </div><div class="workspace-split mod-root"><div class="workspace-leaf-content" data-type="canvas">虚构画布</div></div><button class="nav-file-title">示例</button><div class="print"><div class="markdown-preview-view" id="pdf-export-view"><h1 id="pdf-h1">PDF 一级标题</h1><p id="pdf-prose-p">PDF普通段落</p><p class="qs-typora-media-only" id="pdf-media-p"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></p><pre><code id="pdf-code">const x = 1;</code></pre><div class="markdown-embed"><div class="markdown-preview-view"><h1 id="pdf-embed-h1">PDF 嵌入标题</h1></div></div><div class="callout" id="pdf-callout" style="--callout-color: 8, 109, 221;"><div class="callout-title">PDF Callout</div></div><table><thead><tr><th>PDF Th</th></tr></thead><tbody><tr><td>PDF Td</td></tr></tbody></table></div></div></body>`);
  await p.addStyleTag({content:fs.readFileSync(path.join(__dirname,'../styles.css'),'utf8')});
  await t.test('fixed widths affect both reading and editing',async()=>{for(const w of [480,800,1000,1200]){const a=await p.evaluate(w=>{document.body.style.setProperty('--qs-typora-width',w+'px');return ['.markdown-preview-sizer','.cm-scroller > .cm-sizer'].map(s=>document.querySelector(s).getBoundingClientRect().width)},w);assert.deepEqual(a,[w,w]);}});
  await t.test('full width restores available width',async()=>{await p.evaluate(()=>{document.body.classList.remove('qs-typora-width-fixed');document.body.classList.add('qs-typora-width-full')});assert.equal(await p.locator('.markdown-preview-sizer').evaluate(x=>x.getBoundingClientRect().width),1340);await p.evaluate(()=>{document.body.classList.remove('qs-typora-width-full');document.body.classList.add('qs-typora-width-typora')});});

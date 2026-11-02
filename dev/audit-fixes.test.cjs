@@ -108,7 +108,7 @@ test('hover prose follows indent toggle but semantic and media paragraphs stay u
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH || '/Users/laity/.cache/hyperframes/chrome/chrome-headless-shell/mac_arm-152.0.7977.30/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
  try {
   const page=await browser.newPage();
-  await page.setContent('<body class="qs-typora-enabled qs-typora-indent"><div class="popover hover-popover"><div class="markdown-preview-view"><div class="markdown-preview-sizer"><div><p id="prose">Prose</p><blockquote><p>Quote</p></blockquote><ul><li><p>List</p></li></ul><div class="callout"><p>Callout</p></div><p><img></p></div></div></div></div></body>');
+  await page.setContent('<body class="qs-typora-enabled qs-typora-indent"><div class="popover hover-popover"><div class="markdown-preview-view"><div class="markdown-preview-sizer"><div><p id="prose">Prose</p><blockquote><p>Quote</p></blockquote><ul><li><p>List</p></li></ul><div class="callout"><p>Callout</p></div><p class="qs-typora-media-only"><img></p></div></div></div></div></body>');
   await page.addStyleTag({content:fs.readFileSync(path.join(__dirname,'../styles.css'),'utf8')});
   assert.equal(await page.locator('#prose').evaluate(e=>getComputedStyle(e).textIndent),'32px');
   for(const value of await page.locator('p:not(#prose)').evaluateAll(es=>es.map(e=>getComputedStyle(e).textIndent)))assert.equal(value,'0px');
@@ -128,4 +128,37 @@ test('hover heading code inherits heading size in light and dark themes',async()
    for(const [heading,code] of await page.locator('h1,h2,h3,h4,h5,h6').evaluateAll(es=>es.map(e=>[getComputedStyle(e).fontSize,getComputedStyle(e.querySelector('code')).fontSize])))assert.equal(code,heading);
   }
  } finally {await browser.close();}
+});
+
+test('line numbers leave breathing room before live preview text',async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH || '/Users/laity/.cache/hyperframes/chrome/chrome-headless-shell/mac_arm-152.0.7977.30/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+ try {
+  const page=await browser.newPage();
+  await page.setContent('<style>*{box-sizing:border-box}.cm-contentContainer,.cm-gutters{display:flex}.cm-lineNumbers{width:30px}body :not(.canvas-node) .markdown-source-view.mod-cm6 .cm-gutters{position:absolute !important;margin-inline-end:0}</style><body class="qs-typora-enabled"><div class="workspace-leaf-content" data-type="markdown"><div class="markdown-source-view mod-cm6 is-live-preview"><div class="cm-contentContainer"><div class="cm-gutters"><div class="cm-lineNumbers">1</div></div><div class="cm-content"><div class="cm-line">虚构正文</div></div></div></div></div></body>');
+  await page.addStyleTag({content:fs.readFileSync(path.join(__dirname,'../styles.css'),'utf8')});
+  const gap=await page.evaluate(()=>document.querySelector('.cm-content').getBoundingClientRect().left-document.querySelector('.cm-lineNumbers').getBoundingClientRect().left-30);
+  assert.ok(gap>=16,`line-number spacing: ${gap}px`);
+ } finally {await browser.close()}
+});
+
+test('mixed inline images stay inline while standalone images are centered',async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH || '/Users/laity/.cache/hyperframes/chrome/chrome-headless-shell/mac_arm-152.0.7977.30/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+ try {
+  const page=await browser.newPage();
+  await page.setContent('<body class="qs-typora-enabled"><div class="workspace-leaf-content" data-type="markdown"><div class="markdown-preview-view"><p>before <span id="mixed" class="image-embed"><img></span> after</p><p class="qs-typora-media-only"><span id="solo" class="image-embed"><img></span></p></div></div><div class="print"><div class="markdown-preview-view"><p>before <img id="pdf-mixed"> after</p><p class="qs-typora-media-only"><img id="pdf-solo"></p></div></div></body>');
+  await page.addStyleTag({content:fs.readFileSync(path.join(__dirname,'../styles.css'),'utf8')});
+  const displays=await page.evaluate(()=>['mixed','solo','pdf-mixed','pdf-solo'].map(id=>getComputedStyle(document.getElementById(id)).display));
+  assert.deepEqual(displays,['inline','block','inline','block']);
+ } finally {await browser.close()}
+});
+
+test('linked standalone images are centered in reading and print views',async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH || '/Users/laity/.cache/hyperframes/chrome/chrome-headless-shell/mac_arm-152.0.7977.30/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+ try {
+  const page=await browser.newPage();
+  await page.setContent('<body class="qs-typora-enabled"><div class="workspace-leaf-content" data-type="markdown"><div class="markdown-preview-view"><p class="qs-typora-media-only"><a id="linked"><span class="image-embed"><img></span></a></p></div></div><div class="print"><div class="markdown-preview-view"><p class="qs-typora-media-only"><a id="pdf-linked"><img></a></p></div></div></body>');
+  await page.addStyleTag({content:fs.readFileSync(path.join(__dirname,'../styles.css'),'utf8')});
+  const displays=await page.evaluate(()=>['linked','pdf-linked'].map(id=>getComputedStyle(document.getElementById(id)).display));
+  assert.deepEqual(displays,['block','block']);
+ } finally {await browser.close()}
 });

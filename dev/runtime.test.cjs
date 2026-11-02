@@ -68,9 +68,10 @@ test('isolated Obsidian runtime acceptance', { timeout: 180000 }, async t => {
      await settings({widthMode,contentWidth:800});
      const result=await page.locator('.is-live-preview .cm-scroller').evaluate(sc=>{
       const g=sc.querySelector('.cm-gutters'),s=sc.querySelector('.cm-sizer'),gr=g.getBoundingClientRect(),sr=s.getBoundingClientRect(),cr=sc.getBoundingClientRect();
-      return {display:getComputedStyle(g).display,gap:sc.querySelector('.cm-content').getBoundingClientRect().left-gr.right,center:(sr.left+sr.right)/2,scCenter:(cr.left+cr.right)/2,width:sr.width,inside:gr.left>=cr.left-1&&sr.right<=cr.right+1};
+      return {display:getComputedStyle(g).display,numberGap:sc.querySelector('.cm-line').getBoundingClientRect().left-sc.querySelector('.cm-lineNumbers').getBoundingClientRect().right,gap:sc.querySelector('.cm-content').getBoundingClientRect().left-gr.right,center:(sr.left+sr.right)/2,scCenter:(cr.left+cr.right)/2,width:sr.width,inside:gr.left>=cr.left-1&&sr.right<=cr.right+1};
      });
      assert.notEqual(result.display,'none');assert.ok(result.inside,JSON.stringify(result));
+     assert.ok(result.numberGap>=16,JSON.stringify(result));
      assert.ok(result.gap>=0&&result.gap<=40,JSON.stringify(result));
      assert.ok(Math.abs(result.center-result.scCenter)<12,JSON.stringify(result));
     }
@@ -210,6 +211,88 @@ test('isolated Obsidian runtime acceptance', { timeout: 180000 }, async t => {
    await page.keyboard.type('# Heading');await page.keyboard.press('Enter');await page.keyboard.type('- item');
    const value=await page.evaluate(()=>app.workspace.activeLeaf.view.editor.getValue());assert.ok(value.startsWith('# Heading\n- item'));
    await settings({paragraphIndent:false});await page.evaluate(async text=>{app.workspace.activeLeaf.view.editor.setValue(text);await app.workspace.activeLeaf.view.save()},fixtures['验收布局.md']);
+  });
+
+  await t.test('indent tracks paragraph boundaries while editing and toggling',async()=>{
+   await settings({paragraphIndent:true});await open('验收布局.md');
+   try {
+    await page.evaluate(()=>{const e=app.workspace.activeLeaf.view.editor;e.setValue('第一行\n第二行\n\n下一段\n续行');e.setCursor({line:0,ch:0})});
+    const indents=()=>page.locator('.is-live-preview .cm-content > .cm-line').evaluateAll(rows=>rows.slice(0,5).map(e=>getComputedStyle(e).textIndent));
+    assert.deepEqual(await indents(),['32px','0px','0px','32px','0px']);
+    await page.evaluate(()=>app.workspace.activeLeaf.view.editor.replaceRange('\n',{line:1,ch:0}));
+    await page.waitForFunction(()=>[...document.querySelectorAll('.is-live-preview .cm-content > .cm-line')][2]?.classList.contains('qs-typora-paragraph-start'));
+    assert.deepEqual((await indents()).slice(0,3),['32px','0px','32px']);
+    await settings({paragraphIndent:false});
+    assert.deepEqual((await indents()).slice(0,3),['0px','0px','0px']);
+   } finally {
+    await page.evaluate(async text=>{app.workspace.activeLeaf.view.editor.setValue(text);await app.workspace.activeLeaf.view.save()},fixtures['验收布局.md']);
+    await settings({paragraphIndent:false});
+   }
+  });
+
+  await t.test('mixed image prose indents while image-only paragraphs do not',async()=>{
+   await page.evaluate(async()=>{
+    const name='虚构缩进图.png';if(!app.vault.getAbstractFileByPath(name)){
+     const bytes=Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/aWQAAAAASUVORK5CYII='),c=>c.charCodeAt(0));
+     await app.vault.createBinary(name,bytes.buffer);
+    }
+   });
+   await settings({paragraphIndent:true});
+   try {
+    await open('验收布局.md');
+    await page.evaluate(async()=>{const e=app.workspace.activeLeaf.view.editor;e.setValue('文字 ![[虚构缩进图.png]] 文字\n\n![[虚构缩进图.png]]\n\n末尾');await app.workspace.activeLeaf.view.save()});
+    for(const mode of ['preview','live']){
+     await open('验收布局.md',mode);
+     if(mode==='live')await page.evaluate(()=>app.workspace.activeLeaf.view.editor.setCursor({line:4,ch:0}));
+     const rows=mode==='preview'?'.markdown-reading-view .markdown-preview-sizer p':'.is-live-preview .cm-content > .cm-line';
+     await page.waitForFunction(sel=>document.querySelectorAll(sel).length>=3,rows);
+     const indents=await page.locator(rows).evaluateAll(es=>es.filter(x=>x.textContent.includes('文字')||x.querySelector('.image-embed')).map(x=>getComputedStyle(x).textIndent));
+     assert.deepEqual(indents,['32px','0px'],`${mode}: ${indents}`);
+     if(mode==='preview'){
+      const displays=await page.locator(rows).evaluateAll(es=>es.filter(x=>x.querySelector('.image-embed')).map(x=>getComputedStyle(x.querySelector('.image-embed')).display));
+      assert.deepEqual(displays,['inline','block']);
+     }
+    }
+   } finally {
+    await open('验收布局.md');await page.evaluate(async text=>{app.workspace.activeLeaf.view.editor.setValue(text);await app.workspace.activeLeaf.view.save()},fixtures['验收布局.md']);
+    await settings({paragraphIndent:false});
+   }
+  });
+
+  await t.test('linked and multiline media use paragraph content for indentation',async()=>{
+   await page.evaluate(async()=>{if(!app.vault.getAbstractFileByPath('虚构(缩进图).png')){const data=await app.vault.readBinary(app.vault.getAbstractFileByPath('虚构缩进图.png'));await app.vault.createBinary('虚构(缩进图).png',data)}});
+   await settings({paragraphIndent:true});
+   try {
+    for(const [text,expected] of [
+      ['[![图](虚构缩进图.png)](https://example.invalid)','0px'],
+      ['![图](虚构(缩进图).png)','0px'],
+      ['![图](虚构缩进图.png "标题")','0px'],
+      ['![[虚构缩进图.png]]\n![[虚构缩进图.png]]','0px'],
+      ['![[虚构缩进图.png]]  \n后续文字','32px'],
+      ['![甲](虚构缩进图.png) 中间文字 ![乙](虚构缩进图.png)','32px'],
+      ['[![甲](虚构缩进图.png)](https://example.invalid) 中间文字 [![乙](虚构缩进图.png)](https://example.invalid)','32px'],
+    ]){
+     await open('验收布局.md');
+     await page.evaluate(async text=>{const e=app.workspace.activeLeaf.view.editor;e.setValue(text+'\n\n结束');await app.workspace.activeLeaf.view.save()},text);
+     for(const mode of ['preview','live']){
+      await open('验收布局.md',mode);
+      if(mode==='live')await page.evaluate(()=>{const e=app.workspace.activeLeaf.view.editor;e.setCursor({line:e.lineCount()-1,ch:0})});
+      const sel=mode==='preview'?'.markdown-reading-view .markdown-preview-sizer p':'.is-live-preview .cm-content > .cm-line';
+      const indent=await page.locator(sel).first().evaluate(e=>getComputedStyle(e).textIndent);
+      assert.equal(indent,expected,`${mode}: ${JSON.stringify(text)}`);
+     }
+    }
+    await open('验收布局.md');
+    await page.evaluate(()=>{const e=app.workspace.activeLeaf.view.editor;e.setValue('![[虚构缩进图.png]]\n后续文字');e.setCursor({line:1,ch:0})});
+    const first=page.locator('.is-live-preview .cm-content > .cm-line').first();
+    assert.equal(await first.evaluate(e=>getComputedStyle(e).textIndent),'32px');
+    await page.evaluate(()=>app.workspace.activeLeaf.view.editor.replaceRange('',{line:0,ch:14},{line:1,ch:4}));
+    await page.waitForFunction(()=>document.querySelector('.is-live-preview .cm-line')?.classList.contains('qs-typora-media-only'));
+    assert.equal(await first.evaluate(e=>getComputedStyle(e).textIndent),'0px');
+   } finally {
+    await open('验收布局.md');await page.evaluate(async text=>{app.workspace.activeLeaf.view.editor.setValue(text);await app.workspace.activeLeaf.view.save()},fixtures['验收布局.md']);
+    await settings({paragraphIndent:false});
+   }
   });
 
   await t.test('real popout is styled and its document is released on close',async()=>{

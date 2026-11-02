@@ -9,21 +9,23 @@ function element() {
 }
 function setup(data) {
   const docs = [{ body: element() }, { body: element() }];
-  const events = new Map(), notices = [];
+  const events = new Map(), notices = [], noticeObjects = [];
   class Plugin {
     async loadData() { return data; }
     async saveData(value) { this.saved = JSON.parse(JSON.stringify(value)); }
     registerEvent(ref) { (this.refs ??= []).push(ref); }
+    registerEditorExtension(extension) { this.editorExtension = extension; }
+    registerMarkdownPostProcessor(processor) { this.markdownProcessor = processor; }
     addSettingTab(tab) { this.tab = tab; }
     addCommand(command) { (this.commands ??= []).push(command); }
   }
   class PluginSettingTab { constructor(app, plugin) { this.app=app; } }
   const exports = { exports: {} };
-  const context = { module: exports, exports: exports.exports, document: docs[0], console, setTimeout, clearTimeout, require(name) { assert.equal(name,'obsidian'); return { Plugin, PluginSettingTab, Setting: class {}, Notice: class { constructor(text) { notices.push(text); } } }; } };
+  const context = { module: exports, exports: exports.exports, document: docs[0], console, setTimeout, clearTimeout, require(name) { if(name==='@codemirror/view') return {ViewPlugin:{fromClass: cls=>cls},Decoration:{}}; if(name==='@codemirror/language') return {syntaxTree(){}}; assert.equal(name,'obsidian'); return { Plugin, PluginSettingTab, Setting: class {}, Notice: class { constructor(text) { notices.push(text); this.hidden=false; noticeObjects.push(this); } hide(){this.hidden=true;} } }; } };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../main.js'),'utf8'),context);
   const instance = new exports.exports();
   instance.app = { workspace: { iterateAllLeaves(cb) { docs.forEach(doc=>cb({ view: { containerEl: { ownerDocument: doc } } })); }, on(name,cb) { events.set(name,cb); return name; } } };
-  return { instance, docs, events, notices };
+  return { instance, docs, events, notices, noticeObjects };
 }
 test('new installation uses the agreed defaults and styles all windows',async()=>{
   const {instance:p,docs}=setup(null); await p.onload();
@@ -168,9 +170,46 @@ test('a failed save can be retried with exactly the same settings',async()=>{
  assert.equal(attempts,2);assert.equal(p.saveFailed,false);
 });
 
-test('reset repairs data after a failed load',async()=>{
- const {instance:p}=setup();p.loadData=async()=>{throw Error('invalid JSON')};await p.onload();
- await p.resetSettings();assert.equal(p.saved?.fontSize,16);
+test('failed load never overwrites unread settings during updates or reset',async()=>{
+ const {instance:p,notices}=setup();p.loadData=async()=>{throw Error('temporary read error')};await p.onload();
+ let saves=0;p.saveData=async()=>{saves++};
+ await p.updateSettings({fontSize:20});await p.resetSettings();
+ assert.equal(saves,0);assert.ok(notices.some(n=>n.includes('不会保存')));
+});
+test('media postprocessor distinguishes text, pending media and embedded notes',async()=>{
+ const {instance:p}=setup();await p.onload();
+ const paragraph=nodes=>{const classes=new Set();return {childNodes:nodes,classes,classList:{toggle(k,on){on?classes.add(k):classes.delete(k)}}}};
+ const text=value=>({nodeType:3,textContent:value});
+ const element=(selector,src='')=>({nodeType:1,matches(query){return query.split(', ').includes(selector)},getAttribute(){return src}});
+ const media=element('.internal-embed[src]','picture.png');
+ const mixed=paragraph([text('before '),media,text(' after')]);
+ const standalone=paragraph([text(' '),media,text(' ')]);
+ const note=paragraph([element('.internal-embed[src]','note.md')]);
+ const root={matches:()=>false,querySelectorAll:()=>[mixed,standalone,note]};
+ p.markdownProcessor(root);
+ assert.equal(mixed.classes.has('qs-typora-media-only'),false);
+ assert.equal(standalone.classes.has('qs-typora-media-only'),true);
+ assert.equal(note.classes.has('qs-typora-media-only'),false);
+ standalone.childNodes.push(text('caption'));p.markdownProcessor(root);
+ assert.equal(standalone.classes.has('qs-typora-media-only'),false);
+});
+test('a read failure notice is dismissed on unload',async()=>{
+ const {instance:p,noticeObjects}=setup();p.loadData=async()=>{throw Error('temporary read error')};await p.onload();
+ assert.equal(noticeObjects.length,1);assert.equal(noticeObjects[0].hidden,false);
+ p.onunload();assert.equal(noticeObjects[0].hidden,true);
+});
+test('unloading while a failing read is pending does not show an orphan notice',async()=>{
+ const {instance:p,noticeObjects}=setup();let fail;
+ p.loadData=()=>new Promise((resolve,reject)=>{fail=reject});
+ const loading=p.onload();await new Promise(r=>setImmediate(r));p.onunload();fail(Error('read error'));await loading;
+ assert.equal(noticeObjects.length,0);
+});
+test('reload after a failed load restores persisted settings and permits saving',async()=>{
+ const {instance:old}=setup();old.loadData=async()=>{throw Error('temporary read error')};await old.onload();
+ await old.updateSettings({fontSize:20});old.onunload();
+ const {instance:fresh}=setup();fresh.app=old.app;fresh.loadData=async()=>({fontSize:18,whiteShell:false});await fresh.onload();
+ assert.equal(fresh.settings.fontSize,18);assert.equal(fresh.settings.whiteShell,false);
+ await fresh.updateSettings({lineHeight:1.8});assert.equal(fresh.saved.fontSize,18);assert.equal(fresh.saved.lineHeight,1.8);
 });
 test('reload waits for old writes before loading settings',async()=>{
  const {instance:old}=setup();await old.onload();let release;let disk={fontSize:16};
