@@ -86,9 +86,11 @@ function markMediaOnlyParagraphs(element) {
 
 // Scan Markdown links linearly so malformed input cannot cause regex backtracking.
 function skipBracket(value, position, closing) {
+  let depth = 1;
   for (let i = position; i < value.length; i++) {
     if (value[i] === '\\') { i++; continue; }
-    if (value[i] === closing) return i + 1;
+    if (value[i] === '[') depth++;
+    else if (value[i] === closing && --depth === 0) return i + 1;
   }
   return -1;
 }
@@ -128,6 +130,7 @@ function standaloneMediaLine(text, allowCommentOnly = false) {
   while (position < value.length) {
     while (position < value.length && /\s/.test(value[position])) position++;
     if (position === value.length) break;
+    if (foundMedia && value[position] === '^' && /\s/.test(value[position - 1]) && /^\^[A-Za-z0-9-]+$/.test(value.slice(position))) return true;
     if (value.startsWith('<!--', position)) {
       const end = value.indexOf('-->', position + 4);
       if (end < 0) return false;

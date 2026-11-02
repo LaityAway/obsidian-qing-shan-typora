@@ -6,6 +6,16 @@ GitHub Releases 在线查看：[https://github.com/LaityAway/obsidian-qing-shan-
 
 ---
 
+## [Unreleased: 0.4.12] - 2026-11-02
+
+### 修复
+- **图片首行缩进**：纯图片包含块引用标识，或 Markdown 图片说明包含嵌套方括号时，实时预览不再误加缩进；图片旁有正文时保持正常缩进。
+
+### 测试
+- 隔离 Obsidian 完整回归 101 项通过，0 失败、0 跳过。
+
+---
+
 ## [Unreleased: 0.4.11] - 2026-11-02
 
 ### 修复

@@ -266,6 +266,9 @@ test('isolated Obsidian runtime acceptance', { timeout: 180000 }, async t => {
     for(const [text,expected] of [
       ['[![图](虚构缩进图.png)](https://example.invalid)','0px'],
       ['![图](虚构(缩进图).png)','0px'],
+      ['![[虚构缩进图.png]] ^abc123','0px'],
+      ['![图 [嵌套]](虚构缩进图.png)','0px'],
+      ['![[虚构缩进图.png]] 正文 ^abc123','32px'],
       ['![甲](虚构缩进图.png) ![乙](虚构缩进图.png)','0px'],
       ['![[虚构缩进图.png]] ![[虚构缩进图.png]]','0px'],
       ['[![甲](虚构缩进图.png)](https://example.invalid) [![乙](虚构缩进图.png)](https://example.invalid)','0px'],
