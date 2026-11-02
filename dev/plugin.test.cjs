@@ -265,3 +265,20 @@ test('failed deferred slider save can retry the same value',async()=>{
  const retry=p.updateSettings({fontSize:18},{deferSave:true});p.flushPendingSave();await retry;
  assert.equal(attempts,2);assert.equal(p.saveFailed,false);
 });
+
+test('malformed long media syntax returns promptly without blocking the editor',()=>{
+ const {spawnSync}=require('node:child_process');
+ const script=`const fs=require('node:fs'),vm=require('node:vm');
+ const module={exports:{}};
+ const context={module,exports:module.exports,require(name){
+  if(name==='obsidian')return {Plugin:class{},PluginSettingTab:class{},Setting:class{},Notice:class{}};
+  if(name==='@codemirror/view')return {ViewPlugin:{fromClass:cls=>cls},Decoration:{}};
+  if(name==='@codemirror/language')return {};
+  throw Error(name);
+ }};
+ vm.runInNewContext(fs.readFileSync(process.argv[1],'utf8')+';globalThis.check=standaloneMediaLine',context);
+ if(context.check('![x]('+('"a"'.repeat(5000))+'(')!==false)process.exit(2);`;
+ const result=spawnSync(process.execPath,['-e',script,path.join(__dirname,'../main.js')],{timeout:2000,encoding:'utf8'});
+ assert.equal(result.error?.code,undefined,result.error?.message);
+ assert.equal(result.status,0,result.stderr);
+});

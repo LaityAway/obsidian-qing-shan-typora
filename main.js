@@ -84,27 +84,72 @@ function markMediaOnlyParagraphs(element) {
   }
 }
 
-const MEDIA_IMAGE = String.raw`!\[[^\]\n]*\]\((?:[^()\n]|\([^()\n]*\))*\)`;
-const MEDIA_URL = String.raw`\((?:[^()\n]|\([^()\n]*\))*\)`;
-const MEDIA_TOKEN = new RegExp(
-  String.raw`!\[\[[^\]\n]+\]\]|\[${MEDIA_IMAGE}\]${MEDIA_URL}|${MEDIA_IMAGE}|<(?:img\b[^>]*\/?|(?:audio|video)\b[^>]*>.*?<\/(?:audio|video))>`,
-  'iy'
-);
+// Scan Markdown links linearly so malformed input cannot cause regex backtracking.
+function skipBracket(value, position, closing) {
+  for (let i = position; i < value.length; i++) {
+    if (value[i] === '\\') { i++; continue; }
+    if (value[i] === closing) return i + 1;
+  }
+  return -1;
+}
 
-function standaloneMediaLine(text) {
+function skipDestination(value, position) {
+  if (value[position] !== '(') return -1;
+  let depth = 1;
+  let quote = '';
+  for (let i = position + 1; i < value.length; i++) {
+    const char = value[i];
+    if (char === '\\') { i++; continue; }
+    if (quote) { if (char === quote) quote = ''; continue; }
+    if ((char === '"' || char === "'") && /\s/.test(value[i - 1])) { quote = char; continue; }
+    if (char === '(') depth++;
+    else if (char === ')' && --depth === 0) return i + 1;
+  }
+  return -1;
+}
+
+function skipImage(value, position) {
+  if (!value.startsWith('![', position)) return -1;
+  if (value[position + 2] === '[') {
+    const end = value.indexOf(']]', position + 3);
+    return end > position + 3 ? end + 2 : -1;
+  }
+  const end = skipBracket(value, position + 2, ']');
+  return end < 0 ? -1 : skipDestination(value, end);
+}
+
+const MEDIA_HTML = /<(?:img\b[^>]*\/?|(?:audio|video)\b[^>]*>.*?<\/(?:audio|video))>/iy;
+
+function standaloneMediaLine(text, allowCommentOnly = false) {
   const value = text.trim();
   let position = 0;
   let foundMedia = false;
+  let foundComment = false;
   while (position < value.length) {
     while (position < value.length && /\s/.test(value[position])) position++;
     if (position === value.length) break;
-    MEDIA_TOKEN.lastIndex = position;
-    const match = MEDIA_TOKEN.exec(value);
-    if (!match) return false;
+    if (value.startsWith('<!--', position)) {
+      const end = value.indexOf('-->', position + 4);
+      if (end < 0) return false;
+      foundComment = true;
+      position = end + 3;
+      continue;
+    }
+    let end = skipImage(value, position);
+    if (end < 0 && value[position] === '[') {
+      const imageEnd = skipImage(value, position + 1);
+      if (imageEnd >= 0 && value[imageEnd] === ']') end = skipDestination(value, imageEnd + 1);
+    }
+    if (end < 0 && value[position] === '<') {
+      MEDIA_HTML.lastIndex = position;
+      const match = MEDIA_HTML.exec(value);
+      if (match) end = MEDIA_HTML.lastIndex;
+    }
+    if (end < 0) return false;
     foundMedia = true;
-    position = MEDIA_TOKEN.lastIndex;
+    position = end;
   }
-  return foundMedia;
+  return foundMedia || (allowCommentOnly && foundComment);
 }
 
 function isMarkdownBlockLine(tree, line) {
@@ -118,7 +163,7 @@ function mediaOnlyParagraph(doc, tree, line) {
   for (let number = line.number + 1; number <= doc.lines; number++) {
     const next = doc.line(number);
     if (!next.text.trim() || isMarkdownBlockLine(tree, next)) break;
-    if (!standaloneMediaLine(next.text)) return false;
+    if (!standaloneMediaLine(next.text, true)) return false;
   }
   return true;
 }
