@@ -230,6 +230,33 @@ test('isolated Obsidian runtime acceptance', { timeout: 180000 }, async t => {
    }
   });
 
+  await t.test('paragraphs after standalone HTML comments are indented',async()=>{
+   await settings({paragraphIndent:true});await open('验收布局.md');
+   try {
+    for(const [text,line] of [
+     ['<!-- 注释 -->\n正文',1],
+     ['<!-- 第一行\n第二行 -->\n正文',2],
+     ['前文\n<!-- 注释 -->\n正文',2],
+     ['前文\n  <!-- 注释 -->\n正文',2],
+    ]){
+     await page.evaluate(async text=>{const e=app.workspace.activeLeaf.view.editor;e.setValue(text);await app.workspace.activeLeaf.view.save()},text);
+     await open('验收布局.md','preview');
+     const reading=await page.locator('.markdown-reading-view .markdown-preview-sizer p').evaluateAll(es=>es.filter(e=>e.textContent.trim()==='正文').map(e=>getComputedStyle(e).textIndent));
+     assert.deepEqual(reading,['32px']);
+     await open('验收布局.md');
+     const editing=await page.locator('.is-live-preview .cm-content > .cm-line').nth(line).evaluate(e=>getComputedStyle(e).textIndent);
+     assert.equal(editing,'32px',text);
+    }
+    await page.evaluate(()=>app.workspace.activeLeaf.view.editor.setValue('前文\n续行'));
+    assert.equal(await page.locator('.is-live-preview .cm-content > .cm-line').nth(1).evaluate(e=>getComputedStyle(e).textIndent),'0px');
+    await page.evaluate(()=>app.workspace.activeLeaf.view.editor.setValue('前文 <!-- 行内注释 -->\n续行'));
+    assert.equal(await page.locator('.is-live-preview .cm-content > .cm-line').nth(1).evaluate(e=>getComputedStyle(e).textIndent),'0px');
+   } finally {
+    await page.evaluate(async text=>{app.workspace.activeLeaf.view.editor.setValue(text);await app.workspace.activeLeaf.view.save()},fixtures['验收布局.md']);
+    await settings({paragraphIndent:false});
+   }
+  });
+
   await t.test('mixed image prose indents while image-only paragraphs do not',async()=>{
    await page.evaluate(async()=>{
     const name='虚构缩进图.png';if(!app.vault.getAbstractFileByPath(name)){

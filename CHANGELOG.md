@@ -6,6 +6,16 @@ GitHub Releases 在线查看：[https://github.com/LaityAway/obsidian-qing-shan-
 
 ---
 
+## [Unreleased: 0.4.15] - 2026-11-02
+
+### 修复
+- **HTML 注释后首行缩进**：独立单行或多行 HTML 注释后的正文在实时预览中正确缩进；普通续行及行内注释不受影响。
+
+### 测试
+- 隔离 Obsidian 完整回归 102 项通过，0 失败、0 跳过。
+
+---
+
 ## [Unreleased: 0.4.14] - 2026-11-02
 
 ### 修复
