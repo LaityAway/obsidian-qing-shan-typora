@@ -68,7 +68,7 @@ class TyporaSettingsTab extends PluginSettingTab {
     const plugin = this.plugin;
     containerEl.empty();
     containerEl.createEl('p', {
-      text: '默认按 Typora 1.13.8 的 github 主题取 860 / 1024 / 1200px 三档宽度、1.6 倍行距和 30px 内边距；深色模式使用 Typora night 配色。排版只作用于阅读视图与实时预览，不修改笔记原文。',
+      text: '默认按 Typora 1.13.8 的 github 主题取 860 / 1024 / 1200px 三档宽度、1.6 倍行距和 30px 内边距；深色模式使用 Typora night 配色。支持阅读视图、实时预览、悬浮预览与 PDF 导出排版，不修改笔记原文。',
       cls: 'qs-typora-settings-description',
     });
     new Setting(containerEl).setName('启用正文排版')
@@ -104,7 +104,7 @@ class TyporaSettingsTab extends PluginSettingTab {
       describe();
       row.addSlider(control => control.setLimits(min, max, step).setValue(plugin.settings[key]).setDynamicTooltip().setDisabled(disabled())
         .onChange(async value => {
-          const saving = plugin.updateSettings({ [key]: value });
+          const saving = plugin.updateSettings({ [key]: value }, { deferSave: true });
           describe();
           await saving;
         }));
@@ -182,8 +182,8 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
   }
 
   applyDocument(doc) {
-    if (!doc || !doc.body) return;
-    if (doc.defaultView === null) {
+    if (!doc) return;
+    if (!doc.body || doc.defaultView === null || doc.defaultView?.closed) {
       this.documents.delete(doc);
       return;
     }
@@ -239,16 +239,38 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
     doc.body.style.removeProperty(MONO_VARIABLE);
   }
 
-  updateSettings(patch) {
+  flushPendingSave() {
+    const pending = this.pendingSave;
+    if (!pending) return;
+    this.pendingSave = null;
+    clearTimeout(pending.timer);
+    pending.release();
+  }
+
+  updateSettings(patch, options = {}) {
     if (!this.active) return this.writeQueue;
     const next = normalizeSettings({ ...this.settings, ...patch });
     if (!this.saveFailed && JSON.stringify(next) === JSON.stringify(this.settings)) return this.writeQueue;
     this.settings = next;
     this.refreshSettingsCache();
     this.applySettings();
-    const snapshot = { ...this.settings };
+    if (!options.deferSave) this.flushPendingSave();
+    if (options.deferSave && this.pendingSave) {
+      this.pendingSave.snapshot = { ...this.settings };
+      clearTimeout(this.pendingSave.timer);
+      this.pendingSave.timer = setTimeout(() => this.flushPendingSave(), 300);
+      return this.writeQueue;
+    }
+    const batch = { snapshot: { ...this.settings } };
+    let ready = Promise.resolve();
+    if (options.deferSave) {
+      ready = new Promise(resolve => { batch.release = resolve; });
+      batch.timer = setTimeout(() => this.flushPendingSave(), 300);
+      this.pendingSave = batch;
+    }
     this.writeQueue = this.writeState.tail.then(async () => {
-      await this.saveData(snapshot);
+      await ready;
+      await this.saveData(batch.snapshot);
       this.saveFailed = false;
     }).catch(() => {
       this.saveFailed = true;
@@ -264,6 +286,7 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
 
   onunload() {
     this.active = false;
+    this.flushPendingSave();
     for (const doc of this.documents) this.clearDocument(doc);
     this.documents.clear();
   }

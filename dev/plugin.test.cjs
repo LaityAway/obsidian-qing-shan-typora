@@ -58,6 +58,23 @@ test('detached window with null defaultView is automatically pruned from documen
   p.applyDocument(doc);
   assert.equal(p.documents.has(doc),false);
 });
+test('closed window is pruned even if its close event was missed',async()=>{
+  const {instance:p}=setup(); await p.onload();
+  const doc={body:element(),defaultView:{closed:true}};
+  p.documents.add(doc);
+  p.applySettings();
+  assert.equal(p.documents.has(doc),false);
+  assert.equal(doc.body.classes.size,0);
+});
+test('window-close event removes its document and plugin styles',async()=>{
+  const {instance:p,events}=setup(); await p.onload();
+  const doc={body:element(),defaultView:{closed:false}};
+  events.get('window-open')({doc});
+  assert.equal(p.documents.has(doc),true);
+  events.get('window-close')({doc});
+  assert.equal(p.documents.has(doc),false);
+  assert.equal(doc.body.classes.size,0);
+});
 test('css-change event re-applies settings and synchronizes monospace font',async()=>{
   const {instance:p,docs,events}=setup();
   let mono = 'Source Code Pro';
@@ -173,4 +190,39 @@ test('reapplies CSS variables when an external script removes or tampers them',a
  events.get('layout-change')();
  assert.equal(docs[0].body.values.get('--qs-typora-width'),'840px');
  assert.equal(docs[0].body.values.get('--qs-typora-line-height'),'1.8');
+});
+
+test('slider updates apply immediately and coalesce writes to the final value',async()=>{
+ const {instance:p,docs}=setup();await p.onload();const saves=[];
+ p.saveData=async value=>{saves.push(value.fontSize)};
+ const first=p.updateSettings({fontSize:18},{deferSave:true});
+ const last=p.updateSettings({fontSize:20},{deferSave:true});
+ assert.equal(docs[0].body.values.get('--qs-typora-font-size'),'20px');
+ assert.deepEqual(saves,[]);
+ await Promise.all([first,last]);
+ assert.deepEqual(saves,[20]);
+});
+test('unload flushes a pending slider save before a reload reads settings',async()=>{
+ const {instance:old}=setup();await old.onload();let disk={fontSize:16};
+ old.saveData=async value=>{disk=value};
+ const saving=old.updateSettings({fontSize:19},{deferSave:true});old.onunload();
+ const {instance:fresh}=setup();fresh.app=old.app;fresh.loadData=async()=>disk;
+ await fresh.onload();await saving;
+ assert.equal(fresh.settings.fontSize,19);
+});
+test('normal setting writes flush pending slider values in order',async()=>{
+ const {instance:p}=setup();await p.onload();let saves=[];
+ p.saveData=async value=>saves.push([value.fontSize,value.enabled]);
+ const pending=p.updateSettings({fontSize:18},{deferSave:true});
+ const next=p.updateSettings({enabled:false});
+ await Promise.all([pending,next]);
+ assert.deepEqual(saves,[[18,true],[18,false]]);
+});
+test('failed deferred slider save can retry the same value',async()=>{
+ const {instance:p,notices}=setup();await p.onload();let attempts=0;
+ p.saveData=async()=>{if(++attempts===1)throw Error('disk unavailable')};
+ const first=p.updateSettings({fontSize:18},{deferSave:true});p.flushPendingSave();await first;
+ assert.equal(p.saveFailed,true);assert.ok(notices.some(n=>n.includes('保存失败')));
+ const retry=p.updateSettings({fontSize:18},{deferSave:true});p.flushPendingSave();await retry;
+ assert.equal(attempts,2);assert.equal(p.saveFailed,false);
 });

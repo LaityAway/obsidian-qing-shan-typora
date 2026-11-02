@@ -76,6 +76,7 @@ body.qs-typora-enabled.qs-typora-white-shell .status-bar {
 }
 
 /* 2. Markdown Content Typography (Typora GitHub Theme Specs) */
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
   --font-text: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SF Pro", sans-serif;
   --font-text-size: var(--qs-typora-font-size, 16px);
@@ -245,8 +246,8 @@ body.qs-typora-enabled.qs-typora-width-full .workspace-leaf-content[data-type="m
   }
 }
 
-/* 4. Hide Floating Line Numbers in Live Preview (Source Mode keeps gutters) */
-body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-gutters { display: none; }
+/* Gutter visibility and placement belong to Obsidian's line-number setting.
+   Keep the host's gutter layout inside the centered content sizer. */
 
 /* 5. Explicit title preference: never inspect note text or rendered headings. */
 body.qs-typora-enabled.qs-typora-hide-title .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) .inline-title { display: none; }
@@ -332,6 +333,7 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-s
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-4 { font-size: 1.25em; line-height: 1.4; padding-top: 0.4em; padding-bottom: 0.15em; }
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview :is(.cm-line.HyperMD-header-5, .cm-line.HyperMD-header-6) { font-size: 1em; line-height: 1.4; padding-top: 0.3em; padding-bottom: 0.1em; }
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-6 { color: #777777; }
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line .cm-header { line-height: inherit; }
 
 /* 7. Mermaid Diagrams: Scale Wide Diagrams to Fit Without Stretching Small Diagrams
    Mermaid sets width="100%" and inline style="max-width: <bbox>px" on <svg>.
@@ -519,8 +521,10 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) tbody tr:nth-child(even) td { background-color: #f8f8f8; }
 
 /* 10. Inline Code & Code Blocks (Typora github.css: #f3f4f4 bg, 1px solid #e7eaed, 3px radius, inherit text color) */
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view code,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) code, .markdown-source-view.mod-cm6.is-live-preview .cm-inline-code) { font-family: var(--font-monospace); font-size: 0.9em; }
 
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view :not(pre) > code,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) :not(pre) > code, .markdown-source-view.mod-cm6.is-live-preview .cm-inline-code) {
   background-color: #f3f4f4;
   border: 1px solid #e7eaed;
@@ -530,6 +534,7 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
   overflow-wrap: anywhere;
 }
 
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre {
   background-color: #f8f8f8;
   border: 1px solid #e7eaed;
@@ -581,20 +586,35 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
 
 /* 10b. Typora's fence syntax palette (codemirror.css .cm-s-inner). Only code
    blocks are recoloured; inline code and the rest of the theme stay untouched. */
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.keyword, .token.control-flow, .token.atrule),
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.keyword, .token.control-flow, .token.atrule), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-keyword) { color: #708; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.function, .token.class-name, .token.parameter),
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.function, .token.class-name, .token.parameter), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-def, .cm-header)) { color: #00f; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre .token.variable-2,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.variable-2, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-variable-2) { color: #05a; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre .token.variable-3,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.variable-3, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-variable-3) { color: #085; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre .token.comment,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.comment, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-comment) { color: #a50; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre .token.operator,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.operator, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-operator) { color: #981a1a; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.number, .token.inserted),
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.number, .token.inserted), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-number) { color: #164; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.string, .token.char, .token.attr-value, .token.url, .token.deleted),
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.string, .token.char, .token.attr-value, .token.url, .token.deleted), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-string) { color: #a11; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre .token.regex,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.regex, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-string-2) { color: #f50; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.boolean, .token.constant, .token.atom),
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.boolean, .token.constant, .token.atom), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-atom) { color: #219; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.property, .token.variable),
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.property, .token.variable), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-property) { color: #000; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.tag, .token.selector),
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.tag, .token.selector), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-tag) { color: #170; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre .token.attr-name,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.attr-name, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-attribute) { color: #00c; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre .token.builtin,
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.builtin, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-builtin) { color: #30a; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.meta, .token.entity),
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.meta, .token.entity), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-meta, .cm-qualifier)) { color: #555; }
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) pre .token.punctuation { color: #333; }
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-hr { color: #999; }
@@ -622,6 +642,12 @@ body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdo
   overflow-x: auto;
   text-align: center;
   padding: 4px 0;
+}
+
+/* A rendered formula can sit inside the editor's formula widget. */
+body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-math.cm-embed-block .math-block {
+  margin: 0;
+  padding: 0;
 }
 
 body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(.math-inline, .cm-inline-math) { font-size: 1em; vertical-align: baseline; }
@@ -694,6 +720,21 @@ body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print
 
 body.qs-typora-enabled :is(.workspace-leaf-content[data-type="markdown"], .print) .markdown-embed .markdown-preview-view > .markdown-preview-sizer { width: 100%; max-width: 100%; }
 
+/* A body-level hover preview is not a workspace leaf. Share typography above,
+   while keeping the host popover size, positioning and embedded-note structure. */
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view :is(h1, h2) {
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view h1 { font-size: var(--h1-size); line-height: 1.2; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view h2 { font-size: var(--h2-size); line-height: 1.225; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view :is(p, ul, ol, blockquote) { margin-block: 0.8em; }
+body.qs-typora-enabled.qs-typora-hide-title .popover.hover-popover .inline-title { display: none; }
+body.qs-typora-enabled.qs-typora-code-system .popover.hover-popover .markdown-preview-view { --font-monospace: var(--qs-typora-system-mono, monospace); }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre code { font-family: inherit; font-size: 1em; background: transparent; border: 0; padding: 0; }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre { font-family: var(--font-monospace); }
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre { background-color: #2b3035; border-color: #474d54; color: #c9d1d9; }
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view :not(pre) > code { background-color: #2b3035; border-color: #474d54; }
+
 /* 12. Code font: Typora's stack or the user's Obsidian monospace. */
 body.qs-typora-enabled.qs-typora-code-system :is(.workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview), .print > .markdown-preview-view) { --font-monospace: var(--qs-typora-system-mono, monospace); }
 
@@ -756,6 +797,7 @@ body.theme-dark.qs-typora-enabled.qs-typora-white-shell .status-bar {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view,
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
   --background-primary: #363b40;
   --background-primary-alt: #3d4349;
@@ -831,17 +873,27 @@ body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] 
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) :is(sup.footnote-ref a, sup.footnote-ref a:hover):not(.tag) { background-color: rgba(255, 255, 255, 0.08); color: #b8bfc6; }
 
 /* 13b. Dark syntax palette (GitHub Dark). */
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.keyword, .token.control-flow, .token.atrule, .token.operator),
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.keyword, .token.control-flow, .token.atrule, .token.operator), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-keyword, .cm-operator)) { color: #ff7b72; }
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.function, .token.class-name),
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.function, .token.class-name), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-def) { color: #d2a8ff; }
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.parameter, .token.variable-2, .token.number, .token.boolean, .token.constant, .token.atom, .token.attr-name),
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.parameter, .token.variable-2, .token.number, .token.boolean, .token.constant, .token.atom, .token.attr-name), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-variable-2, .cm-number, .cm-atom, .cm-attribute, .cm-header)) { color: #79c0ff; }
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.variable-3, .token.tag, .token.selector, .token.inserted),
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.variable-3, .token.tag, .token.selector, .token.inserted), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-variable-3, .cm-tag, .cm-quote)) { color: #7ee787; }
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.comment, .token.meta, .token.entity),
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.comment, .token.meta, .token.entity), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-comment, .cm-meta, .cm-qualifier, .cm-hr)) { color: #8b949e; }
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.string, .token.char, .token.attr-value, .token.url, .token.regex),
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.string, .token.char, .token.attr-value, .token.url, .token.regex), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-string, .cm-string-2)) { color: #a5d6ff; }
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre :is(.token.property, .token.variable, .token.punctuation),
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre :is(.token.property, .token.variable, .token.punctuation), .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock :is(.cm-property, .cm-bracket)) { color: #c9d1d9; }
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre .token.builtin,
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home) pre .token.builtin, .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-codeblock .cm-builtin) { color: #ffa657; }
+body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre .token.deleted,
 body.theme-dark.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) pre .token.deleted { color: #ffa198; }
 
 /* 14. Optional AA contrast: off by default so the Typora palette stays intact. */
+body.qs-typora-enabled.qs-typora-contrast .popover.hover-popover .markdown-preview-view,
 body.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
   --text-muted: #5f6b76;
   --text-faint: #6a737d;
@@ -868,6 +920,7 @@ body.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="mar
 
 body.qs-typora-enabled.qs-typora-contrast.qs-typora-white-shell .status-bar { color: #5f6b76; }
 
+body.theme-dark.qs-typora-enabled.qs-typora-contrast .popover.hover-popover .markdown-preview-view,
 body.theme-dark.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[data-type="markdown"] :is(.markdown-preview-view:not(.qs-home), .markdown-source-view.mod-cm6.is-live-preview) {
   --text-muted: #c9d1d9;
   --text-faint: #b8bfc6;
@@ -1007,6 +1060,24 @@ body.qs-typora-enabled .print > .markdown-preview-view pre {
 
 body.qs-typora-enabled .print > .markdown-preview-view pre code { font-family: inherit; font-size: 1em; background: transparent; border: 0; padding: 0; }
 
+/* Export uses a light paper background even when the app uses a dark theme. */
+body.qs-typora-enabled .print > .markdown-preview-view pre :is(.token.keyword, .token.control-flow, .token.atrule) { color: #708; }
+body.qs-typora-enabled .print > .markdown-preview-view pre :is(.token.function, .token.class-name, .token.parameter) { color: #00f; }
+body.qs-typora-enabled .print > .markdown-preview-view pre .token.variable-2 { color: #05a; }
+body.qs-typora-enabled .print > .markdown-preview-view pre .token.variable-3 { color: #085; }
+body.qs-typora-enabled .print > .markdown-preview-view pre .token.comment { color: #a50; }
+body.qs-typora-enabled .print > .markdown-preview-view pre .token.operator { color: #981a1a; }
+body.qs-typora-enabled .print > .markdown-preview-view pre :is(.token.number, .token.inserted) { color: #164; }
+body.qs-typora-enabled .print > .markdown-preview-view pre :is(.token.string, .token.char, .token.attr-value, .token.url, .token.deleted) { color: #a11; }
+body.qs-typora-enabled .print > .markdown-preview-view pre .token.regex { color: #f50; }
+body.qs-typora-enabled .print > .markdown-preview-view pre :is(.token.boolean, .token.constant, .token.atom) { color: #219; }
+body.qs-typora-enabled .print > .markdown-preview-view pre :is(.token.property, .token.variable) { color: #000; }
+body.qs-typora-enabled .print > .markdown-preview-view pre :is(.token.tag, .token.selector) { color: #170; }
+body.qs-typora-enabled .print > .markdown-preview-view pre .token.attr-name { color: #00c; }
+body.qs-typora-enabled .print > .markdown-preview-view pre .token.builtin { color: #30a; }
+body.qs-typora-enabled .print > .markdown-preview-view pre :is(.token.meta, .token.entity) { color: #555; }
+body.qs-typora-enabled .print > .markdown-preview-view pre .token.punctuation { color: #333; }
+
 body.qs-typora-enabled .print > .markdown-preview-view :not(pre) > code {
   font-family: var(--font-monospace, monospace);
   font-size: 0.9em;
@@ -1051,6 +1122,41 @@ body.qs-typora-enabled .print > .markdown-preview-view .task-list-item { list-st
 body.qs-typora-enabled .print > .markdown-preview-view :is(a:not(.tag), .internal-link, .external-link) { color: #4183c4; text-decoration: none; }
 
 body.qs-typora-enabled .print > .markdown-preview-view mark { background-color: #ffff00; color: #000000; }
+
+body.qs-typora-enabled .print > .markdown-preview-view kbd {
+  margin: 0 0.1em;
+  padding: 0.1em 0.6em;
+  font-family: var(--font-monospace, monospace);
+  font-size: 0.8em;
+  color: #242729;
+  background-color: #ffffff;
+  border: 1px solid #adb3b9;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+body.qs-typora-enabled .print > .markdown-preview-view details {
+  margin: 0.8em 0;
+  padding: 8px 14px;
+  border: 1px solid #dfe2e5;
+  border-radius: 4px;
+}
+body.qs-typora-enabled .print > .markdown-preview-view details > summary { font-weight: 600; }
+body.qs-typora-enabled .print > .markdown-preview-view details[open] > summary {
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #dfe2e5;
+}
+body.qs-typora-enabled .print > .markdown-preview-view :is(.block-language-mermaid, .mermaid) {
+  max-width: 100%;
+  min-width: 0;
+  text-align: center;
+}
+body.qs-typora-enabled .print > .markdown-preview-view .mermaid svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-inline: auto;
+}
 
 /* ==========================================================================
    Optional First-Line Paragraph Indent (2em, body.qs-typora-indent)
