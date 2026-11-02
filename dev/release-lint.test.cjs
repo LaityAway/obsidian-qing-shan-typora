@@ -26,3 +26,8 @@ test('relational selectors are limited to direct media children in opt-in indent
     for (const selector of matches[0][1].split(',')) assert.ok(selector.trim().startsWith('> '));
   }
 });
+test('plugin version is registered with its minimum supported app version', () => {
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'manifest.json'), 'utf8'));
+  const versions = JSON.parse(fs.readFileSync(path.join(root, 'versions.json'), 'utf8'));
+  assert.equal(versions[manifest.version], manifest.minAppVersion);
+});

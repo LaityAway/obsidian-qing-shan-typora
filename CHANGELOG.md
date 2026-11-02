@@ -6,9 +6,10 @@ GitHub Releases 在线查看：[https://github.com/LaityAway/obsidian-qing-shan-
 
 ---
 
-## [Unreleased] - 2026-11-02
+## [Unreleased: 0.4.10] - 2026-11-02
 
 ### 修复
+- **同一行多图缩进**：纯图片段落中，多个相邻图片在实时预览与阅读视图均不缩进；图片之间包含文字时仍正常缩进。
 - **实时预览图文混排**：限制图片 Markdown 匹配范围，避免两张图片之间有文字时被误判为纯图片；保留文件名含括号的单图识别。
 - **媒体段落边界**：识别带链接的图片及多行纯媒体段落；图片后同段有文字时，实时预览与阅读视图使用一致的缩进，并在编辑时更新。
 - **读取失败提示清理**：插件卸载时关闭持久提示；读取尚未结束就卸载时不再创建孤立提示。
@@ -23,6 +24,7 @@ GitHub Releases 在线查看：[https://github.com/LaityAway/obsidian-qing-shan-
 - **文档更正**：0.4.5 条目中“保持全量 0 `!important`”的表述不准确；实际保留 1 处针对 Minimal gutter 的 `!important`。
 
 ### 测试
+- 0.4.10 本地完整回归：`QS_REQUIRE_RUNTIME=1 node --test dev/*.test.cjs`，100 项通过、0 失败、0 跳过。
 - 新增 `dev/home.test.cjs` 7 项合成测试：首页网格与嵌套/Callout 列表、行内 `em` 与副标题引用块、嵌入笔记隔离、页脚与 Callout、侧栏底色、PDF 16mm 页边距与图片、`details` 焦点。
 - 更新 `dev/layout.test.cjs` 的画布夹具以匹配真实 `.workspace-split.mod-root` 结构，并更新 `dev/release-lint.test.cjs` 以允许首页页脚的 `:has(+ .el-div)` / `:has(+ .mod-footer)`。
 - 首页修复时全量测试 90 项通过；本次推送前执行 `QS_REQUIRE_RUNTIME=1 node --test dev/*.test.cjs`，99 项通过、0 失败、0 跳过，包含隔离 Obsidian 1.14.5 运行时场景。

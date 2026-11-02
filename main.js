@@ -84,12 +84,27 @@ function markMediaOnlyParagraphs(element) {
   }
 }
 
+const MEDIA_IMAGE = String.raw`!\[[^\]\n]*\]\((?:[^()\n]|\([^()\n]*\))*\)`;
+const MEDIA_URL = String.raw`\((?:[^()\n]|\([^()\n]*\))*\)`;
+const MEDIA_TOKEN = new RegExp(
+  String.raw`!\[\[[^\]\n]+\]\]|\[${MEDIA_IMAGE}\]${MEDIA_URL}|${MEDIA_IMAGE}|<(?:img\b[^>]*\/?|(?:audio|video)\b[^>]*>.*?<\/(?:audio|video))>`,
+  'iy'
+);
+
 function standaloneMediaLine(text) {
   const value = text.trim();
-  const image = '!\\[[^\\]\\n]*\\]\\((?:[^()\\n]|\\([^()\\n]*\\))*\\)';
-  return /^!\[\[[^\]\n]+\]\]$/.test(value) ||
-    new RegExp(`^(?:${image}|\\[${image}\\]\\((?:[^()\\n]|\\([^()\\n]*\\))*\\))$`).test(value) ||
-    /^<(?:img\b[^>]*\/?|(?:audio|video)\b[^>]*>.*<\/(?:audio|video))>$/i.test(value);
+  let position = 0;
+  let foundMedia = false;
+  while (position < value.length) {
+    while (position < value.length && /\s/.test(value[position])) position++;
+    if (position === value.length) break;
+    MEDIA_TOKEN.lastIndex = position;
+    const match = MEDIA_TOKEN.exec(value);
+    if (!match) return false;
+    foundMedia = true;
+    position = MEDIA_TOKEN.lastIndex;
+  }
+  return foundMedia;
 }
 
 function isMarkdownBlockLine(tree, line) {
