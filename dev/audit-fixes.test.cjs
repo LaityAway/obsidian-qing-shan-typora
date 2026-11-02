@@ -84,3 +84,48 @@ test('body-level hover preview receives typography without full-page sizing',asy
   assert.equal(await page.locator('.token.deleted').evaluate(e=>getComputedStyle(e).color),'rgb(255, 161, 152)');
  } finally {await browser.close()}
 });
+
+test('disabled typography leaves PDF page margins untouched; enabled margins survive toggling',async()=>{
+ const {execFileSync}=require('node:child_process');
+ const os=require('node:os');
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'qs-print-toggle-'));
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH || '/Users/laity/.cache/hyperframes/chrome/chrome-headless-shell/mac_arm-152.0.7977.30/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+ try {
+  const page=await browser.newPage();
+  await page.setContent('<body><p>PRINT_MARGIN_PROBE</p></body>');
+  const y=async name=>{const file=path.join(dir,name+'.pdf');await page.pdf({path:file,format:'A4'});const xml=execFileSync('pdftotext',['-bbox',file,'-'],{encoding:'utf8'});return Number(xml.match(/yMin="([\d.]+)"[^>]*>PRINT_MARGIN_PROBE/)[1]);};
+  const baseline=await y('baseline');
+  await page.addStyleTag({content:fs.readFileSync(path.join(__dirname,'../styles.css'),'utf8')});
+  assert.equal(await y('disabled'),baseline);
+  await page.evaluate(()=>document.body.classList.add('qs-typora-enabled'));
+  assert.ok(Math.abs((await y('enabled'))-baseline-16*72/25.4)<1);
+  await page.evaluate(()=>document.body.classList.remove('qs-typora-enabled'));
+  assert.equal(await y('disabled-again'),baseline);
+ } finally {await browser.close();fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('hover prose follows indent toggle but semantic and media paragraphs stay unindented',async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH || '/Users/laity/.cache/hyperframes/chrome/chrome-headless-shell/mac_arm-152.0.7977.30/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+ try {
+  const page=await browser.newPage();
+  await page.setContent('<body class="qs-typora-enabled qs-typora-indent"><div class="popover hover-popover"><div class="markdown-preview-view"><div class="markdown-preview-sizer"><div><p id="prose">Prose</p><blockquote><p>Quote</p></blockquote><ul><li><p>List</p></li></ul><div class="callout"><p>Callout</p></div><p><img></p></div></div></div></div></body>');
+  await page.addStyleTag({content:fs.readFileSync(path.join(__dirname,'../styles.css'),'utf8')});
+  assert.equal(await page.locator('#prose').evaluate(e=>getComputedStyle(e).textIndent),'32px');
+  for(const value of await page.locator('p:not(#prose)').evaluateAll(es=>es.map(e=>getComputedStyle(e).textIndent)))assert.equal(value,'0px');
+  await page.evaluate(()=>document.body.classList.remove('qs-typora-indent'));
+  assert.equal(await page.locator('#prose').evaluate(e=>getComputedStyle(e).textIndent),'0px');
+ } finally {await browser.close();}
+});
+
+test('hover heading code inherits heading size in light and dark themes',async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH || '/Users/laity/.cache/hyperframes/chrome/chrome-headless-shell/mac_arm-152.0.7977.30/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+ try {
+  const page=await browser.newPage();
+  await page.setContent('<body class="qs-typora-enabled theme-light"><div class="popover hover-popover"><div class="markdown-preview-view">'+[1,2,3,4,5,6].map(n=>`<h${n}>Title <code>code</code></h${n}>`).join('')+'</div></div></body>');
+  await page.addStyleTag({content:fs.readFileSync(path.join(__dirname,'../styles.css'),'utf8')});
+  for(const theme of ['theme-light','theme-dark']){
+   await page.evaluate(theme=>document.body.className='qs-typora-enabled '+theme,theme);
+   for(const [heading,code] of await page.locator('h1,h2,h3,h4,h5,h6').evaluateAll(es=>es.map(e=>[getComputedStyle(e).fontSize,getComputedStyle(e.querySelector('code')).fontSize])))assert.equal(code,heading);
+  }
+ } finally {await browser.close();}
+});

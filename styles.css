@@ -732,6 +732,7 @@ body.qs-typora-enabled.qs-typora-hide-title .popover.hover-popover .inline-title
 body.qs-typora-enabled.qs-typora-code-system .popover.hover-popover .markdown-preview-view { --font-monospace: var(--qs-typora-system-mono, monospace); }
 body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre code { font-family: inherit; font-size: 1em; background: transparent; border: 0; padding: 0; }
 body.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre { font-family: var(--font-monospace); }
+body.qs-typora-enabled .popover.hover-popover .markdown-preview-view :is(h1, h2, h3, h4, h5, h6) code { font-size: inherit; }
 body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view pre { background-color: #2b3035; border-color: #474d54; color: #c9d1d9; }
 body.theme-dark.qs-typora-enabled .popover.hover-popover .markdown-preview-view :not(pre) > code { background-color: #2b3035; border-color: #474d54; }
 
@@ -948,9 +949,12 @@ body.theme-dark.qs-typora-enabled.qs-typora-contrast .workspace-leaf-content[dat
 body.theme-dark.qs-typora-enabled.qs-typora-contrast.qs-typora-white-shell .status-bar { color: #c9d1d9; }
 
 @media print {
-  @page {
+  /* Named pages keep disabled typography from changing host PDF margins. */
+  @page qs-typora {
     margin: 16mm 0;
   }
+
+  body.qs-typora-enabled { page: qs-typora; }
 
   body.qs-typora-enabled .workspace-leaf-content[data-type="markdown"] .markdown-reading-view > .markdown-preview-view:not(.qs-home) {
     padding: 0;
@@ -1164,6 +1168,7 @@ body.qs-typora-enabled .print > .markdown-preview-view .mermaid svg {
    ========================================================================== */
 
 body.qs-typora-enabled.qs-typora-indent .workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.qs-home) :is(.markdown-preview-sizer > div, .markdown-preview-sizer) > p:not(:has(> img, > .image-embed, > .video-embed, > .audio-embed)),
+body.qs-typora-enabled.qs-typora-indent .popover.hover-popover .markdown-preview-view p:not(blockquote p, .callout p, li p, td p, th p):not(:has(> img, > .image-embed, > .video-embed, > .audio-embed)),
 body.qs-typora-enabled.qs-typora-indent .print > .markdown-preview-view p:not(blockquote p, .callout p, li p, td p, th p):not(:has(> img, > .image-embed, > .video-embed, > .audio-embed)),
 body.qs-typora-enabled.qs-typora-indent .workspace-leaf-content[data-type="markdown"] .markdown-source-view.mod-cm6.is-live-preview .cm-content > .cm-line:not(.HyperMD-header, .HyperMD-list-line, .HyperMD-quote, .HyperMD-codeblock, [class*="HyperMD-table"], .HyperMD-hr, .HyperMD-callout, [class*="HyperMD-frontmatter"], .HyperMD-footnote, .cm-math):not(:has(> img, > .image-embed, > .video-embed, > .audio-embed, > .cm-embed-block)) { text-indent: 2em; }
 
