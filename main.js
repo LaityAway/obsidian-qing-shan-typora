@@ -99,10 +99,15 @@ function skipDestination(value, position) {
   if (value[position] !== '(') return -1;
   let depth = 1;
   let quote = '';
+  let inAngle = false;
+  let started = false;
   for (let i = position + 1; i < value.length; i++) {
     const char = value[i];
-    if (char === '\\') { i++; continue; }
+    if (char === '\\') { started = true; i++; continue; }
+    if (inAngle) { if (char === '>') inAngle = false; continue; }
     if (quote) { if (char === quote) quote = ''; continue; }
+    if (!started && char === '<') { started = true; inAngle = true; continue; }
+    if (!/\s/.test(char)) started = true;
     if ((char === '"' || char === "'") && /\s/.test(value[i - 1])) { quote = char; continue; }
     if (char === '(') depth++;
     else if (char === ')' && --depth === 0) return i + 1;

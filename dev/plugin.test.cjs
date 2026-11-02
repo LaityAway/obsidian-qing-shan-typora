@@ -277,7 +277,8 @@ test('malformed long media syntax returns promptly without blocking the editor',
   throw Error(name);
  }};
  vm.runInNewContext(fs.readFileSync(process.argv[1],'utf8')+';globalThis.check=standaloneMediaLine',context);
- if(context.check('![x]('+('"a"'.repeat(5000))+'(')!==false)process.exit(2);`;
+ if(context.check('![x]('+('"a"'.repeat(5000))+'(')!==false)process.exit(2);
+ if(context.check('![x](<'+('('.repeat(50000)))!==false)process.exit(3);`;
  const result=spawnSync(process.execPath,['-e',script,path.join(__dirname,'../main.js')],{timeout:2000,encoding:'utf8'});
  assert.equal(result.error?.code,undefined,result.error?.message);
  assert.equal(result.status,0,result.stderr);

@@ -260,12 +260,15 @@ test('isolated Obsidian runtime acceptance', { timeout: 180000 }, async t => {
   });
 
   await t.test('linked and multiline media use paragraph content for indentation',async()=>{
-   await page.evaluate(async()=>{if(!app.vault.getAbstractFileByPath('虚构(缩进图).png')){const data=await app.vault.readBinary(app.vault.getAbstractFileByPath('虚构缩进图.png'));await app.vault.createBinary('虚构(缩进图).png',data)}});
+   await page.evaluate(async()=>{for(const name of ['虚构(缩进图).png','虚构(缩进图.png'])if(!app.vault.getAbstractFileByPath(name)){const data=await app.vault.readBinary(app.vault.getAbstractFileByPath('虚构缩进图.png'));await app.vault.createBinary(name,data)}});
    await settings({paragraphIndent:true});
    try {
     for(const [text,expected] of [
       ['[![图](虚构缩进图.png)](https://example.invalid)','0px'],
       ['![图](虚构(缩进图).png)','0px'],
+      ['![图](<虚构(缩进图.png>)','0px'],
+      ['![图](<虚构(缩进图.png>) ![图](<虚构(缩进图.png>)','0px'],
+      ['![图](<虚构(缩进图.png>) 正文','32px'],
       ['![[虚构缩进图.png]] ^abc123','0px'],
       ['![图 [嵌套]](虚构缩进图.png)','0px'],
       ['![[虚构缩进图.png]] 正文 ^abc123','32px'],

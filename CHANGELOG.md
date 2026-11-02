@@ -6,6 +6,16 @@ GitHub Releases 在线查看：[https://github.com/LaityAway/obsidian-qing-shan-
 
 ---
 
+## [Unreleased: 0.4.13] - 2026-11-02
+
+### 修复
+- **尖括号图片地址**：识别地址中含未配对括号的纯图片，修复实时预览误缩进；图文混排仍正常缩进。
+
+### 测试
+- 隔离 Obsidian 完整回归 101 项通过，0 失败、0 跳过。
+
+---
+
 ## [Unreleased: 0.4.12] - 2026-11-02
 
 ### 修复
