@@ -68,8 +68,8 @@ function markMediaOnlyParagraphs(element) {
       if (node.nodeType === 3) return !node.textContent.trim();
       if (node.nodeType !== 1) return true;
       if (node.matches('br')) return true;
-      const isPendingMedia = node.matches('.internal-embed[src]') && /\.(?:png|jpe?g|gif|webp|avif|svg|bmp|mp4|webm|ogv|mov|m4v|mp3|wav|ogg|m4a|flac|aac)(?:[?#].*)?$/i.test(node.getAttribute('src'));
-      if (node.matches('img, .image-embed, .video-embed, .audio-embed') || isPendingMedia) {
+      const isPendingMedia = node.matches('.internal-embed[src]') && /\.(?:png|jpe?g|gif|webp|avif|svg|bmp|mp4|webm|ogv|mov|m4v|mkv|3gp|mp3|wav|ogg|oga|opus|m4a|flac|aac)(?:[?#].*)?$/i.test(node.getAttribute('src'));
+      if (node.matches('img, video, audio, .image-embed, .video-embed, .audio-embed') || isPendingMedia) {
         mediaCount++;
         return true;
       }
@@ -243,8 +243,7 @@ function paragraphStartDecorations(view) {
           }
         }
         if (startsParagraph) {
-          const name = mediaOnlyParagraph(doc, tree, line) ? 'qs-typora-paragraph-start qs-typora-media-only' : 'qs-typora-paragraph-start';
-          marks.push(Decoration.line({ class: name }).range(line.from));
+          marks.push(Decoration.line({ class: 'qs-typora-paragraph-start' }).range(line.from));
         }
       }
       previousLine = line.number;
@@ -253,6 +252,47 @@ function paragraphStartDecorations(view) {
   }
   return Decoration.set(marks, true);
 }
+
+// Media positioning also applies when paragraph indentation is disabled.
+// Resolve the beginning of each visible paragraph, including a viewport that
+// starts halfway through it, and cache the result for the remaining lines.
+function mediaDecorations(view) {
+  const { doc } = view.state;
+  const tree = syntaxTree(view.state);
+  const marks = [];
+  const cached = new Map();
+  let previousLine = 0;
+  for (const range of view.visibleRanges) {
+    for (let line = doc.lineAt(range.from); line.from <= range.to; line = doc.line(line.number + 1)) {
+      if (line.number !== previousLine && standaloneMediaLine(line.text)) {
+        let start = line;
+        const walked = [];
+        while (!cached.has(start.number) && start.number > 1) {
+          const previous = doc.line(start.number - 1);
+          if (!previous.text.trim() || isMarkdownBlockLine(tree, previous) || isHtmlCommentEnd(tree, doc, previous)) break;
+          walked.push(start.number);
+          start = previous;
+        }
+        const isMedia = cached.has(start.number) ? cached.get(start.number) : mediaOnlyParagraph(doc, tree, start);
+        cached.set(start.number, isMedia);
+        for (const number of walked) cached.set(number, isMedia);
+        if (isMedia) marks.push(Decoration.line({ class: 'qs-typora-media-only' }).range(line.from));
+      }
+      previousLine = line.number;
+      if (line.number === doc.lines) break;
+    }
+  }
+  return Decoration.set(marks, true);
+}
+
+const mediaExtension = ViewPlugin.fromClass(class {
+  constructor(view) { this.decorations = mediaDecorations(view); }
+  update(update) {
+    if (update.docChanged || update.viewportChanged || syntaxTree(update.startState) !== syntaxTree(update.state)) {
+      this.decorations = mediaDecorations(update.view);
+    }
+  }
+}, { decorations: plugin => plugin.decorations });
 
 const paragraphIndentExtension = ViewPlugin.fromClass(class {
   constructor(view) { this.decorations = paragraphStartDecorations(view); }
@@ -319,7 +359,7 @@ class TyporaSettingsTab extends PluginSettingTab {
     slider('contentWidth', '正文最大宽度', 480, 1200, 20, ' px', '仅固定宽度模式生效；默认 800 px，Typora 三档为 860 / 1024 / 1200 px', () => plugin.settings.widthMode !== 'fixed');
     slider('lineHeight', '行距', 1.4, 2.2, 0.1, ' 倍', '默认 1.6 倍，与 Typora 一致');
     new Setting(containerEl).setName('恢复默认')
-      .setDesc('恢复 16 px 字号、1.6 倍行距、Typora 自适应宽度、界面浅色，并隐藏顶部文件名。')
+      .setDesc('恢复默认并写入配置：16 px 字号、1.6 倍行距、Typora 自适应宽度、统一底色（深色模式仍为深色底）、隐藏顶部文件名，并重置首行缩进、代码字体、对比度与启用状态。')
       .addButton(button => button.setButtonText('恢复默认').onClick(async () => {
         await plugin.resetSettings();
         this.display();
@@ -346,11 +386,15 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
     } catch {
       this.loadFailed = true;
       this.settings = { ...DEFAULTS };
-      if (this.active) this.loadNotice = new Notice('Typora 正文排版：设置读取失败，本次使用默认值且不会保存。请检查配置后重新加载插件。', 0);
+      if (this.active) this.loadNotice = new Notice('Typora 正文排版：设置读取失败，本次使用默认值且不会保存。点“恢复默认”可覆盖磁盘配置，或修复配置后重新加载插件。', 0);
     }
     this.refreshSettingsCache();
     if (!this.active) return;
-    this.registerEditorExtension(paragraphIndentExtension);
+    // Obsidian reconfigures every editor when this registered array changes.
+    this.mediaExtensions = this.settings.enabled ? [mediaExtension] : [];
+    this.indentExtensions = this.settings.enabled && this.settings.paragraphIndent ? [paragraphIndentExtension] : [];
+    this.registerEditorExtension(this.mediaExtensions);
+    this.registerEditorExtension(this.indentExtensions);
     this.registerMarkdownPostProcessor(markMediaOnlyParagraphs);
     this.addSettingTab(new TyporaSettingsTab(this.app, this));
     this.addCommand({
@@ -362,15 +406,15 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
       },
     });
     this.registerEvent(this.app.workspace.on('layout-change', () => this.applySettings()));
-    this.registerEvent(this.app.workspace.on('css-change', () => this.applySettings()));
+    this.registerEvent(this.app.workspace.on('css-change', () => this.applySettings(true)));
     this.registerEvent(this.app.workspace.on('window-open', workspaceWindow => {
-      this.applyDocument(workspaceWindow?.doc);
+      this.applyDocument(workspaceWindow?.doc, true);
     }));
     this.registerEvent(this.app.workspace.on('window-close', workspaceWindow => {
       this.clearDocument(workspaceWindow?.doc);
       this.documents.delete(workspaceWindow?.doc);
     }));
-    this.applySettings();
+    this.applySettings(true);
   }
 
   refreshSettingsCache() {
@@ -390,7 +434,7 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
     ];
   }
 
-  applyDocument(doc) {
+  applyDocument(doc, syncMono = false) {
     if (!doc) return;
     if (!doc.body || doc.defaultView === null || doc.defaultView?.closed) {
       this.documents.delete(doc);
@@ -401,15 +445,17 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
       this.clearDocument(doc);
       return;
     }
-    const view = doc.defaultView;
-    if (view && typeof view.getComputedStyle === 'function') {
-      const cs = view.getComputedStyle(doc.body);
-      const mono = cs ? cs.getPropertyValue('--font-monospace')?.trim() : '';
-      const currentMono = doc.body.style?.getPropertyValue?.(MONO_VARIABLE) ?? '';
-      if (mono) {
-        if (currentMono !== mono) doc.body.style.setProperty(MONO_VARIABLE, mono);
-      } else if (currentMono) {
-        doc.body.style.removeProperty(MONO_VARIABLE);
+    if (syncMono) {
+      const view = doc.defaultView;
+      if (view && typeof view.getComputedStyle === 'function') {
+        const cs = view.getComputedStyle(doc.body);
+        const mono = cs ? cs.getPropertyValue('--font-monospace')?.trim() : '';
+        const currentMono = doc.body.style?.getPropertyValue?.(MONO_VARIABLE) ?? '';
+        if (mono) {
+          if (currentMono !== mono) doc.body.style.setProperty(MONO_VARIABLE, mono);
+        } else if (currentMono) {
+          doc.body.style.removeProperty(MONO_VARIABLE);
+        }
       }
     }
     const applied = this.appliedSettings.get(doc) === this.signature;
@@ -431,13 +477,13 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
     this.appliedSettings.set(doc, this.signature);
   }
 
-  applySettings() {
+  applySettings(syncMono = false) {
     const docs = new Set([document, ...this.documents]);
     this.app.workspace.iterateAllLeaves(leaf => {
       const doc = leaf?.view?.containerEl?.ownerDocument;
       if (doc) docs.add(doc);
     });
-    for (const doc of docs) this.applyDocument(doc);
+    for (const doc of docs) this.applyDocument(doc, syncMono);
   }
 
   clearDocument(doc) {
@@ -459,11 +505,23 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
   updateSettings(patch, options = {}) {
     if (!this.active) return this.writeQueue;
     const next = normalizeSettings({ ...this.settings, ...patch });
-    if (!this.saveFailed && JSON.stringify(next) === JSON.stringify(this.settings)) return this.writeQueue;
+    const forceSave = options.forceSave === true;
+    if (!this.saveFailed && !(this.loadFailed && forceSave) && JSON.stringify(next) === JSON.stringify(this.settings)) return this.writeQueue;
+    const enabling = !this.settings.enabled && next.enabled;
+    const mediaActive = this.settings.enabled;
+    const indentActive = this.settings.enabled && this.settings.paragraphIndent;
+    const nextIndentActive = next.enabled && next.paragraphIndent;
     this.settings = next;
     this.refreshSettingsCache();
-    this.applySettings();
-    if (this.loadFailed) return this.writeQueue;
+    this.applySettings(enabling);
+    if (mediaActive !== next.enabled) {
+      this.mediaExtensions.splice(0, this.mediaExtensions.length, ...(next.enabled ? [mediaExtension] : []));
+    }
+    if (indentActive !== nextIndentActive) {
+      this.indentExtensions.splice(0, this.indentExtensions.length, ...(nextIndentActive ? [paragraphIndentExtension] : []));
+    }
+    if (mediaActive !== next.enabled || indentActive !== nextIndentActive) this.app.workspace.updateOptions();
+    if (this.loadFailed && !forceSave) return this.writeQueue;
     if (!options.deferSave) this.flushPendingSave();
     if (options.deferSave && this.pendingSave) {
       this.pendingSave.snapshot = { ...this.settings };
@@ -482,16 +540,23 @@ module.exports = class QingShanTyporaPlugin extends Plugin {
       await ready;
       await this.saveData(batch.snapshot);
       this.saveFailed = false;
+      if (this.loadFailed) {
+        this.loadFailed = false;
+        this.loadNotice?.hide();
+        this.loadNotice = null;
+      }
     }).catch(() => {
       this.saveFailed = true;
-      new Notice('Typora 正文排版：设置保存失败，当前外观已更新，请检查磁盘后重试。');
+      new Notice(this.active
+        ? 'Typora 正文排版：设置保存失败，当前外观已更新，请检查磁盘后重试。'
+        : 'Typora 正文排版：插件关闭时设置保存失败，请检查磁盘并重新加载插件后重试。');
     });
     this.writeState.tail = this.writeQueue;
     return this.writeQueue;
   }
 
   resetSettings() {
-    return this.updateSettings(DEFAULTS);
+    return this.updateSettings(DEFAULTS, { forceSave: true });
   }
 
   onunload() {

@@ -15,6 +15,7 @@ The community directory lists this plugin as **Qing Shan Typography**; the Chine
 - **Typora code blocks**: 14.4px / 23.04px code line boxes, `#f8f8f8` surface, 1px border, 8/6 padding, automatic wrapping, and the Typora `cm-s-inner` palette.
 - **Dark mode**: follows `theme-dark` automatically with a Typora `night`-inspired surface, text, table, code, and callout palette.
 - **Semantic callouts**: note / warning / danger keep Obsidian's `--callout-color` on the left border and icon.
+- **Optional `qs-home` dashboard**: a reading-view-only homepage layout driven by `cssclasses: qs-home` — hero title, subtitle, link grid, footer and a bottom callout. Live Preview keeps the normal editor.
 - **Optional paragraph indent**: opt-in 2em first-line indent for prose paragraphs without affecting headings, quotes, lists, callouts, tables, code, or images.
 - **Native PDF export**: exports cleanly styled documents through Obsidian's native PDF export (`.print > .markdown-preview-view`).
 - **[TOC] & TOC Reader compatible**: clean list styling without bullet collisions, tabular numbers, and hover highlights.
@@ -58,16 +59,36 @@ Once the plugin appears in the Obsidian community directory:
 | Font size | 16px | 14–22px. |
 | Max content width | 800px | 480–1200px, used by fixed-width mode. |
 | Line height | 1.6 | 1.4–2.2. |
-| Reset | — | Restore all defaults. |
+| Reset | — | Restore all defaults and write them to disk. |
 
 The settings UI is in Chinese; the plugin itself has no language-dependent behavior.
+
+## Homepage layout (`qs-home`)
+
+Add `qs-home` to a note's `cssclasses` to opt into the dashboard layout:
+
+```yaml
+---
+cssclasses:
+  - qs-home
+---
+```
+
+Conventions:
+
+- The first `H1` is the brand title and gets the 58px Songti hero style (42px in narrow panes) plus the mountain mark.
+- The blockquote immediately after the `H1` is the subtitle; later blockquotes keep the normal quote style.
+- Each `H2` is followed by a flat `ul` of links (`- [[path|label]] — description`); the list becomes a responsive 2–3 column card grid.
+- The last paragraph containing only `*italic*` is the footer; a bottom callout is styled as a small usage note.
+- The layout is **reading-view only**. Live Preview keeps the normal editor typography, so the dashboard never interferes with editing. This is intentional, not a missing live-preview style.
+- The styles only target the reading view's `.el-*` sections and exclude embedded notes and callout content.
 
 ## Compatibility
 
 - Obsidian **1.5.0+**, desktop only.
 - Applies to **Reading view** and **Live Preview**; Source mode is left untouched.
 - Works with light and dark themes. [Minimal](https://github.com/kepano/obsidian-minimal) is recommended but not required.
-- CSS-only layout; no build step is required to use the release files.
+- No build step is required to use the release files; the paragraph-indent decoration uses Obsidian's bundled CodeMirror 6 packages.
 
 ## Privacy
 
